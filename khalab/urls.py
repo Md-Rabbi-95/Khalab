@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home,name='home'),  # 👈 this line handles the root URL
     path('store/', include('store.urls')),
+    path('cart/',include('carts.urls')),
     path('about-us/', views.aboutUs),
     path('category/<int:categoryid>', views.Category),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
