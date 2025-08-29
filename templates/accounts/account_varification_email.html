@@ -1,0 +1,10 @@
+{% autoescape off %}
+
+Hi {{user.first_name}},
+
+Kindly follow the link below to verify and activate your account
+http://{{domain}}{% url 'activate' uidb64=uid token=token %}
+
+If this request was not made by you, please disregard this message.
+
+{% endautoescape %}
