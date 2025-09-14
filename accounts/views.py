@@ -4,6 +4,7 @@ from .models import Account
 from django.contrib import messages,auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+import requests
 
 # Varification
 from django.contrib.sites.shortcuts import get_current_site
@@ -74,7 +75,17 @@ def login(request):
                 pass
             auth.login(request,user)
             messages.success(request,'You are now logged in.')
-            return redirect('dashboard')
+            url = request.META.get('HTTP_REFERER')
+            try:
+                query = requests.utils.urlparse(url).query
+                # next=/cart/checkout'
+                params = dict(x.split('=') for x in query.split('&'))
+                if 'next' in params:
+                    nextPage = params['next']
+                    return redirect(nextPage)
+                
+            except:
+                return redirect('dashboard')
         else:
             messages.error(request,'Login failed. Please check your email and password.')
             return redirect('login')

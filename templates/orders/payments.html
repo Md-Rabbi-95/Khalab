@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section-content padding-y bg">
+  <div class="container">
+
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <h4 class="text-center mb-5">Review Your Order and Make Payment</h4>
+    <div class="row g-4">
+      <!-- Left column -->
+      <aside class="col-lg-8">
+
+        <!-- Billing Address -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-header fw-semibold"><h5>
+            Billing Address</h5>
+          </div>
+          <div class="card-body">
+            <p class="card-text text-muted mb-0">
+              {{order.full_name}}
+            </p>
+            <p class="card-text text-muted mb-0">
+              {{order.full_address}}
+            </p>
+            <p class="card-text text-muted mb-0">
+              {{order.city}}, {{order.state}}
+            </p>
+            <p class="card-text text-muted mb-0">
+              {{order.country}}
+            </p>
+            <p class="card-text text-muted mb-0">
+              {{order.email}}
+            </p>
+            <p class="card-text text-muted mb-0">
+              {{order.phone}}
+            </p>
+            {% if order.order_note %}
+              <b>Order Note: </b> {{order.order_note}}
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-header fw-semibold"><h5>
+            Payment Method</h5>
+          </div>
+          <div class="card-body">
+            <p class="card-text text-muted mb-0">
+              Cash On Delivery
+            </p>
+          </div>
+        </div>
+
+        <!-- Review Products -->
+        <div class="card shadow-sm">
+          <div class="card-header fw-semibold"><h5>
+            Review Products</h5>
+          </div>
+          <div class="card-body">
+            <p class="card-text text-muted mb-0">
+              With supporting text below as a natural lead-in to additional content.
+            </p>
+          </div>
+        </div>
+
+      </aside>
+      <!-- /Left column -->
+
+      <!-- Right column -->
+      <aside class="col-lg-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+
+            <dl class="row dlist-align mb-2">
+              <dt class="col-7 mb-1">Total price:</dt>
+              <dd class="col-5 text-end mb-1">Tk.{{ total }}</dd>
+            </dl>
+
+            <dl class="row dlist-align mb-2">
+              <dt class="col-7 mb-1">Tax:</dt>
+              <dd class="col-5 text-end mb-1">Tk.{{ tax }}</dd>
+            </dl>
+
+            <dl class="row dlist-align">
+              <dt class="col-7">Total:</dt>
+              <dd class="col-5 text-end text-dark fw-bold">Tk.{{ grand_total }}</dd>
+            </dl>
+
+            <hr class="my-3">
+
+            <p class="text-center mb-3">
+			<!-- Bkash -->
+			<img src="{% static 'images/BKash-Logo.wine.png' %}" height="35" alt="Bkash Logo" class="mx-2">
+
+			<!-- Nagad -->
+			<img src="{% static 'images/Nagad_Logo.png' %}" height="35" alt="Nagad Logo" class="mx-2">
+
+			<!-- Rocket -->
+			<img src="{% static 'images/rocket-logo.png' %}" height="35" alt="Rocket Logo" class="mx-2">
+			</p>
+
+            <a href="{% url 'checkout' %}" class="btn btn-primary btn-block w-100">
+              Make Payment
+            </a>
+          </div>
+        </div>
+      </aside>
+      <!-- /Right column -->
+    </div>
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+
+  </div>
+</section>
+{% endblock %}

@@ -1,6 +1,26 @@
 {% extends "base.html" %}
 {% load static %}
 
+<style>
+  /* keep cells vertically centered */
+  .table-shopping-cart th, .table-shopping-cart td { vertical-align: middle; }
+
+  /* center the Quantity (2nd col) */
+  .table-shopping-cart th:nth-child(2),
+  .table-shopping-cart td:nth-child(2) { text-align: center; }
+
+  /* center the Price (3rd col) */
+  .table-shopping-cart th:nth-child(3),
+  .table-shopping-cart td:nth-child(3) { text-align: center; }
+
+  /* make the inner price block center nicely */
+  .table-shopping-cart td:nth-child(3) .price-wrap {
+    text-align: center;
+    display: inline-block;   /* shrink to content so true centering works */
+    margin: 0 auto;          /* center the block inside the td */
+  }
+</style>
+
 {% block content %}
 
 <section class="section-content padding-y bg">
@@ -13,7 +33,7 @@
 <div class="card">
     <div class="card-body">
         <h4 class="card-title mb-4">Billing Address</h4>
-<form action="" method="POST">
+<form action="{% url 'place_order' %}" method="post">
     {% csrf_token %}
     <div class="form-row">
         <div class="col form-group">
@@ -139,8 +159,8 @@
         <thead class="text-muted">
         <tr class="small text-uppercase">
         <th scope="col">Product</th>
-        <th scope="col" width="120">Quantity</th>
-        <th scope="col" width="120">Price</th>
+        <th scope="col" width="120" class="text-center">Quantity</th>
+        <th scope="col" width="120" class="text-center">Price</th>
         <th scope="col" class="text-right" width="200"> </th>
         </tr>
         </thead>
@@ -148,29 +168,36 @@
 
         {% for cart_item in cart_items %}
         <tr>
-            <td>
-                <figure class="itemside align-items-center">
-                    <div class="aside"><img src="{{cart_item.product.images.url }}" class="img-sm"></div>
-                    <figcaption class="info">
-                        <a href="{{cart_item.product.get_url}}" class="title text-dark">{{ cart_item.product.product_name }}</a>
-                        <p class="text-muted small">
-                            {% if cart_item.variations.all %}
-                                {% for item in cart_item.variations.all %}
-                                    {{ item.variation_category | capfirst }} : {{ item.variation_value | capfirst }} <br>
-                                {% endfor %}
-                            {% endif %}
-                        </p>
-                    </figcaption>
-                </figure>
-            </td>
-            <td> 
-                <label for="">{{cart_item.quantity}}
-            </td>
-            <td> 
-                <div class="price-wrap"> 
-                    <var class="price">Tk.{{ cart_item.sub_total }}</var> 
-                    <small class="text-muted">Tk.{{ cart_item.product.price}} each </small> 
-                </div> <!-- price-wrap .// -->
+        <td>
+            <figure class="itemside align-items-center">
+            <div class="aside"><img src="{{ cart_item.product.images.url }}" class="img-sm"></div>
+            <figcaption class="info">
+                <a href="{{ cart_item.product.get_url }}" class="title text-dark">{{ cart_item.product.product_name }}</a>
+                <p class="text-muted small">
+                {% if cart_item.variations.all %}
+                    {% for item in cart_item.variations.all %}
+                    {{ item.variation_category|capfirst }} : {{ item.variation_value|capfirst }} <br>
+                    {% endfor %}
+                {% endif %}
+                </p>
+            </figcaption>
+            </figure>
+        </td>
+
+        <td class="text-center align-middle">
+            <span>{{ cart_item.quantity }}</span>
+        </td>
+
+        <!-- ✅ Price cell: centered + properly closed -->
+        <td class="text-center align-middle">
+            <div class="price-wrap">
+            <var class="price">Tk.{{ cart_item.sub_total }}</var>
+            <small class="text-muted">Tk.{{ cart_item.product.price }} each</small>
+            </div>
+        </td>
+
+        <!-- ✅ keep column count aligned with the thead (4th, blank) -->
+        <td></td>
         </tr>
         {% endfor %}
         </tbody>
