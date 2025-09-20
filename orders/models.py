@@ -7,7 +7,7 @@ class Payment(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     payment_id = models.CharField(max_length=100)
     payment_method = models.CharField(max_length=100)
-    account_paid = models.CharField(max_length=100)
+    #account_paid = models.CharField(max_length=100)
     status = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -60,9 +60,8 @@ class OrderProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     payment = models.ForeignKey(Payment, on_delete=models.SET_NULL,blank=True,null=True)
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    variation = models.ForeignKey(Variation,on_delete=models.CASCADE)
-    color = models.CharField(max_length=50)
-    size = models.CharField(max_length=50)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_products',null=True,blank=True)
+    variations = models.ManyToManyField(Variation,blank=True) 
     quantity = models.IntegerField()
     product_price = models.FloatField()
     ordered = models.BooleanField(default=False)
@@ -72,3 +71,4 @@ class OrderProduct(models.Model):
     
     def __str__(self):
         return self.product.product_name
+        

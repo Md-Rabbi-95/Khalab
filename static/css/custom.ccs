@@ -1,0 +1,46 @@
+/* ===== Simple 5-Star Rating (no icon font) ===== */
+.rate {
+  display: inline-block;
+  position: relative;
+  border: 0;
+  font-size: 0;          /* remove inline gaps */
+  direction: rtl;        /* lets ~ select “previous” stars visually */
+  user-select: none;
+}
+
+.rate input {
+  position: absolute;
+  left: -9999px;         /* fully hide radios */
+}
+
+.rate label {
+  float: right;
+  cursor: pointer;
+  position: relative;
+  width: 1.1rem;         /* star box */
+  height: 1.1rem;
+  margin: 0 2px;
+  line-height: 1.1rem;
+  display: inline-block;
+  transition: transform .08s ease-in-out;
+}
+
+/* empty star */
+.rate label::before {
+  content: "★";
+  font-size: 1rem;       /* star size (compact like screenshot) */
+  color: #c5c8ce;        /* light grey outline look */
+}
+
+/* hover + checked fill */
+.rate input:checked ~ label::before,
+.rate label:hover ~ label::before,
+.rate label:hover::before {
+  color: #222;           /* dark fill like your screenshot */
+}
+
+/* subtle hover feel */
+.rate label:hover { transform: scale(1.04); }
+
+/* compact spacing for this 5-star variant only (optional class) */
+.rate-5 { margin-top: 2px; }

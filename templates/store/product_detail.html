@@ -1,109 +1,213 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends "base.html" %}
+{% load static rating_tags %}
 
 {% block content %}
 <section class="section-content padding-y bg">
-<div class="container">
+  <div class="container">
 
-<!-- ============================ COMPONENT 1 ================================= -->
-<div class="card">
-	<div class="row no-gutters">
-		<aside class="col-md-6">
-<article class="gallery-wrap"> 
-	<div class="img-big-wrap">
-	   <a href="#"><img src="{{ single_product.images.url }}" alt="{{ single_product.product_name }}">></a>
-	</div> <!-- img-big-wrap.// -->
-	
-</article> <!-- gallery-wrap .end// -->
-		</aside>
-		<main class="col-md-6 border-left">
-	<form action="{% url 'add_cart' product_id=single_product.id %}" method="POST">
-		{% csrf_token %}
-<article class="content-body">
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <div class="card">
+      <div class="row no-gutters">
+        <aside class="col-md-6">
+          <article class="gallery-wrap">
+            <div class="img-big-wrap">
+              <a href="#"><img src="{{ single_product.images.url }}" alt="{{ single_product.product_name }}"></a>
+            </div>
+          </article>
+        </aside>
 
-<h2 class="title">{{ single_product.product_name }}</h2>
+        <main class="col-md-6 border-left">
+          <form action="{% url 'add_cart' product_id=single_product.id %}" method="POST">
+            {% csrf_token %}
+            <article class="content-body">
 
-<div class="mb-3"> 
-	<var class="price h4">Tk.{{ single_product.price }}
-</var> 
-</div> 
+              <!-- Product name -->
+              <h2 class="title">{{ single_product.product_name }}</h2>
 
-<p>{{ single_product.description }}</p>
+              <!-- Average rating -->
+              {% with avg=single_product.averageReview|default:0 %}
+                {% star_breakdown avg as sb %}
+                <span class="rating-star" aria-label="Average {{ avg|floatformat:1 }} out of 5">
+                  {% for _ in sb.full|times %}<i class="fas fa-star"></i>{% endfor %}
+                  {% if sb.half %}<i class="fas fa-star-half-alt"></i>{% endif %}
+                  {% for _ in sb.empty|times %}<i class="far fa-star"></i>{% endfor %}
+                </span>
+                <span class="rating-badge ms-1"><strong>{{ avg|floatformat:1 }}</strong>/5</span>
+              {% endwith %}
 
+              <!-- One line spacing -->
+              <br />
 
-<hr>
-	<div class="row">
-<div class="item-option-select">
-  <h6>Choose Color</h6>
-  <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
-    {% for i in single_product.variation_set.colors %}
-      <label class="btn btn-light {% if forloop.first %}active{% endif %}">
-        <input type="radio" name="color" value="{{ i.variation_value }}" {% if forloop.first %}checked{% endif %}>
-        {{ i.variation_value }}
-      </label>
-    {% endfor %}
+              <!-- Price -->
+              <div class="mb-3 mt-1">
+                <var class="price h4">Tk.{{ single_product.price }}</var>
+              </div>
+
+              <!-- Description -->
+              <p>{{ single_product.description }}</p>
+
+              <hr>
+              <!-- Color selection -->
+              <div class="row">
+                <div class="item-option-select">
+                  <h6>Choose Color</h6>
+                  <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
+                    {% for i in single_product.variation_set.colors %}
+                      <label class="btn btn-light {% if forloop.first %}active{% endif %}">
+                        <input type="radio" name="color" value="{{ i.variation_value }}" {% if forloop.first %}checked{% endif %}>
+                        {{ i.variation_value }}
+                      </label>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Size selection -->
+              <div class="row">
+                <div class="item-option-select">
+                  <h6>Select Size</h6>
+                  <select name="size" class="form-control">
+                    {% for i in single_product.variation_set.sizes %}
+                      <option value="{{ i.variation_value|lower }}">{{ i.variation_value|capfirst }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+
+              <hr>
+              <!-- Stock -->
+              {% if single_product.stock <= 0 %}
+                <h5 class="text-danger">
+                  <i class="fas fa-times-circle"></i> Out of Stock
+                </h5>
+              {% else %}
+                <button type="submit" class="btn btn-primary">
+                  <span class="text">Add to Cart</span> <i class="fas fa-shopping-cart"></i>
+                </button>
+              {% endif %}
+
+            </article>
+          </form>
+        </main>
+      </div>
+    </div>
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+
+    <br>
+
+    <div class="row">
+      <div class="col-md-9">
+
+        <!-- Review form -->
+        <style>
+          /* Inline star rating for form */
+          .rate { display:inline-block; position:relative; direction:rtl; margin-left:8px; }
+          .rate input { position:absolute; left:-9999px; opacity:0; }
+          .rate label { float:right; cursor:pointer; width:1.2rem; height:1.2rem; margin:0 1px; }
+          .rate label::before { content:"★"; font-size:1.2rem; color:#c5c8ce; }
+          .rate input:checked ~ label::before,
+          .rate label:hover ~ label::before,
+          .rate label:hover::before { color:#ffb503; }
+
+          /* Display stars */
+          .rating-star .fas.fa-star,
+          .rating-star .fas.fa-star-half-alt { color:#da9a05; }
+          .rating-star .far.fa-star { color:#c5c8ce; }
+
+          .rating-header { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+          .rating-badge { font-size:.875rem; padding:.25rem .5rem; border-radius:.35rem; background:#f6f7f9; color:#4a5568; }
+          .rating-count { color:#6c757d; font-size:.875rem; }
+        </style>
+
+        <form action="{% url 'submit_review' single_product.id %}" method="POST" class="mt-3">
+          {% csrf_token %}
+          <div class="card p-3 shadow-sm border-0 mb-3">
+            <h6 class="text-muted mb-2">Write Your Review</h6>
+
+            <div class="d-flex align-items-center mb-2">
+              <label class="mb-0 me-2">How do you rate this product?</label>
+              <div class="rate">
+                <input type="radio" id="star5" name="rating" value="5" required><label for="star5" title="5"></label>
+                <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4"></label>
+                <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3"></label>
+                <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2"></label>
+                <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1"></label>
+              </div>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label">Review Title</label>
+              <input type="text" class="form-control" name="subject" placeholder="E.g., Beautiful design and finish">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Review</label>
+              <textarea class="form-control" name="review" rows="4" placeholder="Share details about quality, comfort, fit…"></textarea>
+            </div>
+
+            {% if user.is_authenticated %}
+              {% if orderproduct %}
+                <button type="submit" class="btn btn-primary">Submit Review</button>
+              {% else %}
+                <p>You must purchase this product to post a review.</p>
+              {% endif %}
+            {% else %}
+              <p>You must be logged in to post a review.<span><a href="{% url 'login' %}"> Login now</a></span></p>
+            {% endif %}
+          </div>
+          {% include "includes/alerts.html" %}
+        </form>
+
+        <!-- Customer reviews header -->
+        <header class="section-heading">
+          <div class="rating-header">
+            <h3 class="m-0">Customer Reviews</h3>
+            {% with avg=single_product.averageReview|default:0 %}
+              {% star_breakdown avg as sb %}
+              <span class="rating-star">
+                {% for _ in sb.full|times %}<i class="fas fa-star"></i>{% endfor %}
+                {% if sb.half %}<i class="fas fa-star-half-alt"></i>{% endif %}
+                {% for _ in sb.empty|times %}<i class="far fa-star"></i>{% endfor %}
+              </span>
+              <span class="rating-badge ms-1"><strong>{{ avg|floatformat:1 }}</strong>/5</span>
+              <span class="rating-count ms-1">({{ reviews|length }} review{% if reviews|length != 1 %}s{% endif %})</span>
+            {% endwith %}
+          </div>
+        </header>
+
+        <!-- Reviews list -->
+        {% for review in reviews %}
+          <article class="box mb-3">
+            <div class="icontext w-100">
+              <img src="{% static './images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle" alt="avatar">
+              <div class="text w-100">
+                <span class="date text-muted float-md-right">{{ review.updated_at }}</span>
+                <h6 class="mb-1">{{ review.user.full_name }}</h6>
+
+                <div class="rating-star" aria-label="Rated {{ review.rating }} out of 5">
+                  {% star_breakdown review.rating as rb %}
+                  {% for _ in rb.full|times %}<i class="fas fa-star"></i>{% endfor %}
+                  {% if rb.half %}<i class="fas fa-star-half-alt"></i>{% endif %}
+                  {% for _ in rb.empty|times %}<i class="far fa-star"></i>{% endfor %}
+                  <span class="ms-2 small text-muted">{{ review.rating|floatformat:1 }}/5</span>
+                </div>
+
+                {% if review.subject %}
+                  <p class="mt-2 mb-1 fw-semibold">{{ review.subject }}</p>
+                {% endif %}
+                {% if review.review %}
+                  <p class="mb-0">{{ review.review }}</p>
+                {% endif %}
+              </div>
+            </div>
+          </article>
+        {% empty %}
+          <p class="text-muted">No reviews yet.</p>
+        {% endfor %}
+
+      </div>
+    </div>
+
   </div>
-</div>
-
-	</div> <!-- row.// -->
-	<div class="row">
-		<div class="item-option-select">
-			<h6>Select Size</h6>
-				<select name="size" class= "form-control">
-					{% for i in single_product.variation_set.sizes %}
-					<option value="{{i.variation_value | lower}}">{{i.variation_value | capfirst }}</option>
-					{% endfor %}
-				</select>
-		</div>
-	</div> <!-- row.// -->
-	<hr>
-	{% if single_product.stock <= 0 %}
-  		<h5 class="text-danger">
-    	<i class="fas fa-times-circle"></i> Out of Stock
-  		</h5>
-	{% else %}
-  			<button type="submit" class="btn btn-primary">
-    		<span class="text">Add to Cart</span> <i class="fas fa-shopping-cart"></i>
-  			</button>
-	{% endif %}
-	</article> <!-- product-info-aside .// -->
-</form>
-		</main> <!-- col.// -->
-	</div> <!-- row.// -->
-</div> <!-- card.// -->
-<!-- ============================ COMPONENT 1 END .// ================================= -->
-
-<br>
-
-<div class="row">
-			<div class="col-md-9">
-
-	<header class="section-heading">
-		<h3>Customer Reviews </h3>  
-		
-	</header>
-
-	<article class="box mb-3">
-		<div class="icontext w-100">
-			<img src="{% static './images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle">
-			<div class="text">
-				<span class="date text-muted float-md-right">24.04.2020 </span>  
-				<h6 class="mb-1">Mike John </h6>
-				
-			</div>
-		</div> <!-- icontext.// -->
-		<div class="mt-3">
-			<p>
-				Dummy comment Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-				quis nostrud exercitation ullamco laboris nisi ut aliquip
-			</p>	
-		</div>
-	</article>
-
-	</div> <!-- col.// -->
-</div> <!-- row.// -->
-
-</div> <!-- container .//  -->
 </section>
 {% endblock %}
