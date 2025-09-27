@@ -1,46 +1,128 @@
-/* ===== Simple 5-Star Rating (no icon font) ===== */
+/* =========================================================
+   Simple 5-Star Rating (no icon font)
+   ========================================================= */
 .rate {
   display: inline-block;
   position: relative;
   border: 0;
-  font-size: 0;          /* remove inline gaps */
-  direction: rtl;        /* lets ~ select “previous” stars visually */
+  font-size: 0;               /* remove inline gaps */
+  direction: rtl;             /* lets ~ select “previous” stars visually */
   user-select: none;
 }
-
 .rate input {
   position: absolute;
-  left: -9999px;         /* fully hide radios */
+  left: -9999px;              /* fully hide radios */
 }
-
 .rate label {
   float: right;
   cursor: pointer;
   position: relative;
-  width: 1.1rem;         /* star box */
+  width: 1.1rem;              /* star box */
   height: 1.1rem;
   margin: 0 2px;
   line-height: 1.1rem;
   display: inline-block;
   transition: transform .08s ease-in-out;
 }
-
 /* empty star */
 .rate label::before {
   content: "★";
-  font-size: 1rem;       /* star size (compact like screenshot) */
-  color: #c5c8ce;        /* light grey outline look */
+  font-size: 1rem;            /* star size (compact) */
+  color: #c5c8ce;             /* light grey outline look */
 }
-
 /* hover + checked fill */
 .rate input:checked ~ label::before,
 .rate label:hover ~ label::before,
 .rate label:hover::before {
-  color: #222;           /* dark fill like your screenshot */
+  color: #222;
 }
-
 /* subtle hover feel */
 .rate label:hover { transform: scale(1.04); }
-
-/* compact spacing for this 5-star variant only (optional class) */
+/* tighter vertical rhythm when used inline */
 .rate-5 { margin-top: 2px; }
+
+
+/* =========================================================
+   Product Detail (gallery + thumbs, Amazon-like)
+   ========================================================= */
+.prod-figure { border-radius: 10px; }
+
+.prod-main {
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 420px;          /* desktop height */
+}
+.prod-main img {
+  width: 100%;
+  max-height: 520px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+/* Thumbnails strip */
+.prod-thumbs { margin: .5rem 0 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.prod-thumbs .thumb,
+.thumb-img {                     /* .thumb-img kept for older markup */
+  width: 78px;
+  height: 78px;
+  object-fit: cover;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform .1s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.prod-thumbs .thumb:hover,
+.thumb-img:hover {
+  transform: translateY(-1px);
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13,110,253,.15);
+}
+.prod-thumbs .thumb.active,
+.thumb-img.active {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13,110,253,.25);
+}
+
+/* Star colors for read-only displays */
+.rating-star .fas.fa-star,
+.rating-star .fas.fa-star-half-alt { color: #da9a05; }
+.rating-star .far.fa-star { color: #c5c8ce; }
+
+/* Mobile tweaks */
+@media (max-width: 767.98px) {
+  .prod-main { min-height: 300px; }
+}
+
+
+/* =========================================================
+   Compact small <select> (used for “Select Size”)
+   ========================================================= */
+.plain-select-sm {
+  display: inline-block;
+  min-width: 140px;               /* width control */
+  height: 32px;                   /* smaller height */
+  padding: 2px 28px 2px 8px;      /* compact padding */
+  font-size: 0.9rem;
+  border: 1px solid #cfd4da;
+  border-radius: 6px;
+  line-height: 1.2;
+  background:
+    #fff
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='gray'><path d='M7 10l5 5 5-5z'/></svg>")
+    no-repeat right 8px center;
+  background-size: 12px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.plain-select-sm:focus {
+  border-color: #0d6efd;
+  outline: 0;
+  box-shadow: 0 0 0 2px rgba(13,110,253,.15);
+}
+
+

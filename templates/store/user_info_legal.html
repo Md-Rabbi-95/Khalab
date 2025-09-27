@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section-content py-5 bg-light">
+  <div class="container">
+
+    <!-- Hero -->
+    <div class="text-center mb-5">
+      <h1 class="display-5 fw-bold text-gradient">User Information Legal Enquiry Guide</h1>
+      <p class="lead text-muted">
+        At <strong>Khalab</strong>, we believe in transparency. This guide explains how we collect and protect user information, and how we handle legal enquiries related to customer data.
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Section 1 -->
+      <div class="col-lg-4">
+        <div class="card shadow-sm border-0 policy-card h-100">
+          <div class="card-body p-4 text-center">
+            <div class="icon-circle-lg bg-primary text-white mb-3">
+              <i class="fas fa-user-shield fa-lg"></i>
+            </div>
+            <h5 class="fw-bold mb-3">User Information</h5>
+            <p class="text-muted">
+              We only collect essential details — such as name, phone, email, and address — to process orders and provide support. Your data is always stored securely and never shared without authorization.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2 -->
+      <div class="col-lg-4">
+        <div class="card shadow-sm border-0 policy-card h-100">
+          <div class="card-body p-4 text-center">
+            <div class="icon-circle-lg bg-danger text-white mb-3">
+              <i class="fas fa-gavel fa-lg"></i>
+            </div>
+            <h5 class="fw-bold mb-3">Legal Enquiries</h5>
+            <p class="text-muted">
+              In case of lawful requests from authorities, Khalab will provide access to relevant data as required by law. Whenever legally possible, customers will be informed about such disclosures.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3 -->
+      <div class="col-lg-4">
+        <div class="card shadow-sm border-0 policy-card h-100">
+          <div class="card-body p-4 text-center">
+            <div class="icon-circle-lg bg-success text-white mb-3">
+              <i class="fas fa-handshake fa-lg"></i>
+            </div>
+            <h5 class="fw-bold mb-3">Customer Rights</h5>
+            <p class="text-muted">
+              You have the right to enquire how your information is used. For any concerns, please contact us at 
+              <a href="mailto:{{ contact_email }}" class="fw-semibold text-decoration-none">{{ contact_email }}</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Note -->
+    <div class="alert alert-info mt-5 shadow-sm d-flex align-items-center">
+      <i class="fas fa-info-circle fa-lg me-3"></i>
+      <div>
+        Khalab is committed to safeguarding your privacy while complying with all applicable legal requirements.
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center mt-5">
+      <a href="{% url 'store' %}" class="btn btn-lg btn-primary px-4 shadow-sm">
+        <i class="fas fa-arrow-left me-2"></i> Back to Store
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- Styling -->
+<style>
+  .text-gradient {
+    background: linear-gradient(90deg, #0d6efd, #6610f2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .policy-card {
+    border-radius: 14px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .policy-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+  }
+  .icon-circle-lg {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 22px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+</style>
+{% endblock %}

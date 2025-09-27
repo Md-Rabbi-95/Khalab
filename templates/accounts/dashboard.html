@@ -8,24 +8,51 @@
 {% include 'includes/alerts.html' %}
 <div class="container">
 	<div class="row">
-	<aside class="col-md-3">
-		<!--   SIDEBAR   -->
-		<ul class="list-group">
-			<a class="list-group-item active" href="#"> My order history </a>
-			<a class="list-group-item" href="#"> Transactions </a>
-			<a class="list-group-item" href="#"> Return and refunds </a>
-			<a class="list-group-item" href="#">Settings </a>
-			<a class="list-group-item" href="#"> My Selling Items </a>
-			<a class="list-group-item" href="#"> Received orders </a>
-		</ul>
-		<br>
-		<a class="btn btn-light btn-block" href="{% url 'logout' %}"> <i class="fa fa-power-off"></i> <span class="text">Log out</span> </a> 
-		<!--   SIDEBAR .//END   -->
-	</aside>
-	
+	{% include 'includes/dashboard_sidebar.html'%}
+	<main class="col-md-9">
+		<article class="card">
+		<header class="card-header">
+			<strong class="d-inline-block mr-3">Logged in as:</strong>
+			<span>{{user.full_name}}</span>
+		</header>
+		<div class="card-body">
+			<div class="row"> 
+			
+			<div class="col-md-6">
+			<div class="card shadow-sm border-0 text-center">
+				<div class="card-body">
+				<h5 class="card-title text-muted mb-2">Total Orders</h5>
+				<h2 class="fw-bold text-primary">{{ orders_count }}</h2>
+				<a href="{% url 'my_orders' %}" class="btn btn-sm btn-outline-primary mt-2">View Orders</a>
+				</div>
+			</div>
+			</div>
+
+			<div class="col-md-6">
+			<div class="card shadow-sm border-0 text-center">
+				<div class="card-body">
+				{% with pic=userprofile.profile_picture %}
+				{% if userprofile and userprofile.profile_picture and userprofile.profile_picture.name %}
+				<img src="{{ userprofile.profile_picture.url }}?v={% now 'U' %}" alt="Profile Picture" width="60" height="60" class="rounded-circle mb-2" loading="lazy">
+				{% else %}
+				<img src="https://www.w3schools.com/howto/img_avatar.png" alt="Default Avatar" width="60" height="60" class="rounded-circle mb-2" loading="lazy">
+				{% endif %}
+
+				{% endwith %}
+				<h6 class="fw-bold mb-1">{{ user.get_full_name }}</h6>
+				<p class="mb-0 text-muted">{{ user.email }}</p>
+				<p class="text-muted">{{ user.phone_number }}</p>
+				</div>
+			</div>
+			</div>
+
+			
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
+		</article> <!-- order-group.// --> 
+	</main>
 </div> <!-- row.// -->
 </div>
-
 
 </section>
 

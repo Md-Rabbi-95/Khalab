@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="bg-amz py-4">
+  {% include 'includes/alerts.html' %}
+
+  <div class="container">
+    <div class="row">
+      {% include 'includes/dashboard_sidebar.html' %}
+
+      <main class="col-md-9">
+        <!-- Page header -->
+        <div class="mb-3">
+          <h4 class="mb-1 fw-semibold">Your Profile</h4>
+          <div class="text-muted small">Manage your name, contact info, and default shipping address.</div>
+        </div>
+
+        <!-- Amazon-like card -->
+        <article class="card amz-card">
+          <div class="card-body p-4">
+
+            <!-- Top: Avatar + identity -->
+            <div class="d-flex align-items-center justify-content-between flex-wrap mb-4">
+              <div class="d-flex align-items-center">
+                <div class="amz-avatar me-3">
+                  {% with pic=profile_form.instance.profile_picture %}
+                    {% if pic and pic.name %}
+                      <img id="avatarPreview" src="{{ pic.url }}" alt="Profile Picture">
+                    {% else %}
+                      <img id="avatarPreview" src="https://www.w3schools.com/howto/img_avatar.png" alt="Default Avatar">
+                    {% endif %}
+                  {% endwith %}
+                </div>
+                <div>
+                  <div class="fw-semibold">{{ request.user.full_name }}</div>  
+                  <div class="text-muted small">{{ request.user.email }}</div>
+                </div>
+              </div>
+              <span class="badge bg-light text-dark border">Account</span>
+            </div>
+
+            <form action="{% url 'edit_profile' %}" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+
+              <!-- Basic info -->
+              <div class="amz-section">
+                <div class="amz-section-title">Basic information</div>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="amz-label">First name</label>
+                    {{ user_form.first_name }}
+                  </div>
+                  <div class="col-md-6">
+                    <label class="amz-label">Last name</label>
+                    {{ user_form.last_name }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Contact & photo -->
+              <div class="amz-divider"></div>
+              <div class="amz-section">
+                <div class="amz-section-title">Contact & photo</div>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="amz-label">Phone number</label>
+                    {{ user_form.phone_number }}
+                    <small class="text-muted">Used for delivery updates.</small>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="amz-label">Profile picture</label>
+                    {{ profile_form.profile_picture }}
+                    <small class="text-muted d-block mt-1">JPG/PNG · Max 2–5MB</small>
+                    <small class="text-primary d-block">Choose a file to preview instantly.</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Shipping address -->
+              <div class="amz-divider"></div>
+              <div class="amz-section">
+                <div class="amz-section-title">Default shipping address</div>
+                <div class="mb-3">
+                  <label class="amz-label">Address line 1</label>
+                  {{ profile_form.address_line_1 }}
+                </div>
+                <div class="mb-3">
+                  <label class="amz-label">Address line 2</label>
+                  {{ profile_form.address_line_2 }}
+                </div>
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <label class="amz-label">Area</label>
+                    {{ profile_form.area }}
+                  </div>
+                  <div class="col-md-4">
+                    <label class="amz-label">City</label>
+                    {{ profile_form.city }}
+                  </div>
+                  <div class="col-md-4">
+                    <label class="amz-label">Country</label>
+                    {{ profile_form.country }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Actions -->
+              <div class="d-flex align-items-center gap-2 mt-4">
+                <input type="submit" value="Save changes" class="btn btn-amz px-4">
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+              </div>
+            </form>
+
+          </div>
+        </article>
+      </main>
+    </div>
+  </div>
+</section>
+
+<style>
+
+  
+  .bg-amz { background: #f3f3f3; }
+  .amz-card {
+    border: 1px solid #e7e7e7 !important;
+    border-radius: 8px;
+  }
+  .amz-section { margin-bottom: .25rem; }
+  .amz-section-title {
+    font-weight: 600; margin-bottom: .75rem; color: #111;
+  }
+  .amz-label {
+    display: inline-block; margin-bottom: .35rem; font-weight: 500; color: #333;
+  }
+  .amz-divider {
+    height: 1px; background: #e7e7e7; margin: 1.25rem 0;
+  }
+
+  /* Avatar */
+  .amz-avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    overflow: hidden; border: 1px solid #e7e7e7; background: #fff;
+  }
+  .amz-avatar img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+
+  /* Inputs — slightly round for modern feel */
+  .amz-card .form-control { border-radius: 6px; }
+
+/* Blue primary */
+.btn-amz {
+  background: #0d6efd;   /* Bootstrap blue */
+  border-color: #0d6efd;
+  color: #fff;
+  box-shadow: 0 2px 0 rgba(0,0,0,.05);
+  font-weight: 600;
+}
+.btn-amz:hover {
+  background: #0b5ed7;
+  border-color: #0a58ca;
+  color: #fff;
+}
+
+</style>
+
+<!-- Live image preview -->
+<script>
+  (function(){
+    const input = document.getElementById('id_profile_picture');
+    const img = document.getElementById('avatarPreview');
+    if(!input || !img) return;
+    input.addEventListener('change', function(e){
+      const f = e.target.files && e.target.files[0];
+      if(!f) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => img.src = ev.target.result;
+      reader.readAsDataURL(f);
+    });
+  })();
+</script>
+{% endblock %}

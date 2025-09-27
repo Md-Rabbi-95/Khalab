@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section-content py-5 bg-light">
+  <div class="container">
+
+    <!-- Hero -->
+    <div class="text-center mb-5">
+      <h1 class="display-5 fw-bold text-gradient">Terms of Use</h1>
+      <p class="lead text-muted">
+        By using Khalab’s website and services, you agree to the terms and conditions below. 
+        Please read them carefully before making any purchase.
+      </p>
+    </div>
+
+    <!-- Terms Section -->
+    <div class="card shadow-sm border-0 policy-card mb-4">
+      <div class="card-body p-4">
+        <h4 class="fw-semibold mb-3"><i class="fas fa-shopping-bag text-primary me-2"></i> Use of Services</h4>
+        <p class="text-muted">
+          Khalab provides this website for browsing and purchasing products. 
+          Customers must use the platform responsibly and refrain from any unlawful or fraudulent activity.
+        </p>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0 policy-card mb-4">
+      <div class="card-body p-4">
+        <h4 class="fw-semibold mb-3"><i class="fas fa-money-bill-wave text-success me-2"></i> Pricing & Payments</h4>
+        <p class="text-muted">
+          All product prices are clearly displayed. Customers are responsible for ensuring accurate payment 
+          through supported methods such as bKash, Nagad, and Rocket. Khalab reserves the right to update prices at any time.
+        </p>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0 policy-card mb-4">
+      <div class="card-body p-4">
+        <h4 class="fw-semibold mb-3"><i class="fas fa-undo-alt text-warning me-2"></i> Returns & Exchanges</h4>
+        <p class="text-muted">
+          Our <a href="{% url 'return_policy' %}" class="fw-semibold text-decoration-none">Return Policy</a> 
+          applies to all orders. Customers must check their products in front of the delivery person. 
+          No return requests are accepted after delivery completion.
+        </p>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0 policy-card mb-4">
+      <div class="card-body p-4">
+        <h4 class="fw-semibold mb-3"><i class="fas fa-lock text-danger me-2"></i> Privacy & Data</h4>
+        <p class="text-muted">
+          We respect your privacy. All data is handled according to our 
+          <a href="{% url 'privacy_policy' %}" class="fw-semibold text-decoration-none">Privacy Policy</a>. 
+          By using Khalab, you consent to our data practices.
+        </p>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0 policy-card mb-4">
+      <div class="card-body p-4">
+        <h4 class="fw-semibold mb-3"><i class="fas fa-balance-scale text-secondary me-2"></i> Limitation of Liability</h4>
+        <p class="text-muted">
+          Khalab is not responsible for delays, damages, or losses caused by third-party couriers, 
+          unforeseen circumstances, or misuse of products after delivery.
+        </p>
+      </div>
+    </div>
+
+    <!-- Note -->
+    <div class="alert alert-info mt-5 shadow-sm d-flex align-items-center">
+      <i class="fas fa-info-circle fa-lg me-3"></i>
+      <div>
+        By continuing to use our website and services, you acknowledge that you have read, understood, and agreed to these Terms of Use.
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center mt-5">
+      <a href="{% url 'store' %}" class="btn btn-lg btn-primary px-4 shadow-sm">
+        <i class="fas fa-arrow-left me-2"></i> Back to Store
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- Styling -->
+<style>
+  .text-gradient {
+    background: linear-gradient(90deg, #0d6efd, #6610f2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .policy-card {
+    border-radius: 14px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .policy-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  }
+</style>
+{% endblock %}

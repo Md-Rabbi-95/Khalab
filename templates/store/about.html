@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section-content py-5 bg-light">
+  <div class="container">
+
+    <!-- Page header -->
+    <header class="mb-5 text-center">
+      <h1 class="display-4 fw-bold text-gradient">About Khalab</h1>
+      <p class="text-muted fs-5">
+        Discover who we are, what we stand for, and how Khalab brings value to your everyday life.
+      </p>
+    </header>
+
+    <div class="row g-5 align-items-center">
+      <!-- Company Story -->
+      <div class="col-lg-6">
+        <h3 class="fw-semibold mb-3">Our Story</h3>
+        <p class="lead">
+          Khalab was born with a simple vision: to combine quality, affordability, 
+          and modern lifestyle into one seamless shopping experience. 
+        </p>
+        <p>
+          From a small idea to a trusted platform, Khalab has grown by staying true to our values:
+          <strong>trust, innovation, and customer delight</strong>. Every purchase matters, 
+          because it’s not just shopping — it’s building lasting connections.
+        </p>
+      </div>
+
+      <!-- Vision / Mission -->
+      <div class="col-lg-6">
+        <h3 class="fw-semibold mb-3">Our Mission & Vision</h3>
+        <ul class="list-unstyled fs-6">
+          <li class="mb-3">
+            <i class="fas fa-check-circle text-success me-2"></i> Deliver excellence with every order
+          </li>
+          <li class="mb-3">
+            <i class="fas fa-check-circle text-success me-2"></i> Make quality products accessible to everyone
+          </li>
+          <li class="mb-3">
+            <i class="fas fa-check-circle text-success me-2"></i> Build a sustainable and customer-driven future
+          </li>
+          <li>
+            <i class="fas fa-check-circle text-success me-2"></i> Be the brand people can always trust
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- Core values cards -->
+    <div class="row text-center g-4">
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 card-hover">
+          <div class="card-body">
+            <i class="fas fa-handshake fa-3x text-primary mb-3"></i>
+            <h5 class="card-title fw-bold">Integrity</h5>
+            <p class="card-text text-muted">We stand for honesty, fairness, and transparency in every action we take.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 card-hover">
+          <div class="card-body">
+            <i class="fas fa-users fa-3x text-info mb-3"></i>
+            <h5 class="card-title fw-bold">Customer First</h5>
+            <p class="card-text text-muted">Our customers shape who we are and drive the way we grow.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0 card-hover">
+          <div class="card-body">
+            <i class="fas fa-leaf fa-3x text-success mb-3"></i>
+            <h5 class="card-title fw-bold">Sustainability</h5>
+            <p class="card-text text-muted">We embrace ethical, green, and responsible practices for a better tomorrow.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="my-5">
+
+    <!-- Call to action -->
+    <div class="text-center">
+      <h4 class="fw-bold mb-3">Want to connect with us?</h4>
+      <p class="mb-4 fs-5 text-muted">
+        We’re always happy to hear from you.  
+        Reach us at 
+        <a href="mailto:{{ contact_email }}" class="contact-badge">
+          {{ contact_email }}
+        </a> 
+        for inquiries, collaborations, or feedback.
+      </p>
+      <a href="{% url 'store' %}" class="btn btn-lg btn-primary px-4 py-2 shadow">
+        <i class="fas fa-shopping-cart me-2"></i> Start Shopping
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Extra stylish CSS -->
+<style>
+  .text-gradient {
+    background: linear-gradient(90deg, #0d6efd, #6610f2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .card-hover {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border-radius: 12px;
+  }
+  .card-hover:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  .contact-badge {
+    color: #0d6efd;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(13, 110, 253, 0.1);
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+  .contact-badge:hover {
+    background: #0d6efd;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.4);
+    text-decoration: none;
+  }
+</style>
+{% endblock %}

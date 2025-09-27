@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section-content py-5 bg-light">
+  <div class="container">
+
+    <!-- Header -->
+    <header class="text-center mb-5">
+      <h1 class="display-5 fw-bold text-gradient">Privacy Policy</h1>
+      <p class="text-muted fs-5">
+        At Khalab, your privacy is important to us. This page explains how we handle your personal information in a clear and simple way.
+      </p>
+    </header>
+
+    <!-- Content -->
+    <div class="card shadow-sm border-0 policy-card">
+      <div class="card-body p-4">
+        
+        <h4 class="fw-semibold mb-3"><i class="fas fa-user-shield text-primary me-2"></i> Personal Information</h4>
+        <p class="text-muted">
+          We collect only the necessary details such as your name, phone number, address, and email to process your orders and provide customer support.
+        </p>
+
+        <h4 class="fw-semibold mt-4 mb-3"><i class="fas fa-lock text-success me-2"></i> Data Security</h4>
+        <p class="text-muted">
+          Your personal data is kept secure. We never sell, rent, or share your information with unauthorized third parties.
+        </p>
+
+        <h4 class="fw-semibold mt-4 mb-3"><i class="fas fa-cookie-bite text-warning me-2"></i> Cookies</h4>
+        <p class="text-muted">
+          Our website may use cookies to improve your browsing experience. You can manage or disable cookies through your browser settings.
+        </p>
+
+        <h4 class="fw-semibold mt-4 mb-3"><i class="fas fa-credit-card text-danger me-2"></i> Payments</h4>
+        <p class="text-muted">
+          For online payments, we use trusted and secure third-party gateways (like bKash, Nagad, Rocket). Your financial details are never stored by us.
+        </p>
+
+      </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="text-center mt-5">
+      <a href="{% url 'store' %}" class="btn btn-lg btn-primary px-4 shadow-sm">
+        <i class="fas fa-arrow-left me-2"></i> Back to Store
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- Styling -->
+<style>
+  .text-gradient {
+    background: linear-gradient(90deg, #0d6efd, #6610f2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .policy-card {
+    border-radius: 14px;
+  }
+</style>
+{% endblock %}

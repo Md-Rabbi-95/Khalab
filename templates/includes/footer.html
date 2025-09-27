@@ -5,89 +5,53 @@
   <div class="container">
     <!-- Top section -->
     <section class="footer-top">
-      <div class="row">
+      <div class="row text-center text-md-start">
         <!-- Contact us section -->
         <aside class="col-md-4 col-12 mb-3">
-          <h4 class="title">Contact us</h4>
+          <h4 class="title">Contact Us</h4>
           <ul class="list-icon">
             <li>
               <i class="icon fa fa-map-marker"></i>
-              <a
-                href="https://maps.app.goo.gl/WrLhYw23qcMJ3MwG9"
-                target="_blank"
-              >
+              <a href="https://maps.app.goo.gl/WrLhYw23qcMJ3MwG9" target="_blank">
                 House:11, Road:10, Block:D, Banasree, Dhaka-1219
               </a>
             </li>
             <li>
               <i class="icon fa fa-envelope"></i>
-              <a href="khalab4549@gmail.com"> info@khalab.com.bd </a>
+              <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>
             </li>
             <li>
               <i class="icon fa fa-phone"></i>
-              <a href="tel:+8809638510570"> +880 9638-510570 </a>
+              <a href="tel:{{ contact_phone }}">{{ contact_phone }}</a>
             </li>
           </ul>
         </aside>
 
         <!-- Information links -->
-        <aside class="col-md-4 col-6 mb-3">
+        <aside class="col-md-4 col-12 mb-3">
           <h4 class="title">Information</h4>
           <ul class="list-unstyled">
-            <li><a href="#">About us</a></li>
-            <li><a href="#">Career</a></li>
-            <li><a href="#">Find a store</a></li>
-            <li><a href="#">Rules and terms</a></li>
-            <li><a href="#">Sitemap</a></li>
+            <li><a href="{% url 'about' %}">About us</a></li>
+            <li><a href="{% url 'find_store' %}">Find a store</a></li>
+            <li><a href="{% url 'return_policy' %}">Return Policy</a></li>
           </ul>
         </aside>
 
         <!-- Social media + payment -->
-        <aside class="col-md-4 col-12">
-          <h4 class="title">Follow us</h4>
-          <p class="text-muted small mb-2">
-            Stay connected with us on social media
-          </p>
+        <aside class="col-md-4 col-12 mb-3">
+          <h4 class="title">Follow Us</h4>
+          <p class="text-muted small mb-2">Stay connected with us on social media</p>
           <div class="mb-3">
-            <a
-              href="https://facebook.com/khalab23"
-              target="_blank"
-              class="btn btn-icon social-btn fb-btn"
-              title="Facebook"
-            >
+            <a href="https://facebook.com/khalab23" target="_blank" class="btn btn-icon social-btn fb-btn" title="Facebook">
               <i class="fab fa-facebook-f"></i>
             </a>
-            <a
-              href="https://www.instagram.com/_khalab__?igsh=MWo4MGR1MWgzNGlkdQ=="
-              target="_blank"
-              class="btn btn-icon social-btn insta-btn"
-              title="Instagram"
-            >
+            <a href="https://www.instagram.com/_khalab__" target="_blank" class="btn btn-icon social-btn insta-btn" title="Instagram">
               <i class="fab fa-instagram"></i>
             </a>
-            <a
-              href="https://www.tiktok.com/@khalab95"
-              target="_blank"
-              class="btn btn-icon social-btn tiktok-btn"
-              title="TikTok"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 448 512"
-                width="14"
-                height="14"
-              >
-                <path
-                  d="https://maps.app.goo.gl/zc3PoWZ3UzhgKWZ6A"
-                />
-              </svg>
+            <a href="https://www.tiktok.com/@khalab95" target="_blank" class="btn btn-icon social-btn tiktok-btn" title="TikTok">
+              <i class="fab fa-tiktok"></i>
             </a>
-            <a
-              href="#"
-              target="_blank"
-              class="btn btn-icon social-btn yt-btn"
-              title="YouTube"
-            >
+            <a href="#" target="_blank" class="btn btn-icon social-btn yt-btn" title="YouTube">
               <i class="fab fa-youtube"></i>
             </a>
           </div>
@@ -106,12 +70,11 @@
     <!-- Bottom Section -->
     <section class="footer-bottom text-center">
       <p>
-        <a href="#">Privacy Policy</a> - <a href="#">Terms of Use</a> -
-        <a href="#">User Information Legal Enquiry Guide</a>
+        <a href="{% url 'privacy_policy' %}">Privacy Policy</a> · <a href="{% url 'terms_of_use' %}">Terms of Use</a> ·
+        <a href="{% url 'user_info_legal' %}">User Information Legal Enquiry Guide</a>
       </p>
       <p class="text-muted small">
-        &copy; {{ current_year|default:2025 }} Khalab.com.bd, All rights
-        reserved
+        &copy; {{ current_year|default:2025 }} Khalab.com.bd, All rights reserved
       </p>
     </section>
   </div>
@@ -119,20 +82,10 @@
 <!-- ========================= FOOTER END // ========================= -->
 
 <!-- Floating Buttons -->
-<a
-  href="https://wa.me/message/P6W756NP7JVRC1"
-  class="whatsapp_float"
-  target="_blank"
-  title="Chat with us on WhatsApp"
->
+<a href="https://wa.me/message/P6W756NP7JVRC1" class="whatsapp_float" target="_blank" title="Chat with us on WhatsApp">
   <i class="fab fa-whatsapp"></i>
 </a>
-<a
-  href="https://m.me/khalab23"
-  class="messenger_float"
-  target="_blank"
-  title="Chat with us on Messenger"
->
+<a href="https://m.me/khalab23" class="messenger_float" target="_blank" title="Chat with us on Messenger">
   <i class="fab fa-facebook-messenger"></i>
 </a>
 
@@ -140,46 +93,46 @@
 <style>
   /* Footer General */
   .section-footer {
-    background: #111; /* deep black background */
-    font-size: 14px;
-    padding: 40px 0 20px;
-    color: #ccc;
+    background: #111;
+    font-size: 15px; /* increased */
+    padding: 30px 0 15px;
+    color: #ddd;
   }
   .section-footer .title {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 16px; /* bigger headings */
+    font-weight: 700;
     margin-bottom: 12px;
-    color: #f1c40f; /* gold accent */
+    color: #f1c40f;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
   }
   .section-footer a {
-    color: #bbb;
-    text-decoration: none;
+    color: #ccc;
+    font-size: 14.5px;
     transition: all 0.3s ease;
   }
   .section-footer a:hover {
-    color: #f1c40f; /* gold hover */
+    color: #f1c40f;
     text-decoration: underline;
   }
 
   /* Contact list */
   .list-icon li {
-    margin-bottom: 8px;
-    font-size: 13px;
+    margin-bottom: 10px;
+    font-size: 14.5px;
   }
   .list-icon i {
     margin-right: 8px;
     color: #f1c40f;
+    font-size: 16px;
   }
 
   /* Payment icons */
   .section-footer img {
-    height: 24px;
-    margin-right: 10px;
-    opacity: 0.8;
-    transition: transform 0.3s, opacity 0.3s;
+    height: 28px; /* slightly bigger */
+    margin-right: 8px;
+    opacity: 0.9;
     border-radius: 4px;
+    transition: transform 0.3s, opacity 0.3s;
   }
   .section-footer img:hover {
     transform: scale(1.1);
@@ -190,58 +143,31 @@
   .social-btn {
     color: #fff;
     border: none;
-    width: 38px;
-    height: 38px;
+    width: 40px; height: 40px; /* bigger */
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    font-size: 16px;
+    font-size: 18px;
     margin-right: 6px;
     transition: all 0.3s ease;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   }
-  .fb-btn {
-    background: #1877f2;
-  }
-  .insta-btn {
-    background: radial-gradient(
-      circle at 30% 107%,
-      #fdf497 0%,
-      #fd5949 45%,
-      #d6249f 60%,
-      #285aeb 90%
-    );
-  }
-  .tiktok-btn {
-    background: #010101;
-  }
-  .yt-btn {
-    background: #ff0000;
-  }
+  .fb-btn { background: #1877f2; }
+  .insta-btn { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%); }
+  .tiktok-btn { background: #010101; }
+  .yt-btn { background: #ff0000; }
   .social-btn:hover {
     transform: scale(1.1);
-    box-shadow: 0 0 10px rgba(241, 196, 15, 0.6); /* golden glow */
-  }
-  .tiktok-btn svg {
-    fill: #fff;
+    box-shadow: 0 0 10px rgba(241, 196, 15, 0.6);
   }
 
   /* Footer bottom */
   .footer-bottom {
-    font-size: 13px;
-    padding: 12px 0;
-    margin-top: 15px;
+    font-size: 14px;
+    padding: 10px 0;
+    margin-top: 12px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  .footer-bottom p {
-    margin: 4px 0;
-  }
-  .footer-bottom a {
-    color: #aaa;
-  }
-  .footer-bottom a:hover {
-    color: #f1c40f;
   }
 
   /* WhatsApp Floating */
@@ -262,10 +188,7 @@
     z-index: 100;
     transition: all 0.3s ease;
   }
-  .whatsapp_float:hover {
-    background: #20b858;
-    transform: scale(1.1);
-  }
+  .whatsapp_float:hover { background: #20b858; transform: scale(1.1); }
 
   /* Messenger Floating */
   .messenger_float {
@@ -285,8 +208,5 @@
     z-index: 100;
     transition: all 0.3s ease;
   }
-  .messenger_float:hover {
-    background: #006cd1;
-    transform: scale(1.1);
-  }
+  .messenger_float:hover { background: #006cd1; transform: scale(1.1); }
 </style>
