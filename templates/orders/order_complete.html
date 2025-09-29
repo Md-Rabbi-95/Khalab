@@ -2,116 +2,277 @@
 {% load static %}
 
 {% block content %}
+<section class="section-content padding-y bg">
+  <div class="container">
 
+    <!-- Header -->
+    <div class="checkout-hero d-flex align-items-center justify-content-between">
+      <div>
+        <h3 class="mb-0">Order Confirmation</h3>
+        <div class="subtle small">Thanks! Your order has been placed successfully.</div>
+      </div>
+      <div class="d-flex gap-2">
+        <a href="{% url 'store' %}" class="btn btn-success">
+          <i class="fas fa-shopping-bag me-1"></i> Continue Shopping
+        </a>
+        <button type="button" class="btn btn-outline-secondary" onclick="window.print()">
+          <i class="fas fa-print me-1"></i> Print / Save PDF
+        </button>
+      </div>
+    </div>
 
-<div class="container" style="margin-top: 50px;">
-    <center><i class="fas fa-check-circle" style="font-size: 72px;margin-bottom: 20px;color: #28A745;"></i></center>
-    <h2 class="text-center">Payment Successful</h2>
-	<br>
-	<div class="text-center">
-		<a href="{% url 'store' %}" class="btn btn-success">Shop more</a>
-	</div>
-</div>
+    <div class="row">
+      <div class="col-xl-10 col-lg-11 mx-auto">
 
-<div class="container" style="margin: 0 auto;width: 50%;padding: 50px;background: #f1f1f1;margin-top: 50px;margin-bottom: 50px;">
-    <div class="row invoice row-printable">
-        <div class="col-md-12">
-            <!-- col-lg-12 start here -->
-            <div class="panel panel-default plain" id="dash_0">
-                <!-- Start .panel -->
-                <div class="panel-body p30">
-                    <div class="row">
-                        <!-- Start .row -->
-                        <div class="col-lg-6">
-                            <!-- col-lg-6 start here -->
-                            <div class="invoice-logo"><img src="{% static 'D:\Django\khalab\static\images\logo.png' %}" alt="Invoice logo" style="max-height: 40px;"></div>
-                        </div>
-                        <!-- col-lg-6 end here -->
-                        <div class="col-lg-6">
-                            <!-- col-lg-6 start here -->
-                            <div class="invoice-from">
-                                <ul class="list-unstyled text-right">
-                                    <li><strong>Invoiced To</strong></li>
-                                    <li>Jakob Smith</li>
-                                    <li>Roupark 37</li>
-                                    <li>New York, NY, 2014</li>
-                                    <li>USA</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- col-lg-6 end here -->
-                        <div class="col-lg-12">
-                            <!-- col-lg-12 start here -->
-                            <div class="invoice-details mt25">
-                                <div class="well">
-                                    <ul class="list-unstyled mb0">
-                                        <li><strong>Order</strong> #</li>
-                                        <li><strong>Transaction</strong> #</li>
-                                        <li><strong>Order Date:</strong> Monday, October 10th, 2015</li>
-                                        <li><strong>Status:</strong> PAID</li>
-                                    </ul>
-                                </div>
-                            </div>
-                           
-                            <div class="invoice-items">
-                                <div class="table-responsive" style="overflow: hidden; outline: none;" tabindex="0">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th class="per70 text-center">Description</th>
-                                                <th class="per5 text-center">Qty</th>
-                                                <th class="per25 text-center">Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1024MB Cloud 2.0 Server - elisium.dynamic.com (12/04/2014 - 01/03/2015)</td>
-                                                <td class="text-center">1</td>
-                                                <td class="text-center">$25.00 USD</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Logo design</td>
-                                                <td class="text-center">1</td>
-                                                <td class="text-center">$200.00 USD</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Backup - 1024MB Cloud 2.0 Server - elisium.dynamic.com</td>
-                                                <td class="text-center">12</td>
-                                                <td class="text-center">$12.00 USD</td>
-                                            </tr>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th colspan="2" class="text-right">Sub Total:</th>
-                                                <th class="text-center">$237.00 USD</th>
-                                            </tr>
-                                            <tr>
-                                                <th colspan="2" class="text-right">Tax:</th>
-                                                <th class="text-center">$47.40 USD</th>
-                                            </tr>
-                                            
-                                            <tr>
-                                                <th colspan="2" class="text-right">Grand Total:</th>
-                                                <th class="text-center">$284.4.40 USD</th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="invoice-footer mt25">
-                                <p class="text-center">Thank you for shopping with us!</p>
-                            </div>
-                        </div>
-                        <!-- col-lg-12 end here -->
-                    </div>
-                    <!-- End .row -->
-                </div>
-            </div>
-            <!-- End .panel -->
+        <!-- Order placed banner -->
+        <div class="text-center my-3">
+          <i class="fas fa-check-circle" style="font-size:72px;color:#28a745;"></i>
+          <h4 class="mt-2">Order Placed</h4>
+          <div class="text-muted">
+            We’ve sent a confirmation to <strong>{{ order.email }}</strong>.
+          </div>
         </div>
-        <!-- col-lg-12 end here -->
-    </div>
+
+        <!-- Confirmation card -->
+        <div class="card invoice-card mt-2">
+          <div class="card-body p-4">
+
+            <!-- Brand & order meta -->
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+              <div class="d-flex align-items-center gap-3">
+                <div class="brand-text">
+                  <span class="text-primary fw-bold">Kha</span><span class="text-dark fw-bold">lab</span>
+                </div>
+                <div class="small subtle">Order Receipt</div>
+              </div>
+              <div class="text-end">
+                <div class="small text-muted">Order No.</div>
+                <div class="fw-bold">{{ order.order_number }}</div>
+              </div>
+            </div>
+
+            <hr class="my-3">
+
+            <!-- Addresses + status -->
+            <div class="row g-4">
+              <!-- Customer & Address -->
+              <div class="col-md-6">
+                <div class="fw-semibold mb-2">Customer & Address</div>
+                <div class="text-dark fw-semibold">{{ order.full_name }}</div>
+                <div>{{ order.address_line_1 }}</div>
+                {% if order.address_line_2 %}<div>{{ order.address_line_2 }}</div>{% endif %}
+                <div>{{ order.city }}, {{ order.state }}</div>
+                <div>{{ order.country }}</div>
+                <div class="mt-1">{{ order.phone }}</div>
+                <div class="text-muted small">{{ order.email }}</div>
+                {% if order.order_note %}
+                  <div class="mt-2">
+                    <span class="badge rounded-pill text-bg-light border me-2">Note</span>
+                    <span>{{ order.order_note }}</span>
+                  </div>
+                {% endif %}
+              </div>
+
+              <!-- Order status / payment summary -->
+              <div class="col-md-6">
+                <div class="fw-semibold mb-2">Order Summary</div>
+
+                <div class="row small g-2">
+                  <div class="col-6 text-muted">Placed On</div>
+                  <div class="col-6 text-end fw-semibold">
+                    {{ order.created_at|date:"l, F jS, Y, g:i A" }}
+                  </div>
+
+                  <div class="col-6 text-muted">Order Status</div>
+                  <div class="col-6 text-end">
+                    {% if order.status|lower == "new" or order.status|lower == "accept" %}
+                      <span class="badge bg-info-soft text-info">Order Placed</span>
+                    {% elif order.status|lower == "completed" %}
+                      <span class="badge bg-success-soft text-success">Completed</span>
+                    {% elif order.status|lower == "cancelled" %}
+                      <span class="badge bg-danger-soft text-danger">Cancelled</span>
+                    {% else %}
+                      <span class="badge bg-secondary-soft text-secondary">{{ order.status }}</span>
+                    {% endif %}
+                  </div>
+
+                  <div class="col-6 text-muted">Payment Method</div>
+                  <div class="col-6 text-end fw-semibold">
+                    {{ payment.get_payment_method_display }}
+                  </div>
+
+                  <div class="col-6 text-muted">Payment Type</div>
+                  <div class="col-6 text-end fw-semibold">
+                    {{ payment.get_payment_type_display }}
+                  </div>
+
+                  <div class="col-6 text-muted">Payment Status</div>
+                  <div class="col-6 text-end">
+                    {% if payment.payment_method == "COD" %}
+                      <span class="badge bg-warning-soft text-warning">Unpaid</span>
+                    {% else %}
+                      {% if payment.payment_type == "FULL" %}
+                        <span class="badge bg-success-soft text-success">Paid</span>
+                      {% elif payment.payment_type == "ADVANCE" %}
+                        <span class="badge bg-success-soft text-success">Paid (Delivery Charge)</span>
+                      {% else %}
+                        <span class="badge bg-secondary-soft text-secondary">Paid</span>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+
+                  {% if payment.payment_method != "COD" %}
+                    <div class="col-6 text-muted">Transaction</div>
+                    <div class="col-6 text-end fw-semibold">
+                      {% if payment.transaction_id %}
+                        {{ payment.transaction_id }}
+                      {% else %}
+                        {{ payment.payment_id }}
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+
+                <!-- Gentle ETA hint -->
+                <div class="small subtle mt-2">
+                  {% if order.city|lower == "dhaka" %}
+                    Estimated delivery: 1–3 business days.
+                  {% else %}
+                    Estimated delivery: 3–5 business days.
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <!-- Items -->
+            <div class="table-responsive mt-4">
+              <table class="table table-borderless align-middle invoice-table">
+                <thead>
+                  <tr class="text-uppercase small text-muted">
+                    <th>Product</th>
+                    <th class="text-center" style="width:90px;">Qty</th>
+                    <th class="text-center" style="width:140px;">Unit Price</th>
+                    <th class="text-center" style="width:160px;">Line Total</th>
+                  </tr>
+                </thead>
+                <tbody class="border-top">
+                  {% for item in ordered_products %}
+                    <tr class="row-item">
+                      <td>
+                        <div class="fw-semibold">{{ item.product.product_name }}</div>
+                        {% if item.variations.all %}
+                          <div class="small subtle">
+                            {% for v in item.variations.all %}
+                              {{ v.variation_category|capfirst }}: {{ v.variation_value|capfirst }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                      </td>
+                      <td class="text-center">{{ item.quantity }}</td>
+                      <td class="text-center">
+                        <span class="money">Tk. {{ item.product_price|floatformat:2 }}</span>
+                      </td>
+                      <td class="text-center fw-semibold">
+                        <span class="money">Tk. {{ item.line_total|floatformat:2 }}</span>
+                      </td>
+                    </tr>
+                  {% empty %}
+                    <tr><td colspan="4" class="text-center text-muted">No items found.</td></tr>
+                  {% endfor %}
+                </tbody>
+                <tfoot class="border-top">
+                  <tr>
+                    <th colspan="3" class="text-end subtle">Sub Total:</th>
+                    <th class="text-center fw-semibold">
+                      <span class="money">Tk. {{ subtotal|floatformat:2 }}</span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th colspan="3" class="text-end subtle">Delivery Charge:</th>
+                    <th class="text-center fw-semibold">
+                      <span class="money">Tk. {{ order.delivery_charge|floatformat:2 }}</span>
+                    </th>
+                  </tr>
+                  <tr>
+                    <th colspan="3" class="text-end">Grand Total:</th>
+                    <th class="text-center fs-5">
+                      <span class="money">Tk. {{ order.order_total|floatformat:2 }}</span>
+                    </th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <!-- Next steps -->
+            <div class="mt-3">
+              <div class="alert alert-light border d-flex align-items-center gap-2 mb-0">
+                <i class="fas fa-info-circle"></i>
+                <div class="small">
+                  We’ll notify you by email/SMS when your order is shipped. Keep your order number for reference.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
     </div>
 
+  </div>
+</section>
 
+<!-- Styles -->
+<style>
+  .section-content.padding-y { padding-top: 24px; padding-bottom: 32px; }
+  .checkout-hero{
+    background: linear-gradient(135deg,#f8f9fa 0%,#ffffff 100%);
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.03) inset;
+    margin-bottom: 18px;
+  }
+  .checkout-hero h3{ font-weight:700; letter-spacing:.2px; }
+  .subtle{ color:#6c757d; }
+
+  .invoice-card.card{
+    border:1px solid rgba(0,0,0,.06);
+    border-radius:16px;
+    box-shadow:0 10px 26px rgba(0,0,0,.06);
+  }
+  .brand-text{ font-size: 28px; line-height: 1; }
+  .invoice-table thead th{
+    background:#fafbfc;
+    border-bottom:1px solid rgba(0,0,0,.06);
+    font-weight:700;
+  }
+  .invoice-table tbody tr.row-item{ border-bottom:1px solid rgba(0,0,0,.05); }
+
+  /* Money formatting: keep currency + value on one line and align digits */
+  .money{
+    white-space: nowrap;              /* keep “Tk.” and number together */
+    font-variant-numeric: tabular-nums; /* equal-width digits for alignment */
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  }
+
+  /* Soft badge tints */
+  .bg-success-soft{ background: rgba(25,135,84,.12); }
+  .bg-info-soft{ background: rgba(13,110,253,.12); }
+  .bg-warning-soft{ background: rgba(255,193,7,.16); }
+  .bg-danger-soft{ background: rgba(220,53,69,.14); }
+  .bg-secondary-soft{ background: rgba(108,117,125,.14); }
+  .text-info{ color:#0d6efd !important; }
+
+  @media print {
+    body { background: #fff !important; }
+    .section-content.padding-y { padding: 0 !important; }
+    .checkout-hero, .btn, nav, footer { display: none !important; }
+    .invoice-card { box-shadow: none !important; border: 1px solid #ccc; }
+    .invoice-table thead th {
+      background: #f2f2f2 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+</style>
 {% endblock %}

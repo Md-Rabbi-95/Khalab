@@ -5,112 +5,377 @@
 <section class="section-content padding-y bg">
   <div class="container">
 
-    <!-- ============================ COMPONENT 1 ================================= -->
-    <h4 class="text-center mb-5">Review Your Order and Make Payment</h4>
-    <div class="row g-4">
-      <!-- Left column -->
-      <aside class="col-lg-8">
-
-        <!-- Billing Address -->
-        <div class="card shadow-sm mb-4">
-          <div class="card-header fw-semibold"><h5>
-            Billing Address</h5>
-          </div>
-          <div class="card-body">
-            <p class="card-text text-muted mb-0">
-              {{order.full_name}}
-            </p>
-            <p class="card-text text-muted mb-0">
-              {{order.full_address}}
-            </p>
-            <p class="card-text text-muted mb-0">
-              {{order.city}}, {{order.state}}
-            </p>
-            <p class="card-text text-muted mb-0">
-              {{order.country}}
-            </p>
-            <p class="card-text text-muted mb-0">
-              {{order.email}}
-            </p>
-            <p class="card-text text-muted mb-0">
-              {{order.phone}}
-            </p>
-            {% if order.order_note %}
-              <b>Order Note: </b> {{order.order_note}}
-            {% endif %}
-          </div>
-        </div>
-
-        <!-- Payment Method -->
-        <div class="card shadow-sm mb-4">
-          <div class="card-header fw-semibold"><h5>
-            Payment Method</h5>
-          </div>
-          <div class="card-body">
-            <p class="card-text text-muted mb-0">
-              Cash On Delivery
-            </p>
-          </div>
-        </div>
-
-        <!-- Review Products -->
-        <div class="card shadow-sm">
-          <div class="card-header fw-semibold"><h5>
-            Review Products</h5>
-          </div>
-          <div class="card-body">
-            <p class="card-text text-muted mb-0">
-              With supporting text below as a natural lead-in to additional content.
-            </p>
-          </div>
-        </div>
-
-      </aside>
-      <!-- /Left column -->
-
-      <!-- Right column -->
-      <aside class="col-lg-4">
-        <div class="card border-0 shadow-sm">
-          <div class="card-body">
-
-            <dl class="row dlist-align mb-2">
-              <dt class="col-7 mb-1">Total price:</dt>
-              <dd class="col-5 text-end mb-1">Tk.{{ total }}</dd>
-            </dl>
-
-            <dl class="row dlist-align mb-2">
-              <dt class="col-7 mb-1">Tax:</dt>
-              <dd class="col-5 text-end mb-1">Tk.{{ tax }}</dd>
-            </dl>
-
-            <dl class="row dlist-align">
-              <dt class="col-7">Total:</dt>
-              <dd class="col-5 text-end text-dark fw-bold">Tk.{{ grand_total }}</dd>
-            </dl>
-
-            <hr class="my-3">
-
-            <p class="text-center mb-3">
-			<!-- Bkash -->
-			<img src="{% static 'images/BKash-Logo.wine.png' %}" height="35" alt="Bkash Logo" class="mx-2">
-
-			<!-- Nagad -->
-			<img src="{% static 'images/Nagad_Logo.png' %}" height="35" alt="Nagad Logo" class="mx-2">
-
-			<!-- Rocket -->
-			<img src="{% static 'images/rocket-logo.png' %}" height="35" alt="Rocket Logo" class="mx-2">
-			</p>
-
-            <a href="{% url 'checkout' %}" class="btn btn-primary btn-block w-100">
-              Make Payment
-            </a>
-          </div>
-        </div>
-      </aside>
-      <!-- /Right column -->
+    <!-- Page Header -->
+    <div class="checkout-hero d-flex align-items-center justify-content-between">
+      <div>
+        <h3 class="mb-0">Payment</h3>
+        <div class="subtle small">Step 3 of 3 · Confirm & Pay</div>
+      </div>
+      <ol class="breadcrumb mb-0 small">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'checkout' %}">Checkout</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Payment</li>
+      </ol>
     </div>
-    <!-- ============================ COMPONENT 1 END .// ================================= -->
+
+    <form method="POST" id="payment-form" novalidate>
+      {% csrf_token %}
+
+      <div class="row">
+        <!-- LEFT -->
+        <aside class="col-lg-8 mb-4">
+          <!-- Billing Address -->
+          <div class="card mb-4">
+            <div class="card-header bg-white border-0 py-3">
+              <h5 class="mb-0 fw-semibold"><i class="fas fa-receipt me-2"></i>Billing Address</h5>
+            </div>
+            <div class="card-body pt-0">
+              <div class="row gy-1 text-muted">
+                <div class="col-12">
+                  <div class="fw-semibold text-dark">{{ order.full_name }}</div>
+                </div>
+                <div class="col-12">{{ order.full_address }}</div>
+                <div class="col-12">{{ order.city }}, {{ order.state }}</div>
+                <div class="col-12">{{ order.country }}</div>
+                <div class="col-12">{{ order.email }}</div>
+                <div class="col-12">{{ order.phone }}</div>
+                {% if order.order_note %}
+                  <div class="col-12 mt-2">
+                    <span class="badge rounded-pill text-bg-light border me-2">Note</span>
+                    <span class="text-dark">{{ order.order_note }}</span>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Method -->
+          <div class="card mb-4">
+            <div class="card-header bg-white border-0 py-3">
+              <h5 class="mb-0 fw-semibold"><i class="fas fa-wallet me-2"></i>Payment Method</h5>
+            </div>
+
+            <div class="card-body pt-0">
+              {% if order.city and order.city|lower != 'dhaka' %}
+                <div class="alert alert-info d-flex align-items-start gap-2">
+                  <i class="fas fa-info-circle fs-5 mt-1"></i>
+                  <div>
+                    <strong>Note:</strong> You’re from outside Dhaka city — you have to pay the Delivery charge
+                    {% if order.requires_advance %}before placing an order.{% endif %}
+                  </div>
+                </div>
+              {% endif %}
+
+              <!-- Method -->
+              <div class="mb-4">
+                <label class="form-label fw-semibold">Select Payment Method</label>
+                <div class="row g-3">
+                  <!-- COD -->
+                  <div class="col-md-6">
+                    <div class="form-check p-3 border rounded-3 h-100 hover-outline">
+                      <input class="form-check-input" type="radio" name="payment_method" id="cod" value="COD"
+                             {% if not order.requires_advance %}checked{% endif %}
+                             {% if order.requires_advance %}disabled{% endif %}>
+                      <label class="form-check-label ms-1" for="cod">
+                        <div class="fw-semibold"><i class="fas fa-money-bill-wave me-2"></i>Cash on Delivery</div>
+                        {% if order.requires_advance %}
+                          <small class="text-muted">May not be available outside Dhaka</small>
+                        {% else %}
+                          <small class="text-muted">Pay at delivery</small>
+                        {% endif %}
+                      </label>
+                    </div>
+                  </div>
+                  <!-- ONLINE -->
+                  <div class="col-md-6">
+                    <div class="form-check p-3 border rounded-3 h-100 hover-outline">
+                      <input class="form-check-input" type="radio" name="payment_method" id="online" value="ONLINE"
+                             {% if order.requires_advance %}checked{% endif %}>
+                      <label class="form-check-label ms-1" for="online">
+                        <div class="fw-semibold"><i class="fas fa-mobile-alt me-2"></i>Online Payment</div>
+                        <small class="text-muted">Bkash / Nagad / Rocket</small>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Payment Type -->
+              <div class="mb-4" id="payment-type-section">
+                <label class="form-label fw-semibold">Payment Type</label>
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <div class="form-check p-3 border rounded-3 h-100 hover-outline">
+                      <input class="form-check-input" type="radio" name="payment_type" id="full_payment" value="FULL"
+                             {% if not order.requires_advance %}checked{% endif %}>
+                      <label class="form-check-label ms-1" for="full_payment">
+                        <div class="fw-semibold"><i class="fas fa-credit-card me-2"></i>Full Payment</div>
+                        <small class="text-muted">Tk. {{ grand_total|floatformat:0 }}</small>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-check p-3 border rounded-3 h-100 hover-outline">
+                      <input class="form-check-input" type="radio" name="payment_type" id="advance_payment" value="ADVANCE"
+                             {% if order.requires_advance %}checked{% endif %}>
+                      <label class="form-check-label ms-1" for="advance_payment">
+                        <div class="fw-semibold"><i class="fas fa-truck me-2"></i>Delivery Charge Only</div>
+                        <small class="text-muted">Tk. {{ delivery_charge|floatformat:0 }}</small>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Online Payment Methods -->
+              <div class="mb-4" id="online-payment-methods" style="display:none;">
+                <label class="form-label fw-semibold">Choose Mobile Banking</label>
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <div class="form-check p-3 border rounded-3 h-100 text-center hover-outline">
+                      <input class="form-check-input" type="radio" name="online_payment_method" id="bkash" value="BKASH">
+                      <label class="form-check-label d-block mt-2" for="bkash">
+                        <img src="{% static 'images/BKash-Logo.wine.png' %}" height="36" alt="Bkash Logo" class="mb-2">
+                        <div class="fw-semibold text-pink">Bkash</div>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-check p-3 border rounded-3 h-100 text-center hover-outline">
+                      <input class="form-check-input" type="radio" name="online_payment_method" id="nagad" value="NAGAD">
+                      <label class="form-check-label d-block mt-2" for="nagad">
+                        <img src="{% static 'images/Nagad_Logo.png' %}" height="36" alt="Nagad Logo" class="mb-2">
+                        <div class="fw-semibold text-orange">Nagad</div>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-check p-3 border rounded-3 h-100 text-center hover-outline">
+                      <input class="form-check-input" type="radio" name="online_payment_method" id="rocket" value="ROCKET">
+                      <label class="form-check-label d-block mt-2" for="rocket">
+                        <img src="{% static 'images/rocket-logo.png' %}" height="36" alt="Rocket Logo" class="mb-2">
+                        <div class="fw-semibold text-purple">Rocket</div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Instructions -->
+              <div id="payment-instructions" class="mb-4" style="display:none;">
+                <div class="alert alert-info d-flex align-items-start gap-3 border-left-primary">
+                  <i class="fas fa-info-circle fs-5 mt-1"></i>
+                  <div class="flex-grow-1">
+                    <h6 class="fw-semibold mb-2">Payment Instructions</h6>
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <div class="small text-muted mb-1 fw-semibold">Send Money To</div>
+                        <div class="fs-5 fw-bold text-primary" id="payment-number"></div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="small text-muted mb-1 fw-semibold">Amount</div>
+                        <div class="fs-5 fw-bold text-success">Tk. <span id="payment-amount"></span></div>
+                      </div>
+                    </div>
+                    <div class="small mt-2 text-warning">
+                      <i class="fas fa-exclamation-circle me-1"></i> After payment, enter the transaction ID below.
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label for="transaction_id" class="form-label fw-semibold">
+                    <i class="fas fa-receipt me-2"></i>Transaction ID
+                  </label>
+                  <input type="text" class="form-control form-control-lg" id="transaction_id" name="transaction_id"
+                         placeholder="Enter your transaction ID" required>
+                  <div class="form-text">Enter the exact transaction/reference ID you received.</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Review Products -->
+          <div class="card">
+            <div class="card-header bg-white border-0 py-3">
+              <h5 class="mb-0 fw-semibold"><i class="fas fa-box-open me-2"></i>Review Products</h5>
+            </div>
+            <div class="card-body pt-0">
+              {% for cart_item in cart_items %}
+                <div class="row align-items-center py-3 border-bottom">
+                  <div class="col-md-6">
+                    <div class="fw-semibold">{{ cart_item.product.product_name }}</div>
+                    {% if cart_item.variations.all %}
+                      <small class="text-muted">
+                        {% for item in cart_item.variations.all %}
+                          {{ item.variation_category|capfirst }}: {{ item.variation_value|capfirst }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                      </small>
+                    {% endif %}
+                  </div>
+                  <div class="col-md-2 text-md-center mt-2 mt-md-0">
+                    <span class="badge text-bg-light border">Qty: {{ cart_item.quantity }}</span>
+                  </div>
+                  <div class="col-md-2 text-md-center mt-2 mt-md-0">
+                    <span class="fw-semibold">Tk. {{ cart_item.product.price|floatformat:0 }}</span>
+                  </div>
+                  <div class="col-md-2 text-md-end mt-2 mt-md-0">
+                    <span class="fw-bold text-success">Tk. {{ cart_item.sub_total|floatformat:0 }}</span>
+                  </div>
+                </div>
+              {% empty %}
+                <div class="text-muted">Your cart is empty.</div>
+              {% endfor %}
+            </div>
+          </div>
+        </aside>
+
+        <!-- RIGHT -->
+        <aside class="col-lg-4">
+          <div class="card position-sticky order-summary">
+            <div class="card-body">
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Subtotal</span>
+                <span class="fw-semibold">Tk. {{ total|floatformat:0 }}</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span class="text-muted">Delivery charge</span>
+                <span class="fw-semibold">Tk. {{ delivery_charge|floatformat:0 }}</span>
+              </div>
+              <hr class="my-3">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="fw-semibold">Total</span>
+                <span class="fw-bold fs-5">Tk. {{ grand_total|floatformat:0 }}</span>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg w-100">
+                <i class="fas fa-check-circle me-2"></i>Place Order
+              </button>
+              <div class="text-center mt-2">
+                <small class="text-muted">
+                  <i class="fas fa-shield-alt me-1"></i>Your payment information is secure
+                </small>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </form>
 
   </div>
 </section>
+
+<!-- Behavior (unchanged) -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const codRadio = document.getElementById('cod');
+  const onlineRadio = document.getElementById('online');
+  const onlinePaymentMethods = document.getElementById('online-payment-methods');
+  const paymentInstructions = document.getElementById('payment-instructions');
+  const transactionIdField = document.getElementById('transaction_id');
+
+  const paymentNumbers = {
+    'BKASH': '{{ payment_settings.bkash_number }}',
+    'NAGAD': '{{ payment_settings.nagad_number }}',
+    'ROCKET': '{{ payment_settings.rocket_number }}'
+  };
+
+  function togglePaymentOptions() {
+    if (onlineRadio && onlineRadio.checked) {
+      onlinePaymentMethods.style.display = 'block';
+      updatePaymentInstructions();
+    } else {
+      onlinePaymentMethods.style.display = 'none';
+      paymentInstructions.style.display = 'none';
+      transactionIdField.removeAttribute('required');
+      transactionIdField.value = '';
+    }
+  }
+
+  function updatePaymentInstructions() {
+    const selectedOnlineMethod = document.querySelector('input[name="online_payment_method"]:checked');
+    const selectedPaymentType = document.querySelector('input[name="payment_type"]:checked');
+
+    if (selectedOnlineMethod && selectedPaymentType && onlineRadio.checked) {
+      const paymentNumber = document.getElementById('payment-number');
+      const paymentAmount = document.getElementById('payment-amount');
+
+      paymentNumber.textContent = paymentNumbers[selectedOnlineMethod.value];
+
+      if (selectedPaymentType.value === 'FULL') {
+        paymentAmount.textContent = '{{ grand_total|floatformat:0 }}';
+      } else {
+        paymentAmount.textContent = '{{ delivery_charge|floatformat:0 }}';
+      }
+
+      paymentInstructions.style.display = 'block';
+      transactionIdField.setAttribute('required', 'required');
+      transactionIdField.focus();
+    } else {
+      paymentInstructions.style.display = 'none';
+      transactionIdField.removeAttribute('required');
+    }
+  }
+
+  if (codRadio) codRadio.addEventListener('change', togglePaymentOptions);
+  if (onlineRadio) onlineRadio.addEventListener('change', togglePaymentOptions);
+  document.querySelectorAll('input[name="online_payment_method"]').forEach(radio => {
+    radio.addEventListener('change', updatePaymentInstructions);
+  });
+  document.querySelectorAll('input[name="payment_type"]').forEach(radio => {
+    radio.addEventListener('change', updatePaymentInstructions);
+  });
+
+  // initial
+  togglePaymentOptions();
+});
+</script>
+
+<!-- Presentation polish (matches checkout page) -->
+<style>
+  .section-content.padding-y { padding-top: 24px; padding-bottom: 32px; }
+
+  .checkout-hero{
+    background: linear-gradient(135deg,#f8f9fa 0%,#ffffff 100%);
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.03) inset;
+    margin-bottom: 18px;
+  }
+  .checkout-hero h3{ font-weight:700; letter-spacing:.2px; }
+  .subtle{ color:#6c757d; }
+
+  .card{
+    border:1px solid rgba(0,0,0,.06);
+    border-radius:14px;
+    box-shadow:0 6px 18px rgba(0,0,0,.05);
+  }
+  .card-header h5{ font-weight:700; letter-spacing:.2px; }
+
+  /* Selection tiles */
+  .hover-outline:hover{
+    border-color: rgba(13,110,253,.35)!important;
+    box-shadow: 0 0 0 .2rem rgba(13,110,253,.08);
+  }
+  .form-check-input:disabled + .form-check-label{ opacity:.6; }
+
+  .text-pink{ color:#e91e63; }
+  .text-orange{ color:#ec7c26; }
+  .text-purple{ color:#722ed1; }
+  .border-left-primary{ border-left:4px solid #0d6efd; }
+
+  /* Sticky order card */
+  @media (min-width: 992px){
+    .order-summary{ top: 90px; }
+    .order-summary{ position: sticky; }
+  }
+
+  .btn-primary{
+    border-radius: 10px;
+    padding: .75rem 1rem;
+    font-weight: 600;
+  }
+</style>
 {% endblock %}

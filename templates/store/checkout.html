@@ -1,227 +1,304 @@
 {% extends "base.html" %}
 {% load static %}
 
-<style>
-  /* keep cells vertically centered */
-  .table-shopping-cart th, .table-shopping-cart td { vertical-align: middle; }
-
-  /* center the Quantity (2nd col) */
-  .table-shopping-cart th:nth-child(2),
-  .table-shopping-cart td:nth-child(2) { text-align: center; }
-
-  /* center the Price (3rd col) */
-  .table-shopping-cart th:nth-child(3),
-  .table-shopping-cart td:nth-child(3) { text-align: center; }
-
-  /* make the inner price block center nicely */
-  .table-shopping-cart td:nth-child(3) .price-wrap {
-    text-align: center;
-    display: inline-block;   /* shrink to content so true centering works */
-    margin: 0 auto;          /* center the block inside the td */
-  }
-</style>
-
 {% block content %}
 
+<style>
+  /* Page polish */
+  .checkout-hero {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.03) inset;
+    margin-bottom: 18px;
+  }
+  .checkout-hero h3 {
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: .2px;
+  }
+  .subtle { color:#6c757d; }
+
+  /* Cards */
+  .card {
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,.05);
+  }
+  .card-title {
+    font-weight: 700;
+    letter-spacing: .2px;
+  }
+
+  /* Form */
+  .form-group label { font-weight: 600; }
+  .form-control, .custom-select {
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,.08);
+  }
+  .form-control:focus, .custom-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 .2rem rgba(13,110,253,.15);
+  }
+
+  /* Table */
+  .table-shopping-cart th, .table-shopping-cart td { vertical-align: middle; }
+  .table-shopping-cart th:nth-child(2),
+  .table-shopping-cart td:nth-child(2) { text-align: center; }
+  .table-shopping-cart th:nth-child(3),
+  .table-shopping-cart td:nth-child(3) { text-align: center; }
+  .table-shopping-cart td:nth-child(3) .price-wrap {
+    text-align: center;
+    display: inline-block;
+    margin: 0 auto;
+  }
+  .table-shopping-cart img.img-sm {
+    width: 64px; height: 64px; object-fit: cover; border-radius: 8px;
+    border: 1px solid rgba(0,0,0,.06);
+  }
+  .table thead th {
+    background: #f8f9fb;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+    font-weight: 700;
+  }
+
+  /* Sticky order panel on desktop */
+  @media (min-width: 992px) {
+    .sticky-lg-top { position: sticky; top: 24px; }
+  }
+
+  /* Buttons */
+  .btn-primary {
+    border-radius: 10px;
+    padding: .7rem 1rem;
+    font-weight: 600;
+  }
+  .btn-light {
+    border-radius: 10px;
+    padding: .7rem 1rem;
+    border: 1px solid rgba(0,0,0,.08);
+  }
+
+  /* Section spacing */
+  .section-content.padding-y { padding-top: 24px; padding-bottom: 32px; }
+</style>
+
 <section class="section-content padding-y bg">
-<div class="container">
+  <div class="container">
 
-<!-- ============================ COMPONENT 1 ================================= -->
-
-<div class="row">
-	<aside class="col-lg-6">
-<div class="card">
-    <div class="card-body">
-        <h4 class="card-title mb-4">Billing Address</h4>
-<form action="{% url 'place_order' %}" method="post">
-    {% csrf_token %}
-    <div class="form-row">
-        <div class="col form-group">
-            <label for="first_name">First Name</label>
-            <input type="text" name="first_name" id="first_name" class="form-control" required>
-        </div>
-        <div class="col form-group">
-            <label for="last_name">Last Name</label>
-            <input type="text" name="last_name" id="last_name" class="form-control" required>
-        </div>
+    <!-- Header / Step hint -->
+    <div class="checkout-hero d-flex align-items-center justify-content-between">
+      <div>
+        <h3>Checkout</h3>
+        <div class="subtle small">Step 2 of 3 · Billing & Review</div>
+      </div>
     </div>
 
-    <div class="form-row">
-        <div class="col form-group">
-            <label for="email">Email Address</label>
-            <input type="email" name="email" id="email" class="form-control" required>
-        </div>
-        <div class="col form-group">
-            <label for="phone">Phone Number</label>
-            <input type="text" name="phone" id="phone" class="form-control" required>
-        </div>
-    </div>
+    <!-- ✅ Form should wrap BOTH columns so the submit button submits the address fields -->
+    <form action="{% url 'place_order' %}" method="post" novalidate>
+      {% csrf_token %}
 
-    <div class="form-row">
-        <div class="col form-group">
-            <label for="address_line_1">Address Line 1</label>
-            <input type="text" name="address_line_1" id="address_line_1" class="form-control" required>
-        </div>
-        <div class="col form-group">
-            <label for="address_line_2">Address Line 2</label>
-            <input type="text" name="address_line_2" id="address_line_2" class="form-control">
-        </div>
-    </div>
+      <div class="row">
+        <!-- LEFT: Billing Address -->
+        <aside class="col-lg-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title mb-4">Billing Address</h4>
 
-    <div class="form-row">
-        <div class="col form-group">
-            <label for="city">City</label>
-            <input type="text" name="city" id="city" class="form-control" required>
-        </div>
-        <div class="col form-group">
-            <label for="state">District</label>
-            <select name="state" id="state" class="form-control" required>
-                <option value="">-- Select District --</option>
-                <option>Bagerhat</option>
-                <option>Bandarban</option>
-                <option>Barguna</option>
-                <option>Barisal</option>
-                <option>Bhola</option>
-                <option>Bogra</option>
-                <option>Brahmanbaria</option>
-                <option>Chandpur</option>
-                <option>Chattogram</option>
-                <option>Chuadanga</option>
-                <option>Cox's Bazar</option>
-                <option>Dhaka</option>
-                <option>Dinajpur</option>
-                <option>Faridpur</option>
-                <option>Feni</option>
-                <option>Gaibandha</option>
-                <option>Gazipur</option>
-                <option>Gopalganj</option>
-                <option>Habiganj</option>
-                <option>Jamalpur</option>
-                <option>Jashore</option>
-                <option>Jhalokati</option>
-                <option>Jhenaidah</option>
-                <option>Joypurhat</option>
-                <option>Khagrachari</option>
-                <option>Khulna</option>
-                <option>Kishoreganj</option>
-                <option>Kurigram</option>
-                <option>Kushtia</option>
-                <option>Lakshmipur</option>
-                <option>Lalmonirhat</option>
-                <option>Madaripur</option>
-                <option>Magura</option>
-                <option>Manikganj</option>
-                <option>Meherpur</option>
-                <option>Moulvibazar</option>
-                <option>Munshiganj</option>
-                <option>Mymensingh</option>
-                <option>Naogaon</option>
-                <option>Narayanganj</option>
-                <option>Narsingdi</option>
-                <option>Natore</option>
-                <option>Netrokona</option>
-                <option>Nilphamari</option>
-                <option>Noakhali</option>
-                <option>Pabna</option>
-                <option>Panchagarh</option>
-                <option>Patuakhali</option>
-                <option>Pirojpur</option>
-                <option>Rajbari</option>
-                <option>Rajshahi</option>
-                <option>Rangamati</option>
-                <option>Rangpur</option>
-                <option>Satkhira</option>
-                <option>Shariatpur</option>
-                <option>Sherpur</option>
-                <option>Sirajganj</option>
-                <option>Sunamganj</option>
-                <option>Sylhet</option>
-                <option>Tangail</option>
-                <option>Thakurgaon</option>
-            </select>
-        </div>
-        <div class="col form-group">
-            <label for="country">Country</label>
-            <input type="text" name="country" id="country" class="form-control" required value="Bangladesh">
-        </div>
-    </div>
+              <div class="form-row">
+                <div class="col form-group">
+                  <label for="first_name">First Name</label>
+                  <input type="text" name="first_name" id="first_name" class="form-control" required autocomplete="given-name" placeholder="e.g. Arif">
+                </div>
+                <div class="col form-group">
+                  <label for="last_name">Last Name</label>
+                  <input type="text" name="last_name" id="last_name" class="form-control" required autocomplete="family-name" placeholder="e.g. Hossain">
+                </div>
+              </div>
 
-    <div class="form-group">
-        <label for="order_note">Order Notes</label>
-        <textarea name="order_note" id="order_note" rows="3" class="form-control" placeholder="Additional instructions (optional)"></textarea>
-    </div>
+              <div class="form-row">
+                <div class="col form-group">
+                  <label for="email">Email Address</label>
+                  <input type="email" name="email" id="email" class="form-control" required autocomplete="email" placeholder="you@example.com">
+                </div>
+                <div class="col form-group">
+                  <label for="phone">Phone Number</label>
+                  <input type="text" name="phone" id="phone" class="form-control" required autocomplete="tel" placeholder="01XXXXXXXXX">
+                </div>
+              </div>
 
-</div> <!-- card.// -->
+              <div class="form-row">
+                <div class="col form-group">
+                  <label for="address_line_1">Address Line 1</label>
+                  <input type="text" name="address_line_1" id="address_line_1" class="form-control" required autocomplete="address-line1" placeholder="House, Road, Block">
+                </div>
+                <div class="col form-group">
+                  <label for="address_line_2">Address Line 2 <span class="subtle">(optional)</span></label>
+                  <input type="text" name="address_line_2" id="address_line_2" class="form-control" autocomplete="address-line2" placeholder="Area / Landmark">
+                </div>
+              </div>
 
-	</aside> <!-- col.// -->
-	<aside class="col-lg-6">
-        <table class="table table-borderless table-shopping-cart">
-        <thead class="text-muted">
-        <tr class="small text-uppercase">
-        <th scope="col">Product</th>
-        <th scope="col" width="120" class="text-center">Quantity</th>
-        <th scope="col" width="120" class="text-center">Price</th>
-        <th scope="col" class="text-right" width="200"> </th>
-        </tr>
-        </thead>
-        <tbody>
+              <div class="form-row">
+                <div class="col form-group">
+                  <label for="city">City</label>
+                  <input type="text" name="city" id="city" class="form-control" required autocomplete="address-level2" placeholder="e.g. Dhaka">
+                </div>
+                <div class="col form-group">
+                  <label for="state">District</label>
+                  <select name="state" id="state" class="custom-select" required>
+                    <option value="">-- Select District --</option>
+                    <option>Bagerhat</option>
+                    <option>Bandarban</option>
+                    <option>Barguna</option>
+                    <option>Barisal</option>
+                    <option>Bhola</option>
+                    <option>Bogra</option>
+                    <option>Brahmanbaria</option>
+                    <option>Chandpur</option>
+                    <option>Chattogram</option>
+                    <option>Chuadanga</option>
+                    <option>Cox's Bazar</option>
+                    <option>Dhaka</option>
+                    <option>Dinajpur</option>
+                    <option>Faridpur</option>
+                    <option>Feni</option>
+                    <option>Gaibandha</option>
+                    <option>Gazipur</option>
+                    <option>Gopalganj</option>
+                    <option>Habiganj</option>
+                    <option>Jamalpur</option>
+                    <option>Jashore</option>
+                    <option>Jhalokati</option>
+                    <option>Jhenaidah</option>
+                    <option>Joypurhat</option>
+                    <option>Khagrachari</option>
+                    <option>Khulna</option>
+                    <option>Kishoreganj</option>
+                    <option>Kurigram</option>
+                    <option>Kushtia</option>
+                    <option>Lakshmipur</option>
+                    <option>Lalmonirhat</option>
+                    <option>Madaripur</option>
+                    <option>Magura</option>
+                    <option>Manikganj</option>
+                    <option>Meherpur</option>
+                    <option>Moulvibazar</option>
+                    <option>Munshiganj</option>
+                    <option>Mymensingh</option>
+                    <option>Naogaon</option>
+                    <option>Narayanganj</option>
+                    <option>Narsingdi</option>
+                    <option>Natore</option>
+                    <option>Netrokona</option>
+                    <option>Nilphamari</option>
+                    <option>Noakhali</option>
+                    <option>Pabna</option>
+                    <option>Panchagarh</option>
+                    <option>Patuakhali</option>
+                    <option>Pirojpur</option>
+                    <option>Rajbari</option>
+                    <option>Rajshahi</option>
+                    <option>Rangamati</option>
+                    <option>Rangpur</option>
+                    <option>Satkhira</option>
+                    <option>Shariatpur</option>
+                    <option>Sherpur</option>
+                    <option>Sirajganj</option>
+                    <option>Sunamganj</option>
+                    <option>Sylhet</option>
+                    <option>Tangail</option>
+                    <option>Thakurgaon</option>
+                  </select>
+                </div>
+                <div class="col form-group">
+                  <label for="country">Country</label>
+                  <input type="text" name="country" id="country" class="form-control" required value="Bangladesh" autocomplete="country-name">
+                </div>
+              </div>
 
-        {% for cart_item in cart_items %}
-        <tr>
-        <td>
-            <figure class="itemside align-items-center">
-            <div class="aside"><img src="{{ cart_item.product.images.url }}" class="img-sm"></div>
-            <figcaption class="info">
-                <a href="{{ cart_item.product.get_url }}" class="title text-dark">{{ cart_item.product.product_name }}</a>
-                <p class="text-muted small">
-                {% if cart_item.variations.all %}
-                    {% for item in cart_item.variations.all %}
-                    {{ item.variation_category|capfirst }} : {{ item.variation_value|capfirst }} <br>
-                    {% endfor %}
-                {% endif %}
-                </p>
-            </figcaption>
-            </figure>
-        </td>
-
-        <td class="text-center align-middle">
-            <span>{{ cart_item.quantity }}</span>
-        </td>
-
-        <!-- ✅ Price cell: centered + properly closed -->
-        <td class="text-center align-middle">
-            <div class="price-wrap">
-            <var class="price">Tk.{{ cart_item.sub_total }}</var>
-            <small class="text-muted">Tk.{{ cart_item.product.price }} each</small>
+              <div class="form-group">
+                <label for="order_note">Order Notes</label>
+                <textarea name="order_note" id="order_note" rows="3" class="form-control" placeholder="Additional instructions (optional)"></textarea>
+              </div>
             </div>
-        </td>
+          </div>
+        </aside>
 
-        <!-- ✅ keep column count aligned with the thead (4th, blank) -->
-        <td></td>
-        </tr>
-        {% endfor %}
-        </tbody>
-        </table>        
+        <!-- RIGHT: Order Review -->
+        <aside class="col-lg-6 mb-4">
+          <div class="card sticky-lg-top">
+            <div class="card-body">
+              <h4 class="card-title mb-4">Order Review</h4>
 
-        
-			<hr>
-			<p class="text-center mb-3">
-				<img src="{% static './images/misc/payments.png' %}" height="26">
-            </p>
-            <button type="submit" name="submit" class="btn btn-primary btn-block">Place Order</button>
-			<a href="{% url 'store' %}" class="btn btn-light btn-block">Continue Shopping</a>
-		</div> <!-- card-body.// -->
-		</div> <!-- card.// -->
+              <div class="table-responsive">
+                <table class="table table-borderless table-shopping-cart mb-2">
+                  <thead class="text-muted">
+                    <tr class="small text-uppercase">
+                      <th scope="col">Product</th>
+                      <th scope="col" width="120" class="text-center">Quantity</th>
+                      <th scope="col" width="120" class="text-center">Price</th>
+                      <th scope="col" class="text-right" width="40"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for cart_item in cart_items %}
+                    <tr>
+                      <td>
+                        <figure class="itemside align-items-center">
+                          <div class="aside">
+                            <img src="{{ cart_item.product.images.url }}" class="img-sm" alt="{{ cart_item.product.product_name }}">
+                          </div>
+                          <figcaption class="info">
+                            <a href="{{ cart_item.product.get_url }}" class="title text-dark font-weight-bold">
+                              {{ cart_item.product.product_name }}
+                            </a>
+                            <p class="text-muted small mb-0">
+                              {% if cart_item.variations.all %}
+                                {% for item in cart_item.variations.all %}
+                                  {{ item.variation_category|capfirst }}: {{ item.variation_value|capfirst }}<br>
+                                {% endfor %}
+                              {% endif %}
+                            </p>
+                          </figcaption>
+                        </figure>
+                      </td>
+
+                      <td class="text-center align-middle">
+                        <span class="badge badge-light px-3 py-2" style="font-weight:600;">{{ cart_item.quantity }}</span>
+                      </td>
+
+                      <td class="text-center align-middle">
+                        <div class="price-wrap">
+                          <div class="price font-weight-bold">Tk. {{ cart_item.sub_total }}</div>
+                          <small class="text-muted d-block">Tk. {{ cart_item.product.price }} each</small>
+                        </div>
+                      </td>
+
+                      <td></td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+
+              <hr class="my-3">
+
+              <!-- Actions -->
+              <div class="d-grid">
+                <button type="submit" name="submit" class="btn btn-primary btn-block mb-2">
+                  Proceed to payment
+                </button>
+                <a href="{% url 'store' %}" class="btn btn-light btn-block">
+                  Continue Shopping
+                </a>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div><!-- /row -->
     </form>
-</aside> <!-- col.// -->
 
-
-</div> <!-- row.// -->
-
-<!-- ============================ COMPONENT 1 END .// ================================= -->
-
-</div> <!-- container .//  -->
+  </div><!-- /container -->
 </section>
-<!-- ========================= SECTION CONTENT END// ========================= -->
 
 {% endblock %}

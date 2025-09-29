@@ -1,3 +1,4 @@
+# D:\Django\khalab\khalab\settings.py
 """
 Django settings for khalab project.
 
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'category',
     'accounts',
     'store',
@@ -62,22 +64,24 @@ ROOT_URLCONF = 'khalab.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR,"templates"],
+        'DIRS': [BASE_DIR / "templates"],   # small fix: use BASE_DIR / "templates"
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.auth.context_processors.auth', 
                 'django.contrib.messages.context_processors.messages',
                 'category.context_processors.menu_links',
                 'carts.context_processors.counter',
-                "khalab.context_processors.contact_info",
-
+                'khalab.context_processors.contact_info',
+            ],
+            'builtins': [      # 👈 add this
+                'django.contrib.humanize.templatetags.humanize',
             ],
         },
     },
 ]
+
 
 AUTHENTICATION_BACKENDS = [
     'accounts.backends.EmailBackend',
@@ -124,7 +128,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "Asia/Dhaka"
+USE_TZ = True 
 
 USE_I18N = True
 
@@ -169,4 +174,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 CONTACT_EMAIL = config('CONTACT_EMAIL')
 CONTACT_PHONE = config('CONTACT_PHONE')
+
+
+
 
