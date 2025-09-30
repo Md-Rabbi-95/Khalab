@@ -1,55 +1,144 @@
-
 {% extends "base.html" %}
 {% load static %}
 
 {% block content %}
 
+<style>
+  /* Page polish */
+  .section-intro { background: linear-gradient(180deg, #f8fafc, #ffffff); }
+  .intro-banner-wrap img { width: 100%; height: auto; border-radius: 1rem; }
+
+  .section-heading { margin-bottom: 1rem; }
+  .section-heading .section-title { font-weight: 700; letter-spacing: .2px; }
+  .section-heading .btn { border-radius: .6rem; }
+
+  /* Product cards */
+  .card-product-grid { 
+    border: 1px solid #eef1f5; 
+    border-radius: 1rem; 
+    overflow: hidden; 
+    transition: transform .18s ease, box-shadow .18s ease; 
+    background: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .card-product-grid:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 10px 26px rgba(23, 43, 77, .08); 
+  }
+
+  .card-product-grid .img-wrap { 
+    display: block; 
+    position: relative; 
+    overflow: hidden; 
+    background: #f3f5f9;
+  }
+  .card-product-grid .img-wrap::before {
+    content: ""; 
+    display: block; 
+    padding-top: 100%;
+  }
+  .card-product-grid .img-wrap img { 
+    position: absolute; 
+    inset: 0; 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    transition: transform .25s ease; 
+  }
+  .card-product-grid:hover .img-wrap img { transform: scale(1.05); }
+
+  .info-wrap { padding: .9rem 1rem 1.1rem; }
+  .card-product-grid .title { 
+    display: -webkit-box;
+    -webkit-line-clamp: 2; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: #0f172a;
+    font-weight: 600; 
+    text-decoration: none; 
+  }
+  .card-product-grid .title:hover { text-decoration: underline; }
+
+  .card-product-grid .price { 
+    font-weight: 700; 
+    color: #0ea5e9; 
+    font-size: 1.05rem; 
+    margin-bottom: .6rem;
+  }
+
+  /* Add to Cart button */
+  .btn-add-cart {
+    display: inline-block;
+    width: 100%;
+    background: #0ea5e9;
+    color: #fff;
+    border: none;
+    padding: .5rem 0;
+    font-size: .9rem;
+    font-weight: 600;
+    border-radius: .5rem;
+    text-align: center;
+    transition: background .2s ease, transform .15s ease;
+  }
+  .btn-add-cart:hover {
+    background: #0284c7;
+    text-decoration: none;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 575.98px){
+    .section-intro { padding-top: .75rem; }
+  }
+</style>
+
 <!-- ========================= SECTION MAIN ========================= -->
 <section class="section-intro padding-y-sm">
-<div class="container">
-
-<div class="intro-banner-wrap">
-	{% load static %}
-	<img src="{% static 'images/banners/1.jpg' %}" class="img-fluid rounded">
-
-</div>
-
-</div> <!-- container //  -->
+  <div class="container">
+    <div class="intro-banner-wrap">
+      <img src="{% static 'images/banners/1.jpg' %}" class="img-fluid" alt="Featured banner">
+    </div>
+  </div>
 </section>
 <!-- ========================= SECTION MAIN END// ========================= -->
 
-<!-- ========================= SECTION  ========================= -->
+
+<!-- ========================= SECTION ========================= -->
 <section class="section-name padding-y-sm">
-<div class="container">
+  <div class="container">
 
-<header class="section-heading">
-	<a href="{% url 'store' %}" class="btn btn-outline-primary float-right">See all</a>
-	<h3 class="section-title">Popular products</h3>
-</header><!-- sect-heading -->
+    <header class="section-heading d-flex align-items-center justify-content-between">
+      <h3 class="section-title mb-0">Popular products</h3>
+      <a href="{% url 'store' %}" class="btn btn-outline-primary btn-sm">See all</a>
+    </header>
 
-	
-<div class="row">
-    {% for product in products %}
-    <div class="col-md-3">
-        <div class="card card-product-grid">
-            <a href="{{product.get_url}}" class="img-wrap">
-                <img src="{{ product.images.url }}" alt="{{ product.product_name }}">
-            </a>
+    <div class="row g-3 g-md-4">
+      {% for product in products %}
+      <div class="col-6 col-md-4 col-lg-3 d-flex">
+        <div class="card card-product-grid w-100">
+          <a href="{{ product.get_url }}" class="img-wrap" aria-label="{{ product.product_name }}">
+            <img 
+              src="{{ product.images.url }}" 
+              alt="{{ product.product_name }}" 
+              loading="lazy" 
+              width="600" height="600">
+          </a>
 
-            <figcaption class="info-wrap">
-                <a href="{{product.get_url}}" class="title">{{ product.product_name }}</a>
-                <div class="price mt-1">Tk. {{ product.price }}</div>
-            </figcaption>
+          <figcaption class="info-wrap">
+            <a href="{{ product.get_url }}" class="title">{{ product.product_name }}</a>
+            <div class="price">Tk. {{ product.price }}</div>
+            {% url 'add_cart' product.id as add_url %}
+            <a href="{{ add_url }}" class="btn-add-cart">Add to Cart</a>
+          </figcaption>
         </div>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
-</div>
 
-</div><!-- container // -->
+  </div><!-- container // -->
 </section>
-<!-- ========================= SECTION  END// ========================= -->
-
-</body>
-</html>
+<!-- ========================= SECTION END// ========================= -->
 
 {% endblock %}
