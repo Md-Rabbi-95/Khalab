@@ -49,33 +49,50 @@
 
               <li><span class="text-muted">Order Date:</span> {{ order.created_at }}</li>
 
-              {# ORDER STATUS like in order_complete.html #}
+              {# ORDER STATUS — dynamically from DB with color badge #}
               <li>
                 <span class="text-muted">Order Status:</span>
-                {% if order.status|lower == "new" or order.status|lower == "accept" %}
-                  <span class="badge bg-info text-dark">Order Placed</span>
-                {% elif order.status|lower == "completed" %}
-                  <span class="badge bg-success">Completed</span>
-                {% elif order.status|lower == "cancelled" %}
-                  <span class="badge bg-danger">Cancelled</span>
-                {% else %}
-                  <span class="badge bg-secondary">{{ order.status }}</span>
-                {% endif %}
+                {% with s=order.status|lower %}
+                  {% if s == "new" %}
+                    <span class="badge bg-secondary">{{ order.status }}</span>
+                  {% elif s == "accept" %}
+                    <span class="badge bg-info text-dark">{{ order.status }}</span>
+                  {% elif s == "completed" %}
+                    <span class="badge bg-success">{{ order.status }}</span>
+                  {% elif s == "cancelled" %}
+                    <span class="badge bg-danger">{{ order.status }}</span>
+                  {% else %}
+                    <span class="badge bg-secondary">{{ order.status }}</span>
+                  {% endif %}
+                {% endwith %}
               </li>
 
-              {# PAYMENT STATUS like in order_complete.html #}
+              {# PAYMENT STATUS — driven by Payment.status from admin #}
               <li>
                 <span class="text-muted">Payment Status:</span>
-                {% if order.payment.payment_method == "COD" %}
+                {% if not order.payment %}
                   <span class="badge bg-warning text-dark">Unpaid</span>
                 {% else %}
-                  {% if order.payment.payment_type == "FULL" %}
-                    <span class="badge bg-success">Paid</span>
-                  {% elif order.payment.payment_type == "ADVANCE" %}
-                    <span class="badge bg-success">Paid (Delivery Charge)</span>
-                  {% else %}
-                    <span class="badge bg-secondary">Paid</span>
-                  {% endif %}
+                  {% with ps=order.payment.status|default:""|lower %}
+                    {% if ps == "paid" %}
+                      <span class="badge bg-success">Paid</span>
+                    {% elif ps == "paid (delivery charge)" %}
+                      <span class="badge bg-primary">Paid (Delivery Charge)</span>
+                    {% elif ps == "unpaid" %}
+                      <span class="badge bg-warning text-dark">Unpaid</span>
+                    {% else %}
+                      {# Fallback to method/type if status is something else #}
+                      {% if order.payment.payment_method == "COD" %}
+                        <span class="badge bg-warning text-dark">Unpaid</span>
+                      {% elif order.payment.payment_type == "FULL" %}
+                        <span class="badge bg-success">Paid</span>
+                      {% elif order.payment.payment_type == "ADVANCE" %}
+                        <span class="badge bg-primary">Paid (Delivery Charge)</span>
+                      {% else %}
+                        <span class="badge bg-secondary">{{ order.payment.status|default:"Unpaid" }}</span>
+                      {% endif %}
+                    {% endif %}
+                  {% endwith %}
                 {% endif %}
               </li>
             </ul>

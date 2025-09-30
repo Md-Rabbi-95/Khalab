@@ -1,8 +1,14 @@
 {% autoescape off %}
 
-Hi {{user.first_name}},
+Dear {{user.first_name}},
 
-YOUR ORDER HAS BEEN RECEIVED.
+We are pleased to inform you that your order has been successfully received.  
 
-Order Number: {{order.order_number}}
+Order Number: **{{order.order_number}}**
+
+Thank you for shopping with us. We will keep you updated on the next steps.
+
+Best regards,  
+Khalab
+
 {% endautoescape %}

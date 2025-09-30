@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms  # <-- added
 from .models import Payment, Order, OrderProduct, PaymentSettings, DeliveryCharge
 
 
@@ -74,8 +75,56 @@ class OrderProductInline(admin.TabularInline):
     extra = 0
 
 
+# ----------------------- Added: Order admin form with editable "Transaction status" -----------------------
+
+class OrderAdminForm(forms.ModelForm):
+    TRANSACTION_STATUS_CHOICES = [
+        ('Paid', 'Paid'),
+        ('Unpaid', 'Unpaid'),
+        ('Paid (Delivery Charge)', 'Paid (Delivery Charge)'),
+    ]
+    transaction_status = forms.ChoiceField(
+        choices=TRANSACTION_STATUS_CHOICES,
+        required=False,
+        label='Transaction status'
+    )
+
+    class Meta:
+        model = Order
+        fields = "__all__"
+
+    def _auto_status_from_payment(self, payment):
+        """
+        Auto rules:
+          - No payment or COD -> 'Unpaid'
+          - Online + ADVANCE  -> 'Paid (Delivery Charge)'
+          - Online + FULL     -> 'Paid'
+        """
+        if not payment:
+            return 'Unpaid'
+        if payment.payment_method == 'COD':
+            return 'Unpaid'
+        if payment.payment_type == 'ADVANCE':
+            return 'Paid (Delivery Charge)'
+        if payment.payment_type == 'FULL':
+            return 'Paid'
+        return 'Unpaid'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        payment = getattr(self.instance, 'payment', None)
+
+        # If Payment.status already one of our display labels, use it; else auto-compute.
+        if payment and (payment.status or '').strip().title() in dict(self.TRANSACTION_STATUS_CHOICES):
+            self.fields['transaction_status'].initial = (payment.status or '').strip().title()
+        else:
+            self.fields['transaction_status'].initial = self._auto_status_from_payment(payment)
+
+
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    form = OrderAdminForm  # <-- use the form with "transaction_status"
+
     list_display = [
         'order_number', 'full_name', 'phone', 'email', 'city',
         'delivery_charge', 'requires_advance', 'order_total',
@@ -88,9 +137,13 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = ('order_number', 'created_at', 'updated_at', 'ip', 'requires_advance', 'delivery_charge')
     list_editable = ['status']
 
-
-@admin.register(OrderProduct)
-class OrderProductAdmin(admin.ModelAdmin):
-    list_display = ['order', 'product', 'user', 'quantity', 'product_price', 'ordered', 'created_at']
-    list_filter = ['ordered', 'created_at']
-    search_fields = ['order__order_number', 'product__product_name', 'user__email']
+    # Persist the selected "Transaction status" back to Payment.status
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        payment = getattr(obj, 'payment', None)
+        picked = form.cleaned_data.get('transaction_status', None)
+        if payment and picked:
+            # Save exactly what admin chose: Paid / Unpaid / Paid (Delivery Charge)
+            if (payment.status or '').strip().title() != picked:
+                payment.status = picked
+                payment.save(update_fields=['status'])
