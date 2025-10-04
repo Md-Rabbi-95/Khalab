@@ -42,11 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'orders.apps.OrdersConfig',
+    'core.apps.CoreConfig',
     'category',
     'accounts',
     'store',
     'carts',
-    'orders',
+    'courier',
 ]
 
 MIDDLEWARE = [
@@ -100,6 +102,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'OPTIONS': {
+            'timeout': 30,  # seconds (default is 5)
+        },
     }
 }
 
@@ -177,4 +182,40 @@ CONTACT_PHONE = config('CONTACT_PHONE')
 
 
 
+# settings.py
 
+# Give SQLite more time before raising "database is locked"
+DATABASES['default'].setdefault('OPTIONS', {})
+DATABASES['default']['OPTIONS']['timeout'] = 30  
+CONN_MAX_AGE = 0
+
+
+#for courier
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'redx.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'courier': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}

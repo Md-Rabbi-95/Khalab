@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static rating_tags %}
-
+{% comment %} product_detail.html {% endcomment %}
 {% block content %}
 <section class="section-content padding-y bg">
   <div class="container">
@@ -250,7 +250,15 @@
         {% for review in reviews %}
           <article class="box mb-3">
             <div class="icontext w-100">
-              <img src="{% static './images/avatars/avatar1.jpg' %}" class="img-xs icon rounded-circle" alt="avatar">
+              {% with up=review.user.userprofile %}
+                {% if up and up.profile_picture %}
+                  <img src="{{ up.profile_picture.url }}" class="img-xs icon rounded-circle"
+                      alt="{{ review.user.full_name|default:review.user.username }}'s avatar">
+                {% else %}
+                  <img src="{% static 'images/avatars/default.jpg' %}" class="img-xs icon rounded-circle"
+                      alt="Default avatar">
+                {% endif %}
+              {% endwith %}
               <div class="text w-100">
                 <span class="date text-muted float-md-right">{{ review.updated_at }}</span>
                 <h6 class="mb-1">{{ review.user.full_name }}</h6>

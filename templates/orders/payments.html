@@ -18,6 +18,8 @@
       </ol>
     </div>
 
+    {% include "includes/alerts.html" %}
+
     <form method="POST" id="payment-form" novalidate>
       {% csrf_token %}
 
@@ -35,8 +37,7 @@
                   <div class="fw-semibold text-dark">{{ order.full_name }}</div>
                 </div>
                 <div class="col-12">{{ order.full_address }}</div>
-                <div class="col-12">{{ order.city }}, {{ order.state }}</div>
-                <div class="col-12">{{ order.country }}</div>
+                <div class="col-12">{{ order.state }}, {{ order.country }}</div>
                 <div class="col-12">{{ order.email }}</div>
                 <div class="col-12">{{ order.phone }}</div>
                 {% if order.order_note %}
@@ -56,19 +57,18 @@
             </div>
 
             <div class="card-body pt-0">
-              {% if order.city and order.city|lower != 'dhaka' %}
+              {% if order.state and order.state|lower != 'dhaka' %}
                 <div class="alert alert-info d-flex align-items-start gap-2">
                   <i class="fas fa-info-circle fs-5 mt-1"></i>
                   <div>
-                    <strong>Note:</strong> You’re from outside Dhaka city — you have to pay the Delivery charge
-                    {% if order.requires_advance %}before placing an order.{% endif %}
+                    <strong>Note:</strong> You're from outside Dhaka district — you may need to pay the delivery charge before placing an order.
                   </div>
                 </div>
               {% endif %}
 
               <!-- Method -->
               <div class="mb-4">
-                <label class="form-label fw-semibold">Select Payment Method</label>
+                <label class="form-label fw-semibold">Select Payment Method <span class="text-danger">*</span></label>
                 <div class="row g-3">
                   <!-- COD -->
                   <div class="col-md-6">
@@ -79,9 +79,9 @@
                       <label class="form-check-label ms-1" for="cod">
                         <div class="fw-semibold"><i class="fas fa-money-bill-wave me-2"></i>Cash on Delivery</div>
                         {% if order.requires_advance %}
-                          <small class="text-muted">May not be available outside Dhaka</small>
+                          <small class="text-muted">Not available outside Dhaka</small>
                         {% else %}
-                          <small class="text-muted">Pay at delivery</small>
+                          <small class="text-muted">Pay when you receive</small>
                         {% endif %}
                       </label>
                     </div>
@@ -93,7 +93,7 @@
                              {% if order.requires_advance %}checked{% endif %}>
                       <label class="form-check-label ms-1" for="online">
                         <div class="fw-semibold"><i class="fas fa-mobile-alt me-2"></i>Online Payment</div>
-                        <small class="text-muted">Bkash / Nagad / Rocket</small>
+                        <small class="text-muted">bKash / Nagad / Rocket</small>
                       </label>
                     </div>
                   </div>
@@ -102,7 +102,7 @@
 
               <!-- Payment Type -->
               <div class="mb-4" id="payment-type-section">
-                <label class="form-label fw-semibold">Payment Type</label>
+                <label class="form-label fw-semibold">Payment Type <span class="text-danger">*</span></label>
                 <div class="row g-3">
                   <div class="col-md-6">
                     <div class="form-check p-3 border rounded-3 h-100 hover-outline">
@@ -121,7 +121,7 @@
                              {% if order.requires_advance %}checked{% endif %}>
                       <label class="form-check-label ms-1" for="advance_payment">
                         <div class="fw-semibold"><i class="fas fa-truck me-2"></i>Delivery Charge Only</div>
-                        <small class="text-muted">Tk. {{ delivery_charge|floatformat:0 }}</small>
+                        <small class="text-muted">Tk. {{ delivery_charge|floatformat:0 }} (Pay rest on delivery)</small>
                       </label>
                     </div>
                   </div>
@@ -130,14 +130,14 @@
 
               <!-- Online Payment Methods -->
               <div class="mb-4" id="online-payment-methods" style="display:none;">
-                <label class="form-label fw-semibold">Choose Mobile Banking</label>
+                <label class="form-label fw-semibold">Choose Mobile Banking <span class="text-danger">*</span></label>
                 <div class="row g-3">
                   <div class="col-md-4">
                     <div class="form-check p-3 border rounded-3 h-100 text-center hover-outline">
                       <input class="form-check-input" type="radio" name="online_payment_method" id="bkash" value="BKASH">
                       <label class="form-check-label d-block mt-2" for="bkash">
-                        <img src="{% static 'images/BKash-Logo.wine.png' %}" height="36" alt="Bkash Logo" class="mb-2">
-                        <div class="fw-semibold text-pink">Bkash</div>
+                        <i class="fas fa-mobile-alt fa-3x text-danger mb-2"></i>
+                        <div class="fw-semibold text-pink">bKash</div>
                       </label>
                     </div>
                   </div>
@@ -145,7 +145,7 @@
                     <div class="form-check p-3 border rounded-3 h-100 text-center hover-outline">
                       <input class="form-check-input" type="radio" name="online_payment_method" id="nagad" value="NAGAD">
                       <label class="form-check-label d-block mt-2" for="nagad">
-                        <img src="{% static 'images/Nagad_Logo.png' %}" height="36" alt="Nagad Logo" class="mb-2">
+                        <i class="fas fa-mobile-alt fa-3x text-warning mb-2"></i>
                         <div class="fw-semibold text-orange">Nagad</div>
                       </label>
                     </div>
@@ -154,7 +154,7 @@
                     <div class="form-check p-3 border rounded-3 h-100 text-center hover-outline">
                       <input class="form-check-input" type="radio" name="online_payment_method" id="rocket" value="ROCKET">
                       <label class="form-check-label d-block mt-2" for="rocket">
-                        <img src="{% static 'images/rocket-logo.png' %}" height="36" alt="Rocket Logo" class="mb-2">
+                        <i class="fas fa-mobile-alt fa-3x text-info mb-2"></i>
                         <div class="fw-semibold text-purple">Rocket</div>
                       </label>
                     </div>
@@ -168,6 +168,12 @@
                   <i class="fas fa-info-circle fs-5 mt-1"></i>
                   <div class="flex-grow-1">
                     <h6 class="fw-semibold mb-2">Payment Instructions</h6>
+                    <ol class="small mb-2">
+                      <li>Send money to the number below</li>
+                      <li>Use "Send Money" option (not "Payment")</li>
+                      <li>Save your transaction ID</li>
+                      <li>Enter the transaction ID in the field below</li>
+                    </ol>
                     <div class="row g-3">
                       <div class="col-md-6">
                         <div class="small text-muted mb-1 fw-semibold">Send Money To</div>
@@ -178,19 +184,17 @@
                         <div class="fs-5 fw-bold text-success">Tk. <span id="payment-amount"></span></div>
                       </div>
                     </div>
-                    <div class="small mt-2 text-warning">
-                      <i class="fas fa-exclamation-circle me-1"></i> After payment, enter the transaction ID below.
-                    </div>
                   </div>
                 </div>
 
                 <div>
                   <label for="transaction_id" class="form-label fw-semibold">
-                    <i class="fas fa-receipt me-2"></i>Transaction ID
+                    <i class="fas fa-receipt me-2"></i>Transaction ID <span class="text-danger">*</span>
                   </label>
                   <input type="text" class="form-control form-control-lg" id="transaction_id" name="transaction_id"
-                         placeholder="Enter your transaction ID" required>
-                  <div class="form-text">Enter the exact transaction/reference ID you received.</div>
+                         placeholder="Enter your transaction ID (e.g., 8N7A5X2B9D)">
+                  <div class="invalid-feedback">Transaction ID is required for online payment.</div>
+                  <div class="form-text">Enter the exact transaction/reference ID you received after payment.</div>
                 </div>
               </div>
 
@@ -241,13 +245,13 @@
                 <span class="fw-semibold">Tk. {{ total|floatformat:0 }}</span>
               </div>
               <div class="d-flex justify-content-between mb-2">
-                <span class="text-muted">Delivery charge</span>
+                <span class="text-muted">Delivery charge ({{ order.state }})</span>
                 <span class="fw-semibold">Tk. {{ delivery_charge|floatformat:0 }}</span>
               </div>
               <hr class="my-3">
               <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="fw-semibold">Total</span>
-                <span class="fw-bold fs-5">Tk. {{ grand_total|floatformat:0 }}</span>
+                <span class="fw-bold fs-5 text-primary">Tk. {{ grand_total|floatformat:0 }}</span>
               </div>
 
               <button type="submit" class="btn btn-primary btn-lg w-100">
@@ -267,7 +271,7 @@
   </div>
 </section>
 
-<!-- Behavior (unchanged) -->
+<!-- Behavior -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const codRadio = document.getElementById('cod');
@@ -275,6 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const onlinePaymentMethods = document.getElementById('online-payment-methods');
   const paymentInstructions = document.getElementById('payment-instructions');
   const transactionIdField = document.getElementById('transaction_id');
+  const form = document.getElementById('payment-form');
 
   const paymentNumbers = {
     'BKASH': '{{ payment_settings.bkash_number }}',
@@ -289,8 +294,11 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       onlinePaymentMethods.style.display = 'none';
       paymentInstructions.style.display = 'none';
-      transactionIdField.removeAttribute('required');
-      transactionIdField.value = '';
+      if (transactionIdField) {
+        transactionIdField.removeAttribute('required');
+        transactionIdField.value = '';
+        transactionIdField.classList.remove('is-invalid');
+      }
     }
   }
 
@@ -311,29 +319,103 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       paymentInstructions.style.display = 'block';
-      transactionIdField.setAttribute('required', 'required');
-      transactionIdField.focus();
+      if (transactionIdField) {
+        transactionIdField.setAttribute('required', 'required');
+      }
     } else {
       paymentInstructions.style.display = 'none';
-      transactionIdField.removeAttribute('required');
+      if (transactionIdField) {
+        transactionIdField.removeAttribute('required');
+      }
     }
   }
 
+  // Event listeners
   if (codRadio) codRadio.addEventListener('change', togglePaymentOptions);
   if (onlineRadio) onlineRadio.addEventListener('change', togglePaymentOptions);
+  
   document.querySelectorAll('input[name="online_payment_method"]').forEach(radio => {
     radio.addEventListener('change', updatePaymentInstructions);
   });
+  
   document.querySelectorAll('input[name="payment_type"]').forEach(radio => {
     radio.addEventListener('change', updatePaymentInstructions);
   });
 
-  // initial
+  // Form validation
+  form.addEventListener('submit', function(e) {
+    let isValid = true;
+    const errors = [];
+
+    // Check payment method
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+    if (!paymentMethod) {
+      errors.push('Please select a payment method (COD or Online Payment)');
+      isValid = false;
+    }
+
+    // Check payment type
+    const paymentType = document.querySelector('input[name="payment_type"]:checked');
+    if (!paymentType) {
+      errors.push('Please select payment type (Full Payment or Delivery Charge Only)');
+      isValid = false;
+    }
+
+    // If online payment, validate online method and transaction ID
+    if (paymentMethod && paymentMethod.value === 'ONLINE') {
+      const onlineMethod = document.querySelector('input[name="online_payment_method"]:checked');
+      if (!onlineMethod) {
+        errors.push('Please select a mobile banking service (bKash, Nagad, or Rocket)');
+        isValid = false;
+      }
+
+      if (transactionIdField && !transactionIdField.value.trim()) {
+        transactionIdField.classList.add('is-invalid');
+        errors.push('Please enter your transaction ID');
+        isValid = false;
+      } else if (transactionIdField) {
+        transactionIdField.classList.remove('is-invalid');
+      }
+    }
+
+    if (!isValid) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Show error alert
+      const alertHtml = `
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong><i class="fas fa-exclamation-circle me-2"></i>Please fix the following errors:</strong>
+          <ul class="mb-0 mt-2">
+            ${errors.map(err => `<li>${err}</li>`).join('')}
+          </ul>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      `;
+      
+      const existingAlert = document.querySelector('.alert-danger');
+      if (existingAlert) existingAlert.remove();
+      
+      const checkoutHero = document.querySelector('.checkout-hero');
+      checkoutHero.insertAdjacentHTML('afterend', alertHtml);
+    }
+  });
+
+  // Real-time transaction ID validation
+  if (transactionIdField) {
+    transactionIdField.addEventListener('input', function() {
+      if (this.value.trim()) {
+        this.classList.remove('is-invalid');
+      }
+    });
+  }
+
+  // Initial state
   togglePaymentOptions();
 });
 </script>
 
-<!-- Presentation polish (matches checkout page) -->
+<!-- Presentation -->
 <style>
   .section-content.padding-y { padding-top: 24px; padding-bottom: 32px; }
 
@@ -354,28 +436,47 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   .card-header h5{ font-weight:700; letter-spacing:.2px; }
 
-  /* Selection tiles */
+  .hover-outline{
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
   .hover-outline:hover{
     border-color: rgba(13,110,253,.35)!important;
     box-shadow: 0 0 0 .2rem rgba(13,110,253,.08);
   }
-  .form-check-input:disabled + .form-check-label{ opacity:.6; }
+  .form-check-input:checked + .form-check-label{
+    color: #0d6efd;
+  }
+  .form-check-input:disabled + .form-check-label{ opacity:.6; cursor: not-allowed; }
 
   .text-pink{ color:#e91e63; }
   .text-orange{ color:#ec7c26; }
   .text-purple{ color:#722ed1; }
   .border-left-primary{ border-left:4px solid #0d6efd; }
 
-  /* Sticky order card */
   @media (min-width: 992px){
-    .order-summary{ top: 90px; }
-    .order-summary{ position: sticky; }
+    .order-summary{ top: 90px; position: sticky; }
   }
 
   .btn-primary{
     border-radius: 10px;
     padding: .75rem 1rem;
     font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  .btn-primary:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13,110,253,.3);
+  }
+  
+  .is-invalid {
+    border-color: #dc3545 !important;
+  }
+  .invalid-feedback {
+    display: block;
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
   }
 </style>
 {% endblock %}

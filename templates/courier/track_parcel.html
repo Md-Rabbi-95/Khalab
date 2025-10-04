@@ -1,0 +1,145 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+{% block title %}Track Parcel - {{ parcel.tracking_id }}{% endblock %}
+
+{% block content %}
+<div class="content" style="padding: 20px;">
+    <div style="max-width: 900px; margin: 0 auto;">
+        <h1 style="margin-bottom: 10px;">Track REDX Parcel</h1>
+        <p style="color: #666; margin-bottom: 30px;">Real-time tracking information for your parcel</p>
+        
+        <!-- Parcel Information Card -->
+        <div style="background: white; padding: 25px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h2 style="margin: 0 0 20px 0; font-size: 18px; border-bottom: 2px solid #0ea5e9; padding-bottom: 10px;">📦 Parcel Information</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="background: #f8fafc; padding: 15px; border-radius: 6px;">
+                    <p style="margin: 0 0 5px 0; color: #666; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Tracking ID</p>
+                    <p style="margin: 0; font-weight: 700; font-size: 20px; color: #0ea5e9;">{{ parcel.tracking_id }}</p>
+                </div>
+                
+                <div style="background: #f8fafc; padding: 15px; border-radius: 6px;">
+                    <p style="margin: 0 0 5px 0; color: #666; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Order Number</p>
+                    <p style="margin: 0; font-weight: 700; font-size: 20px; color: #1f2937;">{{ parcel.order.order_number }}</p>
+                </div>
+                
+                <div style="background: #f8fafc; padding: 15px; border-radius: 6px;">
+                    <p style="margin: 0 0 5px 0; color: #666; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Customer Name</p>
+                    <p style="margin: 0; font-weight: 600; font-size: 16px; color: #1f2937;">{{ parcel.customer_name }}</p>
+                </div>
+                
+                <div style="background: #f8fafc; padding: 15px; border-radius: 6px;">
+                    <p style="margin: 0 0 5px 0; color: #666; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Customer Phone</p>
+                    <p style="margin: 0; font-weight: 600; font-size: 16px; color: #1f2937;">{{ parcel.customer_phone }}</p>
+                </div>
+                
+                <div style="background: #f8fafc; padding: 15px; border-radius: 6px;">
+                    <p style="margin: 0 0 5px 0; color: #666; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Status</p>
+                    <p style="margin: 0;">
+                        {% if parcel.status == 'delivered' %}
+                            <span style="background: #10b981; color: white; padding: 6px 14px; border-radius: 12px; font-size: 13px; font-weight: 700; text-transform: uppercase;">
+                                ✓ {{ parcel.get_status_display }}
+                            </span>
+                        {% elif parcel.status == 'cancelled' %}
+                            <span style="background: #ef4444; color: white; padding: 6px 14px; border-radius: 12px; font-size: 13px; font-weight: 700; text-transform: uppercase;">
+                                ✗ {{ parcel.get_status_display }}
+                            </span>
+                        {% elif parcel.status == 'in_transit' %}
+                            <span style="background: #0ea5e9; color: white; padding: 6px 14px; border-radius: 12px; font-size: 13px; font-weight: 700; text-transform: uppercase;">
+                                🚚 {{ parcel.get_status_display }}
+                            </span>
+                        {% elif parcel.status == 'picked' %}
+                            <span style="background: #8b5cf6; color: white; padding: 6px 14px; border-radius: 12px; font-size: 13px; font-weight: 700; text-transform: uppercase;">
+                                📦 {{ parcel.get_status_display }}
+                            </span>
+                        {% else %}
+                            <span style="background: #3b82f6; color: white; padding: 6px 14px; border-radius: 12px; font-size: 13px; font-weight: 700; text-transform: uppercase;">
+                                {{ parcel.get_status_display }}
+                            </span>
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <div style="background: #f8fafc; padding: 15px; border-radius: 6px;">
+                    <p style="margin: 0 0 5px 0; color: #666; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Cash Collection</p>
+                    <p style="margin: 0; font-weight: 700; font-size: 18px; color: #059669;">Tk. {{ parcel.cash_collection_amount }}</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                <p style="margin: 0 0 5px 0; color: #666; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Delivery Address</p>
+                <p style="margin: 0; font-weight: 500; color: #1f2937;">{{ parcel.customer_address }}</p>
+                <p style="margin: 5px 0 0 0; color: #6b7280; font-size: 14px;">{{ parcel.customer_area }}, {{ parcel.customer_district }}</p>
+            </div>
+        </div>
+        
+        <!-- Tracking Details Card -->
+        {% if tracking_data %}
+        <div style="background: white; padding: 25px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h2 style="margin: 0 0 15px 0; font-size: 18px; border-bottom: 2px solid #0ea5e9; padding-bottom: 10px;">📍 Tracking Details from REDX</h2>
+            
+            <div style="background: #f9fafb; padding: 20px; border-radius: 6px; border: 1px solid #e5e7eb;">
+                <pre style="margin: 0; font-family: 'Courier New', monospace; font-size: 13px; color: #1f2937; white-space: pre-wrap; word-wrap: break-word; line-height: 1.6;">{{ tracking_data|safe }}</pre>
+            </div>
+        </div>
+        {% else %}
+        <div style="background: #fffbeb; border: 1px solid #fbbf24; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <p style="margin: 0; color: #92400e; font-weight: 500;">⚠️ No tracking details available at this moment. Please try again later.</p>
+        </div>
+        {% endif %}
+        
+        <!-- Parcel Timeline (Optional - if you want to show history) -->
+        <div style="background: white; padding: 25px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h2 style="margin: 0 0 15px 0; font-size: 18px; border-bottom: 2px solid #0ea5e9; padding-bottom: 10px;">🕐 Parcel History</h2>
+            
+            <div style="padding-left: 20px; border-left: 3px solid #e5e7eb;">
+                <div style="margin-bottom: 15px; position: relative;">
+                    <div style="position: absolute; left: -28px; top: 3px; width: 12px; height: 12px; background: #10b981; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px #10b981;"></div>
+                    <p style="margin: 0 0 3px 0; font-weight: 600; color: #1f2937;">Parcel Created</p>
+                    <p style="margin: 0; font-size: 13px; color: #6b7280;">{{ parcel.created_at|date:"d M Y, h:i A" }}</p>
+                </div>
+                
+                {% if parcel.status != 'pending' %}
+                <div style="margin-bottom: 15px; position: relative;">
+                    <div style="position: absolute; left: -28px; top: 3px; width: 12px; height: 12px; background: #3b82f6; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px #3b82f6;"></div>
+                    <p style="margin: 0 0 3px 0; font-weight: 600; color: #1f2937;">Submitted to REDX</p>
+                    <p style="margin: 0; font-size: 13px; color: #6b7280;">{{ parcel.updated_at|date:"d M Y, h:i A" }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="{% url 'admin:courier_redxparcel_change' parcel.id %}" 
+               style="padding: 12px 24px; background: #0ea5e9; color: white; border: none; border-radius: 6px; text-decoration: none; display: inline-block; font-weight: 600; transition: background 0.2s;">
+                ← Back to Parcel
+            </a>
+            <a href="{% url 'admin:orders_order_change' parcel.order.id %}" 
+               style="padding: 12px 24px; background: #6b7280; color: white; border: none; border-radius: 6px; text-decoration: none; display: inline-block; font-weight: 600; transition: background 0.2s;">
+                View Order
+            </a>
+            <a href="javascript:window.location.reload()" 
+               style="padding: 12px 24px; background: #10b981; color: white; border: none; border-radius: 6px; text-decoration: none; display: inline-block; font-weight: 600; transition: background 0.2s;">
+                🔄 Refresh Tracking
+            </a>
+        </div>
+        
+        <!-- Helper Info -->
+        <div style="margin-top: 30px; padding: 15px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px;">
+            <p style="margin: 0; color: #075985; font-size: 14px;">
+                <strong>ℹ️ Note:</strong> Tracking information is updated in real-time from REDX servers. 
+                If you don't see recent updates, please refresh this page or contact REDX support.
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    a:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+</style>
+{% endblock %}

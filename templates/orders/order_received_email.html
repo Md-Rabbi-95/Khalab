@@ -1,14 +1,280 @@
 {% autoescape off %}
+<!DOCTYPE html>
+<html lang="en" style="margin:0;padding:0;">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Your Khalab Order Is Confirmed</title>
+  <style>
+    /* Inbox preview text */
+    .preheader { display:none !important; visibility:hidden; opacity:0; color:transparent; height:0; width:0; overflow:hidden; mso-hide:all; }
+    /* Mobile tweaks */
+    @media (max-width:600px) {
+      .container { width:100% !important; }
+      .px-24 { padding-left:16px !important; padding-right:16px !important; }
+      .py-24 { padding-top:16px !important; padding-bottom:16px !important; }
+      .w-100 { width:100% !important; }
+      .fs-20 { font-size:18px !important; }
+      .fs-14 { font-size:13px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background:#f4f6fb; font-family:Arial,Helvetica,sans-serif; color:#1f2937;">
+  <!-- Preheader -->
+  <div class="preheader">
+    Thanks {{ order.first_name|default:order.full_name|default:"Customer" }} — we’ve received your order {{ order.order_number }}. We’ll update you as it progresses.
+  </div>
 
-Dear {{user.first_name}},
+  <!-- Outer -->
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f6fb; padding:24px 0;">
+    <tr>
+      <td align="center">
 
-We are pleased to inform you that your order has been successfully received.  
+        <!-- Container -->
+        <table role="presentation" class="container" width="620" cellpadding="0" cellspacing="0" style="width:620px; background:#ffffff; border-radius:14px; overflow:hidden; box-shadow:0 6px 24px rgba(17,24,39,0.06);">
+          <!-- Brand header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#0d6efd,#6ea8fe); padding:18px 22px;">
+              <table role="presentation" width="100%">
+                <tr>
+                  <td>
+                    <div style="font-weight:800; letter-spacing:.2px; font-size:22px; color:#ffffff;">Khalab</div>
+                    <div style="font-size:12px; color:#eaf1ff; opacity:.95;">Jewelry & Lifestyle</div>
+                  </td>
+                  <td align="right" style="text-align:right;">
+                    <div style="font-size:12px; color:#eaf1ff;">Order&nbsp;#{{ order.order_number }}</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-Order Number: **{{order.order_number}}**
+          <!-- Hero / Greeting -->
+          <tr>
+            <td class="px-24 py-24" style="padding:26px 24px 10px 24px;">
+              <h1 class="fs-20" style="margin:0 0 8px; font-size:20px; line-height:1.35; font-weight:800; color:#111827;">
+                Thank you for your order, {{ order.first_name|default:order.full_name|default:"Customer" }}!
+              </h1>
+              <p class="fs-14" style="margin:0 0 14px; font-size:14px; line-height:1.65; color:#374151;">
+                We’re happy to let you know we’ve <strong>received</strong> your order. We’ll notify you again when it’s on the way.
+              </p>
+              <!-- Badge -->
+              <div style="margin:10px 0 0;">
+                <span style="display:inline-block; background:#eef2ff; color:#0d6efd; font-weight:700; padding:7px 12px; border-radius:10px; font-size:13px;">
+                  Order Number: {{ order.order_number }}
+                </span>
+              </div>
+            </td>
+          </tr>
 
-Thank you for shopping with us. We will keep you updated on the next steps.
+          <!-- Divider -->
+          <tr>
+            <td style="padding:0 24px;">
+              <hr style="border:none; border-top:1px solid #eef0f4; margin:14px 0 0;">
+            </td>
+          </tr>
 
-Best regards,  
-Khalab
+          <!-- Order + Customer summary -->
+          <tr>
+            <td class="px-24" style="padding:18px 24px 6px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <!-- Shipping / Contact -->
+                  <td valign="top" class="w-100" style="width:50%; padding-right:10px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e6e8ef; border-radius:12px;">
+                      <tr>
+                        <td style="background:#fafbff; border-top-left-radius:12px; border-top-right-radius:12px; padding:12px 14px; border-bottom:1px solid #e6e8ef;">
+                          <strong style="font-size:14px; color:#111827;">Customer & Shipping</strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:12px 14px; font-size:13px; color:#374151;">
+                          <div style="margin-bottom:6px;"><span style="color:#6b7280;">Name:</span> {{ order.full_name }}</div>
+                          <div style="margin-bottom:6px;"><span style="color:#6b7280;">Email:</span> {{ order.email }}</div>
+                          <div style="margin-bottom:6px;"><span style="color:#6b7280;">Phone:</span> {{ order.phone }}</div>
+                          <div><span style="color:#6b7280;">Address:</span> {{ order.full_address }}, {{ order.state }}, {{ order.country }}</div>
+                          {% if order.order_note %}
+                          <div style="margin-top:8px;">
+                            <span style="display:inline-block; background:#f7f7fb; border:1px solid #eceef5; color:#374151; padding:6px 8px; border-radius:8px;">
+                              <strong style="color:#6b7280;">Note: </strong>{{ order.order_note }}
+                            </span>
+                          </div>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
 
+                  <!-- Payment -->
+                  <td valign="top" class="w-100" style="width:50%; padding-left:10px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e6e8ef; border-radius:12px;">
+                      <tr>
+                        <td style="background:#fafbff; border-top-left-radius:12px; border-top-right-radius:12px; padding:12px 14px; border-bottom:1px solid #e6e8ef;">
+                          <strong style="font-size:14px; color:#111827;">Payment</strong>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:12px 14px; font-size:13px; color:#374151;">
+                          {% if payment %}
+                            <div style="margin-bottom:6px;">
+                              <span style="color:#6b7280;">Method:</span>
+                              {% if payment.get_payment_method_display %}{{ payment.get_payment_method_display }}{% else %}{{ payment.payment_method }}{% endif %}
+                              {% if payment.payment_type %} · {{ payment.payment_type|title }}{% endif %}
+                            </div>
+                            <div style="color:#6b7280;">Status:</div>
+                            <div style="margin-top:2px;">
+                              <span style="display:inline-block; background:#eef9f2; color:#0a7a2e; border:1px solid #d9f2e1; padding:4px 8px; border-radius:999px; font-size:12px;">
+                                {{ payment.status|default:"Completed" }}
+                              </span>
+                            </div>
+                          {% else %}
+                            <div>No payment record was attached to this order.</div>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Items -->
+          {% if ordered_products %}
+          <tr>
+            <td class="px-24" style="padding:16px 24px 6px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e6e8ef; border-radius:12px;">
+                <tr>
+                  <td style="background:#fafbff; padding:12px 14px; border-bottom:1px solid #e6e8ef; border-top-left-radius:12px; border-top-right-radius:12px;">
+                    <strong style="font-size:14px; color:#111827;">Items</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:13px; color:#374151;">
+                      <thead>
+                        <tr>
+                          <th align="left" style="padding:12px 14px; color:#6b7280; border-bottom:1px solid #eef0f4;">Product</th>
+                          <th align="center" style="padding:12px 8px; color:#6b7280; border-bottom:1px solid #eef0f4;">Qty</th>
+                          <th align="right" style="padding:12px 14px; color:#6b7280; border-bottom:1px solid #eef0f4;">Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for item in ordered_products %}
+                        <tr>
+                          <td style="padding:12px 14px; border-bottom:1px solid #f3f4f7;">
+                            <div style="font-weight:700; color:#111827;">{{ item.product.product_name }}</div>
+                            {% if item.variations.all %}
+                              <div style="color:#6b7280; font-size:12px; margin-top:2px;">
+                                {% for v in item.variations.all %}
+                                  {{ v.variation_category|capfirst }}: {{ v.variation_value|capfirst }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                              </div>
+                            {% endif %}
+                          </td>
+                          <td align="center" style="padding:12px 8px; border-bottom:1px solid #f3f4f7;">{{ item.quantity }}</td>
+                          <td align="right" style="padding:12px 14px; border-bottom:1px solid #f3f4f7;">Tk. {{ item.product_price|floatformat:0 }}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          {% endif %}
+
+          <!-- Totals -->
+          <tr>
+            <td class="px-24" style="padding:16px 24px 8px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e6e8ef; border-radius:12px;">
+                <tr>
+                  <td style="background:#fafbff; padding:12px 14px; border-bottom:1px solid #e6e8ef; border-top-left-radius:12px; border-top-right-radius:12px;">
+                    <strong style="font-size:14px; color:#111827;">Totals</strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:12px 14px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:13px;">
+                      <tr>
+                        <td style="padding:6px 0; color:#6b7280;">Subtotal</td>
+                        <td align="right" style="padding:6px 0; color:#111827;">Tk. {{ subtotal|default:0|floatformat:0 }}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:6px 0; color:#6b7280;">Delivery ({{ order.state }})</td>
+                        <td align="right" style="padding:6px 0; color:#111827;">Tk. {{ order.delivery_charge|floatformat:0 }}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="2" style="padding:10px 0;"><hr style="border:none; border-top:1px solid #eef0f4;"></td>
+                      </tr>
+                      <tr>
+                        <td style="padding:6px 0; font-weight:800; color:#111827;">Grand Total</td>
+                        <td align="right" style="padding:6px 0; font-weight:800; color:#0d6efd;">Tk. {{ order.order_total|floatformat:0 }}</td>
+                      </tr>
+                      {% if payment %}
+                      <tr>
+                        <td style="padding:6px 0; color:#6b7280;">Amount Paid</td>
+                        <td align="right" style="padding:6px 0; color:#111827;">Tk. {{ payment.amount_paid|floatformat:0 }}</td>
+                      </tr>
+                      {% endif %}
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- CTA -->
+          <tr>
+            <td style="padding:10px 24px 22px;">
+              <table role="presentation" width="100%">
+                <tr>
+                  <td align="center">
+                    <a href="{{ domain|default:'https://yourdomain.com' }}/orders/track/{{ order.order_number }}"
+                       style="display:inline-block; background:#0d6efd; color:#ffffff; text-decoration:none; padding:12px 22px; border-radius:10px; font-weight:800; font-size:14px;">
+                      Track Your Order
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Support / Footer -->
+          <tr>
+            <td style="padding:0 24px 6px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafc; border:1px solid #eef0f4; border-radius:12px;">
+                <tr>
+                  <td style="padding:14px 16px; font-size:12px; color:#6b7280; text-align:center;">
+                    Need help? Visit our <a href="{{ domain|default:'https://yourdomain.com' }}/support" style="color:#0d6efd; text-decoration:none;">Help Center</a>.
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:18px 24px 24px; color:#6b7280; font-size:12px; text-align:center;">
+              Thank you for shopping with <strong style="color:#111827;">Khalab</strong>.<br>
+              This is an automated message; please do not reply.
+            </td>
+          </tr>
+        </table>
+
+        <!-- Legal line -->
+        <table role="presentation" width="620" class="container" cellpadding="0" cellspacing="0" style="width:620px; margin-top:12px;">
+          <tr>
+            <td style="text-align:center; font-size:11px; color:#9ca3af;">
+              © {% now "Y" %} Khalab. All rights reserved.
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
 {% endautoescape %}

@@ -1,0 +1,53 @@
+ERROR 2025-10-04 01:46:31,304 services REDX API Error: 401 Client Error: Unauthorized for url: https://sandbox.redx.com.bd/v1.0.0-beta/parcel
+ERROR 2025-10-04 01:55:39,341 services REDX API Error: 401 Client Error: Unauthorized for url: https://sandbox.redx.com.bd/v1.0.0-beta/parcel
+ERROR 2025-10-04 01:55:39,346 views Failed to create REDX parcel for order 2025100491: Unauthorized
+INFO 2025-10-04 02:01:47,164 services Fetching REDX areas
+INFO 2025-10-04 02:03:30,816 services Creating REDX parcel: 2025100491
+ERROR 2025-10-04 02:03:31,035 services REDX API HTTP Error: 400 Client Error: Bad Request for url: https://openapi.redx.com.bd/v1.0.0-beta/parcel
+INFO 2025-10-04 02:10:43,413 services Fetching REDX areas
+ERROR 2025-10-04 02:10:43,632 services REDX Areas Error: 401 Client Error: Unauthorized for url: https://openapi.redx.com.bd/v1.0.0-beta/areas
+INFO 2025-10-04 02:13:53,395 services Fetching REDX areas
+ERROR 2025-10-04 02:13:53,613 services REDX Areas Error: 401 Client Error: Unauthorized for url: https://openapi.redx.com.bd/v1.0.0-beta/areas
+INFO 2025-10-04 02:20:53,370 services Fetching REDX areas
+INFO 2025-10-04 02:22:02,828 services Creating REDX parcel: 2025100492
+ERROR 2025-10-04 02:22:03,050 services REDX API HTTP Error: 400 Client Error: Bad Request for url: https://openapi.redx.com.bd/v1.0.0-beta/parcel
+ERROR 2025-10-04 02:22:03,056 views Failed to create REDX parcel for order 2025100492: Request payload contains validation errors
+INFO 2025-10-04 02:33:55,891 services Fetching REDX areas
+INFO 2025-10-04 02:33:56,541 services Creating REDX parcel: 2025100493
+INFO 2025-10-04 02:33:56,980 services Parcel created successfully. Tracking ID: 2510A3FR1AICHJ
+INFO 2025-10-04 02:33:56,990 views REDX parcel created successfully for order 2025100493: 2510A3FR1AICHJ
+INFO 2025-10-04 02:37:07,530 services Cancelling parcel: 2510A3FR1AICHJ
+ERROR 2025-10-04 02:37:07,723 services REDX Cancel HTTP Error: 404 Client Error: Not Found for url: https://openapi.redx.com.bd/v1.0.0-beta/parcel/cancel/2510A3FR1AICHJ
+ERROR 2025-10-04 02:37:07,724 views Failed to cancel parcel 2510A3FR1AICHJ: Please check your specified endpoint and request method
+INFO 2025-10-04 02:40:55,652 services Cancelling parcel: 2510A3FR1AICHJ
+ERROR 2025-10-04 02:40:55,851 services REDX Cancel HTTP Error: 404 Client Error: Not Found for url: https://openapi.redx.com.bd/v1.0.0-beta/parcel/cancel/2510A3FR1AICHJ
+ERROR 2025-10-04 02:40:55,852 views Failed to cancel parcel 2510A3FR1AICHJ: Please check your specified endpoint and request method
+INFO 2025-10-04 02:41:22,126 services Cancelling parcel: 2510A3FR1AICHJ
+ERROR 2025-10-04 02:41:22,342 services REDX Cancel HTTP Error: 404 Client Error: Not Found for url: https://openapi.redx.com.bd/v1.0.0-beta/parcel/cancel/2510A3FR1AICHJ
+ERROR 2025-10-04 02:41:22,342 views Failed to cancel parcel 2510A3FR1AICHJ: Please check your specified endpoint and request method
+INFO 2025-10-04 02:42:36,564 services Tracking parcel: 2510A3FR1AICHJ
+INFO 2025-10-04 02:42:52,065 services Tracking parcel: 2510A3FR1AICHJ
+INFO 2025-10-04 02:45:32,823 services Tracking parcel: 2510A3FR1AICHJ
+INFO 2025-10-04 02:46:29,830 services Tracking parcel: 2510A3FR1AICHJ
+INFO 2025-10-04 11:00:12,399 services Fetching REDX areas
+INFO 2025-10-04 11:00:13,225 services Creating REDX parcel: 2025100494
+INFO 2025-10-04 11:00:16,864 services Parcel created successfully. Tracking ID: 2510A4SA1AIDPR
+INFO 2025-10-04 11:00:16,869 views REDX parcel created successfully for order 2025100494: 2510A4SA1AIDPR
+INFO 2025-10-04 11:02:25,080 services Tracking parcel: 2510A4SA1AIDPR
+INFO 2025-10-04 12:00:57,053 services Fetching REDX areas
+INFO 2025-10-04 12:00:57,626 services Creating REDX parcel: 2025100499
+INFO 2025-10-04 12:00:57,923 services Parcel created successfully. Tracking ID: 2510A4SA1AIEAO
+INFO 2025-10-04 12:00:57,926 views REDX parcel created successfully for order 2025100499: 2510A4SA1AIEAO
+INFO 2025-10-04 12:05:34,438 services Fetching REDX areas
+INFO 2025-10-04 12:05:37,951 services Creating REDX parcel: 20251004100
+INFO 2025-10-04 12:05:38,495 services Parcel created successfully. Tracking ID: 2510A4SA1AIECL
+INFO 2025-10-04 12:05:38,498 views REDX parcel created successfully for order 20251004100: 2510A4SA1AIECL
+INFO 2025-10-04 12:06:20,637 services Tracking parcel: 2510A4SA1AIECL
+INFO 2025-10-04 22:14:12,866 services Tracking parcel: 2510A4SA1AIECL
+INFO 2025-10-04 22:14:22,606 services Tracking parcel: 2510A4SA1AIECL
+INFO 2025-10-05 01:21:20,603 services Fetching REDX areas
+INFO 2025-10-05 01:21:21,421 services Creating REDX parcel: 20251005105
+INFO 2025-10-05 01:21:21,751 services Parcel created successfully. Tracking ID: 2510A4SA1AISFT
+INFO 2025-10-05 01:21:21,754 views REDX parcel created successfully for order 20251005105: 2510A4SA1AISFT
+INFO 2025-10-05 01:22:58,880 services Tracking parcel: 2510A4SA1AISFT
+INFO 2025-10-05 01:23:13,845 services Tracking parcel: 2510A4SA1AISFT

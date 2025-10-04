@@ -1,25 +1,146 @@
 {% extends 'base.html' %}
 {% load static %}
-
+{% comment %} store.html {% endcomment %}
 {% block content %}
+
+<style>
+  /* ================== Match home.html styles ================== */
+  .section-intro, .section-pagetop{ background: linear-gradient(180deg, #f8fafc, #ffffff); }
+  .section-pagetop{ border-bottom:1px solid #eef1f5; }
+
+  /* Headings */
+  .section-heading{ margin-bottom:1rem; }
+  .section-heading .section-title{ font-weight:700; letter-spacing:.2px; }
+  .section-heading .btn{ border-radius:.6rem; }
+
+  /* ================== Product Cards ================== */
+  .card-product-grid{
+    border:1px solid #eef1f5;
+    border-radius:1rem;
+    overflow:hidden;
+    background:#fff;
+    display:flex; flex-direction:column; height:100%;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .card-product-grid:hover{ transform:translateY(-3px); box-shadow:0 10px 26px rgba(23,43,77,.08); }
+
+  /* image square */
+  .card-product-grid .img-wrap{
+    position:relative; display:block; overflow:hidden; background:#f3f5f9; margin-bottom:0;
+  }
+  .card-product-grid .img-wrap::before{ content:""; display:block; padding-top:100%; }
+  .card-product-grid .img-wrap img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform .25s ease;
+  }
+  .card-product-grid:hover .img-wrap img{ transform:scale(1.05); }
+
+  /* info area */
+  .info-wrap{
+    padding:.7rem 1rem 1rem;
+    flex-grow:1; display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .card-product-grid .title{
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    color:#0f172a; font-weight:600; text-decoration:none;
+    margin:0 0 .35rem 0; min-height:2.8rem;
+  }
+  .card-product-grid .title:hover{ text-decoration:underline; }
+  .card-product-grid .price{ font-weight:700; color:#0ea5e9; font-size:1.05rem; margin-bottom:.7rem; }
+
+  /* ================== Actions ================== */
+  .product-actions{ display:flex; gap:.4rem; flex-wrap:nowrap; margin-top:auto; }
+
+  /* View Details (same pill as home) */
+  .btn-view{
+    flex:1; text-align:center; padding:.5rem 0; font-size:.9rem; font-weight:600; border-radius:.5rem;
+    background:#f3f4f6 !important; color:#0f172a !important; border:1px solid #e2e8f0 !important;
+    text-decoration:none; transition:all .2s ease;
+  }
+  .btn-view:hover{ background:#e2e8f0 !important; }
+
+  /* ===== Buy Now — hard overrides ===== */
+  a.btn-buy, a.btn.btn-buy, .card .product-actions a.btn-buy{
+    display:inline-block; flex:1; text-align:center; padding:.5rem 0; font-size:.9rem; font-weight:600; border-radius:.5rem;
+    background:#0ea5e9 !important; color:#ffffff !important; border:none !important; box-shadow:none !important;
+    text-decoration:none !important; appearance:none;
+  }
+  a.btn-buy:hover, a.btn.btn-buy:hover,
+  a.btn-buy:focus, a.btn.btn-buy:focus,
+  a.btn-buy:active, a.btn.btn-buy:active{
+    background:#0284c7 !important; color:#ffffff !important; text-decoration:none !important;
+    transform:translateY(-2px); outline:none !important;
+  }
+  a.btn-buy:visited{ color:#ffffff !important; }
+
+  /* ================== Stock Out Styles ================== */
+  .stock-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(239, 68, 68, 0.95);
+    color: #ffffff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  }
+  
+  .card-product-grid.out-of-stock {
+    opacity: 0.75;
+  }
+  
+  .card-product-grid.out-of-stock:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(23, 43, 77, 0.05);
+  }
+  
+  .card-product-grid.out-of-stock .img-wrap img {
+    filter: grayscale(30%);
+  }
+  
+  .btn-disabled {
+    background: #e5e7eb !important;
+    color: #9ca3af !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+    flex: 1;
+    text-align: center;
+    padding: 0.5rem 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db !important;
+  }
+
+  /* Sidebar cards */
+  .card.shadow-sm.border-0{ border-radius:1rem; border:1px solid #eef1f5 !important; }
+  .card-header.bg-light{ background:#f8fafc !important; border-bottom:1px solid #eef1f5; }
+  .filter-group .title{ font-weight:700; color:#0f172a; }
+  .checkbox-btn input{ display:none; }
+  .checkbox-btn .btn{ border-radius:999px; font-weight:600; padding:.25rem .55rem; }
+  .checkbox-btn input:checked + .btn{ background:#0ea5e9; color:#fff; border-color:#0ea5e9; }
+
+  /* Grid spacing */
+  .row.g-4{ --bs-gutter-x:1rem; --bs-gutter-y:1rem; }
+  .pagination .page-link{ border-radius:999px; }
+</style>
+
 <!-- ========================= SECTION PAGETOP ========================= -->
-<section class="section-pagetop bg-light border-bottom py-4">
+<section class="section-pagetop py-4">
   <div class="container">
     {% if 'search' in request.path %}
       <div class="d-flex justify-content-between align-items-center">
-        <h2 class="h4 fw-bold text-dark mb-0">
-          🔍 Search Results
-        </h2>
+        <h2 class="h5 fw-bold text-dark mb-0">🔍 Search Results</h2>
         <span class="text-muted small">{{ product_count }} items found</span>
       </div>
     {% else %}
       <div class="text-center">
-        <h2 class="title-page mb-2 fw-bold text-uppercase text-dark">
-          Discover Quality Products
-        </h2>
-        <p class="text-muted mb-0 fs-5">
-          Explore our exclusive collection and shop with confidence
-        </p>
+        <h2 class="title-page mb-2 fw-bold text-uppercase text-dark">Discover Quality Products</h2>
+        <p class="text-muted mb-0">Explore our exclusive collection and shop with confidence</p>
       </div>
     {% endif %}
   </div>
@@ -28,172 +149,181 @@
 
 <!-- ========================= SECTION CONTENT ========================= -->
 <section class="section-content padding-y">
-<div class="container">
-<div class="row">
+  <div class="container">
+    <div class="row">
 
-<!-- ============= FILTER SIDEBAR ============= -->
-<aside class="col-md-3">
-  <div class="card shadow-sm border-0">
+      <!-- ============= FILTER SIDEBAR ============= -->
+      <aside class="col-md-3">
+        <div class="card shadow-sm border-0">
 
-    <!-- Categories -->
-    <article class="filter-group">
-      <header class="card-header bg-light">
-        <a href="#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" class="d-flex align-items-center">
-          <i class="fa fa-tags me-2 text-primary"></i>
-          <h6 class="title mb-0">Categories</h6>
-        </a>
-      </header>
-      <div class="filter-content collapse show" id="collapse_1">
-        <div class="card-body">
-          <ul class="list-unstyled mb-0">
-            <li><a href="{% url 'store' %}" class="d-block py-1 text-dark">All Products</a></li>
-            {% for category in links %}
-            <li><a href="{{category.get_url}}" class="d-block py-1">{{category.category_name}}</a></li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-    </article>
-
-    <!-- === FILTER FORM START === -->
-    <form method="get" action="{% url 'store' %}">
-      <!-- Sizes -->
-      <article class="filter-group">
-        <header class="card-header bg-light">
-          <a href="#" data-toggle="collapse" data-target="#collapse_4" aria-expanded="true" class="d-flex align-items-center">
-            <i class="fa fa-ruler-combined me-2 text-primary"></i>
-            <h6 class="title mb-0">Sizes</h6>
-          </a>
-        </header>
-        <div class="filter-content collapse show" id="collapse_4">
-          <div class="card-body">
-            {% for size in sizes %}
-              <label class="checkbox-btn me-2 mb-2">
-                <input type="checkbox" name="size" value="{{ size }}"
-                       {% if size in selected_sizes %}checked{% endif %}>
-                <span class="btn btn-outline-secondary btn-sm">{{ size|capfirst }}</span>
-              </label>
-            {% empty %}
-              <p class="text-muted small">No sizes available</p>
-            {% endfor %}
-          </div>
-        </div>
-      </article>
-
-      <!-- Price Range -->
-      <article class="filter-group">
-        <header class="card-header bg-light">
-          <a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" class="d-flex align-items-center">
-            <i class="fas fa-coins me-1 text-primary"></i>
-            <h6 class="title mb-0">Price Range</h6>
-          </a>
-        </header>
-        <div class="filter-content collapse show" id="collapse_3">
-          <div class="card-body">
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                <label class="small">Min</label>
-                <input type="number" class="form-control form-control-sm" name="min_price"
-                       value="{{ selected_min|default:price_range.min_price }}">
-              </div>
-              <div class="form-group col-md-6">
-                <label class="small">Max</label>
-                <input type="number" class="form-control form-control-sm" name="max_price"
-                       value="{{ selected_max|default:price_range.max_price }}">
+          <!-- Categories -->
+          <article class="filter-group">
+            <header class="card-header bg-light">
+              <a href="#" data-toggle="collapse" data-target="#collapse_1" aria-expanded="true" class="d-flex align-items-center">
+                <i class="fa fa-tags me-2 text-primary"></i>
+                <h6 class="title mb-0">Categories</h6>
+              </a>
+            </header>
+            <div class="filter-content collapse show" id="collapse_1">
+              <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                  <li><a href="{% url 'store' %}" class="d-block py-1 text-dark">All Products</a></li>
+                  {% for category in links %}
+                    <li><a href="{{ category.get_url }}" class="d-block py-1">{{ category.category_name }}</a></li>
+                  {% endfor %}
+                </ul>
               </div>
             </div>
-            <button type="submit" class="btn btn-sm btn-primary btn-block mt-2">Apply</button>
-            <a href="{% url 'store' %}" class="btn btn-sm btn-outline-secondary btn-block mt-2">Clear Filters</a>
-          </div>
+          </article>
+
+          <!-- === FILTER FORM START === -->
+          <form method="get" action="{% url 'store' %}">
+            <!-- Sizes -->
+            <article class="filter-group">
+              <header class="card-header bg-light">
+                <a href="#" data-toggle="collapse" data-target="#collapse_4" aria-expanded="true" class="d-flex align-items-center">
+                  <i class="fa fa-ruler-combined me-2 text-primary"></i>
+                  <h6 class="title mb-0">Sizes</h6>
+                </a>
+              </header>
+              <div class="filter-content collapse show" id="collapse_4">
+                <div class="card-body">
+                  {% for size in sizes %}
+                    <label class="checkbox-btn me-2 mb-2">
+                      <input type="checkbox" name="size" value="{{ size }}" {% if size in selected_sizes %}checked{% endif %}>
+                      <span class="btn btn-outline-secondary btn-sm">{{ size|capfirst }}</span>
+                    </label>
+                  {% empty %}
+                    <p class="text-muted small mb-0">No sizes available</p>
+                  {% endfor %}
+                </div>
+              </div>
+            </article>
+
+            <!-- Price Range -->
+            <article class="filter-group">
+              <header class="card-header bg-light">
+                <a href="#" data-toggle="collapse" data-target="#collapse_3" aria-expanded="true" class="d-flex align-items-center">
+                  <i class="fas fa-coins me-1 text-primary"></i>
+                  <h6 class="title mb-0">Price Range</h6>
+                </a>
+              </header>
+              <div class="filter-content collapse show" id="collapse_3">
+                <div class="card-body">
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label class="small">Min</label>
+                      <input type="number" class="form-control form-control-sm" name="min_price"
+                             value="{{ selected_min|default:price_range.min_price }}">
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label class="small">Max</label>
+                      <input type="number" class="form-control form-control-sm" name="max_price"
+                             value="{{ selected_max|default:price_range.max_price }}">
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-sm btn-primary btn-block mt-2">Apply</button>
+                  <a href="{% url 'store' %}" class="btn btn-sm btn-outline-secondary btn-block mt-2">Clear Filters</a>
+                </div>
+              </div>
+            </article>
+          </form>
+          <!-- === FILTER FORM END === -->
+
         </div>
-      </article>
-    </form>
-    <!-- === FILTER FORM END === -->
+      </aside>
+      <!-- ============= FILTER SIDEBAR END// ============= -->
 
-  </div>
-</aside>
-<!-- ============= FILTER SIDEBAR END// ============= -->
+      <!-- ============= MAIN CONTENT ============= -->
+      <main class="col-md-9">
 
-<!-- ============= MAIN CONTENT ============= -->
-<main class="col-md-9">
+        <header class="border-bottom mb-4 pb-3 d-flex justify-content-between align-items-center">
+          <span class="text-muted"><b>{{ product_count }}</b> items found</span>
+        </header>
 
-<header class="border-bottom mb-4 pb-3 d-flex justify-content-between align-items-center">
-  <span class="text-muted"><b>{{product_count}}</b> items found</span>
-</header>
+        <div class="row g-4">
+          {% if products %}
+            {% for product in products %}
+            <div class="col-md-4 col-sm-6 d-flex">
+              <article class="card card-product-grid w-100 {% if product.stock <= 0 %}out-of-stock{% endif %}">
+                <a href="{{ product.get_url }}" class="img-wrap" aria-label="{{ product.product_name }}">
+                  {% if product.stock <= 0 %}
+                    <span class="stock-badge">Stock Out</span>
+                  {% endif %}
+                  {% if product.images %}
+                    <img src="{{ product.images.url }}" alt="{{ product.product_name }}" loading="lazy">
+                  {% else %}
+                    <img src="{% static 'images/default.jpg' %}" alt="{{ product.product_name }}" loading="lazy">
+                  {% endif %}
+                </a>
 
-<div class="row g-4">
-{% if products %}
-  {% for product in products %}
-  <div class="col-md-4 col-sm-6">
-    <figure class="card card-product-grid border-0 shadow-sm h-100">
-      <div class="img-wrap bg-light text-center p-3" style="height:220px; overflow:hidden;">
-        {% if product.images %}
-          <a href ="{{product.get_url}}">
-            <img src="{{ product.images.url }}" alt="{{ product.product_name }}" class="img-fluid h-100 object-fit-contain">
-          </a>
-        {% else %}
-          <img src="{% static 'images/default.jpg' %}" alt="No image" class="img-fluid h-100 object-fit-contain">
-        {% endif %}
-      </div>
-      <figcaption class="info-wrap p-3 d-flex flex-column">
-        <h6 class="title mb-2">
-          <a href="{{product.get_url}}" class="fw-bold text-dark">{{ product.product_name }}</a>
-        </h6>
-        <div class="price-wrap mb-2">
-          <span class="price fw-bold text-primary">Tk.{{ product.price }}</span>
+                <div class="info-wrap">
+                  <a href="{{ product.get_url }}" class="title">{{ product.product_name }}</a>
+                  <div class="price">Tk. {{ product.price }}</div>
+
+                  <div class="product-actions">
+                    {% if product.stock <= 0 %}
+                      <span class="btn-view btn-disabled">Out of Stock</span>
+                      <span class="btn-disabled">Unavailable</span>
+                    {% else %}
+                      {% if product.requires_variation %}
+                        <a href="{{ product.get_url }}" class="btn-view">Choose Options</a>
+                      {% else %}
+                        <a href="{{ product.get_url }}" class="btn-view">View Details</a>
+                      {% endif %}
+                      <a href="{% url 'buy_now' product.id %}" class="btn btn-primary">Buy Now</a>
+                    {% endif %}
+                  </div>
+                </div>
+              </article>
+            </div>
+            {% endfor %}
+          {% else %}
+            <!-- Empty state -->
+            <div class="d-flex flex-column justify-content-center align-items-center text-center py-5 w-100">
+              <i class="fas fa-box-open fa-5x text-secondary mb-3"></i>
+              <h2 class="fw-bold text-dark mb-2">No Results Found</h2>
+              <p class="text-muted mb-4" style="max-width: 420px;">
+                Sorry, we couldn't find any products matching your search.
+                Try adjusting your filters or explore our full collection.
+              </p>
+              <a href="{% url 'store' %}" class="btn btn-lg btn-primary px-4 rounded-pill shadow-sm">🛍️ Continue Shopping</a>
+            </div>
+          {% endif %}
         </div>
-        <a href="{{product.get_url}}" class="btn btn-sm btn-outline-primary mt-auto">View Details</a>
-      </figcaption>
-    </figure>
+
+        <!-- Pagination -->
+        <nav class="mt-4" aria-label="Page navigation">
+          {% if products.has_other_pages %}
+            <ul class="pagination justify-content-center">
+              {% if products.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">Previous</a></li>
+              {% else %}
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+              {% endif %}
+
+              {% for i in products.paginator.page_range %}
+                {% if products.number == i %}
+                  <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                {% else %}
+                  <li class="page-item"><a class="page-link" href="?page={{ i }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">{{ i }}</a></li>
+                {% endif %}
+              {% endfor %}
+
+              {% if products.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">Next</a></li>
+              {% else %}
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+              {% endif %}
+            </ul>
+          {% endif %}
+        </nav>
+
+      </main>
+      <!-- ============= MAIN CONTENT END// ============= -->
+
+    </div>
   </div>
-  {% endfor %}
-{% else %}
-  <!-- Empty state -->
-  <div class="d-flex flex-column justify-content-center align-items-center text-center py-5 w-100">
-    <i class="fas fa-box-open fa-5x text-secondary mb-3"></i>
-    <h2 class="fw-bold text-dark mb-2">No Results Found</h2>
-    <p class="text-muted mb-4" style="max-width: 400px;">
-      Sorry, we couldn’t find any products matching your search.  
-      Try adjusting your keywords or explore our full collection.
-    </p>
-    <a href="{% url 'store' %}" class="btn btn-lg btn-primary px-4 rounded-pill shadow-sm">
-      🛍️ Continue Shopping
-    </a>
-  </div>
-{% endif %}
-</div>
-
-<!-- Pagination -->
-<nav class="mt-4" aria-label="Page navigation">
- {% if products.has_other_pages %}
-  <ul class="pagination justify-content-center">
-	{% if products.has_previous %}
-	  <li class="page-item"><a class="page-link rounded-pill" href="?page={{products.previous_page_number}}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">Previous</a></li>
-	{% else %}
-	  <li class="page-item disabled"><span class="page-link rounded-pill">Previous</span></li>
-	{% endif %}
-
-	{% for i in products.paginator.page_range %}
-	  {% if products.number == i %}
-		<li class="page-item active"><span class="page-link rounded-pill">{{i}}</span></li>
-	  {% else %}
-		<li class="page-item"><a class="page-link rounded-pill" href="?page={{i}}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">{{i}}</a></li>
-	  {% endif %}
-	{% endfor %}
-
-	{% if products.has_next %}
-	  <li class="page-item"><a class="page-link rounded-pill" href="?page={{products.next_page_number}}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">Next</a></li>
-	{% else %}
-	  <li class="page-item disabled"><span class="page-link rounded-pill">Next</span></li>
-	{% endif %}
-  </ul>
- {% endif %}
-</nav>
-
-</main>
-<!-- ============= MAIN CONTENT END// ============= -->
-
-</div>
-</div>
 </section>
+
 {% endblock %}

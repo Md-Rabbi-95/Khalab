@@ -4,7 +4,6 @@
 {% block content %}
 
 <style>
-  /* Page polish */
   .checkout-hero {
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
     border-radius: 14px;
@@ -12,25 +11,16 @@
     box-shadow: 0 1px 0 rgba(0,0,0,.03) inset;
     margin-bottom: 18px;
   }
-  .checkout-hero h3 {
-    margin: 0;
-    font-weight: 700;
-    letter-spacing: .2px;
-  }
+  .checkout-hero h3 { margin: 0; font-weight: 700; letter-spacing: .2px; }
   .subtle { color:#6c757d; }
 
-  /* Cards */
   .card {
     border: 1px solid rgba(0,0,0,.06);
     border-radius: 14px;
     box-shadow: 0 6px 18px rgba(0,0,0,.05);
   }
-  .card-title {
-    font-weight: 700;
-    letter-spacing: .2px;
-  }
+  .card-title { font-weight: 700; letter-spacing: .2px; }
 
-  /* Form */
   .form-group label { font-weight: 600; }
   .form-control, .custom-select {
     border-radius: 10px;
@@ -40,18 +30,10 @@
     border-color: #86b7fe;
     box-shadow: 0 0 0 .2rem rgba(13,110,253,.15);
   }
+  
+  .required-field::after { content: " *"; color: #dc3545; }
 
-  /* Table */
   .table-shopping-cart th, .table-shopping-cart td { vertical-align: middle; }
-  .table-shopping-cart th:nth-child(2),
-  .table-shopping-cart td:nth-child(2) { text-align: center; }
-  .table-shopping-cart th:nth-child(3),
-  .table-shopping-cart td:nth-child(3) { text-align: center; }
-  .table-shopping-cart td:nth-child(3) .price-wrap {
-    text-align: center;
-    display: inline-block;
-    margin: 0 auto;
-  }
   .table-shopping-cart img.img-sm {
     width: 64px; height: 64px; object-fit: cover; border-radius: 8px;
     border: 1px solid rgba(0,0,0,.06);
@@ -62,31 +44,20 @@
     font-weight: 700;
   }
 
-  /* Sticky order panel on desktop */
   @media (min-width: 992px) {
     .sticky-lg-top { position: sticky; top: 24px; }
   }
 
-  /* Buttons */
-  .btn-primary {
-    border-radius: 10px;
-    padding: .7rem 1rem;
-    font-weight: 600;
-  }
-  .btn-light {
-    border-radius: 10px;
-    padding: .7rem 1rem;
-    border: 1px solid rgba(0,0,0,.08);
-  }
-
-  /* Section spacing */
+  .btn-primary { border-radius: 10px; padding: .7rem 1rem; font-weight: 600; }
+  .btn-light { border-radius: 10px; padding: .7rem 1rem; border: 1px solid rgba(0,0,0,.08); }
   .section-content.padding-y { padding-top: 24px; padding-bottom: 32px; }
+  .is-invalid { border-color: #dc3545 !important; }
+  .invalid-feedback { display: block; color: #dc3545; font-size: 0.875rem; margin-top: 0.25rem; }
 </style>
 
 <section class="section-content padding-y bg">
   <div class="container">
 
-    <!-- Header / Step hint -->
     <div class="checkout-hero d-flex align-items-center justify-content-between">
       <div>
         <h3>Checkout</h3>
@@ -94,8 +65,9 @@
       </div>
     </div>
 
-    <!-- ✅ Form should wrap BOTH columns so the submit button submits the address fields -->
-    <form action="{% url 'place_order' %}" method="post" novalidate>
+    {% include "includes/alerts.html" %}
+
+    <form action="{% url 'place_order' %}" method="post" novalidate id="checkoutForm">
       {% csrf_token %}
 
       <div class="row">
@@ -107,118 +79,85 @@
 
               <div class="form-row">
                 <div class="col form-group">
-                  <label for="first_name">First Name</label>
-                  <input type="text" name="first_name" id="first_name" class="form-control" required autocomplete="given-name" placeholder="e.g. Arif">
+                  <label for="first_name" class="required-field">First Name</label>
+                  <input type="text" name="first_name" id="first_name" class="form-control" 
+                         required autocomplete="given-name" placeholder="e.g. Arif"
+                         value="{{ form_data.first_name|default:'' }}">
+                  <div class="invalid-feedback">First name is required.</div>
                 </div>
                 <div class="col form-group">
-                  <label for="last_name">Last Name</label>
-                  <input type="text" name="last_name" id="last_name" class="form-control" required autocomplete="family-name" placeholder="e.g. Hossain">
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="col form-group">
-                  <label for="email">Email Address</label>
-                  <input type="email" name="email" id="email" class="form-control" required autocomplete="email" placeholder="you@example.com">
-                </div>
-                <div class="col form-group">
-                  <label for="phone">Phone Number</label>
-                  <input type="text" name="phone" id="phone" class="form-control" required autocomplete="tel" placeholder="01XXXXXXXXX">
+                  <label for="last_name" class="required-field">Last Name</label>
+                  <input type="text" name="last_name" id="last_name" class="form-control" 
+                         required autocomplete="family-name" placeholder="e.g. Hossain"
+                         value="{{ form_data.last_name|default:'' }}">
+                  <div class="invalid-feedback">Last name is required.</div>
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="col form-group">
-                  <label for="address_line_1">Address Line 1</label>
-                  <input type="text" name="address_line_1" id="address_line_1" class="form-control" required autocomplete="address-line1" placeholder="House, Road, Block">
+                  <label for="email" class="required-field">Email Address</label>
+                  <input type="email" name="email" id="email" class="form-control" 
+                         required autocomplete="email" placeholder="you@example.com"
+                         value="{{ form_data.email|default:'' }}">
+                  <div class="invalid-feedback">Valid email is required.</div>
+                </div>
+                <div class="col form-group">
+                  <label for="phone" class="required-field">Phone Number</label>
+                  <input type="text" name="phone" id="phone" class="form-control" 
+                         required autocomplete="tel" placeholder="01XXXXXXXXX"
+                         value="{{ form_data.phone|default:'' }}">
+                  <div class="invalid-feedback">Phone number is required (min 11 digits).</div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="col form-group">
+                  <label for="address_line_1" class="required-field">Address Line 1</label>
+                  <input type="text" name="address_line_1" id="address_line_1" class="form-control" 
+                         required autocomplete="address-line1" placeholder="House, Road, Block"
+                         value="{{ form_data.address_line_1|default:'' }}">
+                  <div class="invalid-feedback">Address is required.</div>
                 </div>
                 <div class="col form-group">
                   <label for="address_line_2">Address Line 2 <span class="subtle">(optional)</span></label>
-                  <input type="text" name="address_line_2" id="address_line_2" class="form-control" autocomplete="address-line2" placeholder="Area / Landmark">
+                  <input type="text" name="address_line_2" id="address_line_2" class="form-control" 
+                         autocomplete="address-line2" placeholder="Apartment, suite, etc."
+                         value="{{ form_data.address_line_2|default:'' }}">
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="col form-group">
-                  <label for="city">City</label>
-                  <input type="text" name="city" id="city" class="form-control" required autocomplete="address-level2" placeholder="e.g. Dhaka">
+                  <label for="area" class="required-field">Area</label>
+                  <input type="text" name="area" id="area" class="form-control" 
+                         required placeholder="e.g., Gulshan, Banani, Dhanmondi"
+                         value="{{ form_data.area|default:'' }}">
+                  <small class="form-text text-muted">Area/locality within district</small>
+                  <div class="invalid-feedback">Area is required.</div>
                 </div>
                 <div class="col form-group">
-                  <label for="state">District</label>
+                  <label for="state" class="required-field">District</label>
                   <select name="state" id="state" class="custom-select" required>
                     <option value="">-- Select District --</option>
-                    <option>Bagerhat</option>
-                    <option>Bandarban</option>
-                    <option>Barguna</option>
-                    <option>Barisal</option>
-                    <option>Bhola</option>
-                    <option>Bogra</option>
-                    <option>Brahmanbaria</option>
-                    <option>Chandpur</option>
-                    <option>Chattogram</option>
-                    <option>Chuadanga</option>
-                    <option>Cox's Bazar</option>
-                    <option>Dhaka</option>
-                    <option>Dinajpur</option>
-                    <option>Faridpur</option>
-                    <option>Feni</option>
-                    <option>Gaibandha</option>
-                    <option>Gazipur</option>
-                    <option>Gopalganj</option>
-                    <option>Habiganj</option>
-                    <option>Jamalpur</option>
-                    <option>Jashore</option>
-                    <option>Jhalokati</option>
-                    <option>Jhenaidah</option>
-                    <option>Joypurhat</option>
-                    <option>Khagrachari</option>
-                    <option>Khulna</option>
-                    <option>Kishoreganj</option>
-                    <option>Kurigram</option>
-                    <option>Kushtia</option>
-                    <option>Lakshmipur</option>
-                    <option>Lalmonirhat</option>
-                    <option>Madaripur</option>
-                    <option>Magura</option>
-                    <option>Manikganj</option>
-                    <option>Meherpur</option>
-                    <option>Moulvibazar</option>
-                    <option>Munshiganj</option>
-                    <option>Mymensingh</option>
-                    <option>Naogaon</option>
-                    <option>Narayanganj</option>
-                    <option>Narsingdi</option>
-                    <option>Natore</option>
-                    <option>Netrokona</option>
-                    <option>Nilphamari</option>
-                    <option>Noakhali</option>
-                    <option>Pabna</option>
-                    <option>Panchagarh</option>
-                    <option>Patuakhali</option>
-                    <option>Pirojpur</option>
-                    <option>Rajbari</option>
-                    <option>Rajshahi</option>
-                    <option>Rangamati</option>
-                    <option>Rangpur</option>
-                    <option>Satkhira</option>
-                    <option>Shariatpur</option>
-                    <option>Sherpur</option>
-                    <option>Sirajganj</option>
-                    <option>Sunamganj</option>
-                    <option>Sylhet</option>
-                    <option>Tangail</option>
-                    <option>Thakurgaon</option>
+                    {% for value, label in districts %}
+                      <option value="{{ value }}" {% if form_data.state == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
                   </select>
-                </div>
-                <div class="col form-group">
-                  <label for="country">Country</label>
-                  <input type="text" name="country" id="country" class="form-control" required value="Bangladesh" autocomplete="country-name">
+                  <div class="invalid-feedback">Please select a district.</div>
                 </div>
               </div>
 
               <div class="form-group">
+                <label for="country" class="required-field">Country</label>
+                <input type="text" name="country" id="country" class="form-control" 
+                       required value="Bangladesh" readonly autocomplete="country-name">
+              </div>
+
+              <div class="form-group">
                 <label for="order_note">Order Notes</label>
-                <textarea name="order_note" id="order_note" rows="3" class="form-control" placeholder="Additional instructions (optional)"></textarea>
+                <textarea name="order_note" id="order_note" rows="3" class="form-control" 
+                          placeholder="Additional instructions (optional)">{{ form_data.order_note|default:'' }}</textarea>
               </div>
             </div>
           </div>
@@ -235,9 +174,8 @@
                   <thead class="text-muted">
                     <tr class="small text-uppercase">
                       <th scope="col">Product</th>
-                      <th scope="col" width="120" class="text-center">Quantity</th>
-                      <th scope="col" width="120" class="text-center">Price</th>
-                      <th scope="col" class="text-right" width="40"></th>
+                      <th scope="col" width="80" class="text-center">Qty</th>
+                      <th scope="col" width="100" class="text-right">Price</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -262,19 +200,15 @@
                           </figcaption>
                         </figure>
                       </td>
-
                       <td class="text-center align-middle">
                         <span class="badge badge-light px-3 py-2" style="font-weight:600;">{{ cart_item.quantity }}</span>
                       </td>
-
-                      <td class="text-center align-middle">
+                      <td class="text-right align-middle">
                         <div class="price-wrap">
                           <div class="price font-weight-bold">Tk. {{ cart_item.sub_total }}</div>
-                          <small class="text-muted d-block">Tk. {{ cart_item.product.price }} each</small>
+                          <small class="text-muted">Tk. {{ cart_item.product.price }} each</small>
                         </div>
                       </td>
-
-                      <td></td>
                     </tr>
                     {% endfor %}
                   </tbody>
@@ -283,10 +217,9 @@
 
               <hr class="my-3">
 
-              <!-- Actions -->
               <div class="d-grid">
                 <button type="submit" name="submit" class="btn btn-primary btn-block mb-2">
-                  Proceed to payment
+                  Proceed to Payment
                 </button>
                 <a href="{% url 'store' %}" class="btn btn-light btn-block">
                   Continue Shopping
@@ -295,10 +228,119 @@
             </div>
           </div>
         </aside>
-      </div><!-- /row -->
+      </div>
     </form>
 
-  </div><!-- /container -->
+  </div>
 </section>
+
+<script>
+// Auto-fill form from user profile or last order
+document.addEventListener('DOMContentLoaded', function() {
+  const userData = {{ user_data|safe }};
+  
+  if (userData && Object.keys(userData).length > 0) {
+    const fields = ['first_name', 'last_name', 'email', 'phone', 'address_line_1', 'address_line_2', 'area', 'state'];
+    
+    fields.forEach(function(fieldName) {
+      const field = document.getElementById(fieldName);
+      if (field && !field.value && userData[fieldName]) {
+        field.value = userData[fieldName];
+      }
+    });
+  }
+});
+
+// Form validation
+document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+  let isValid = true;
+  const form = this;
+  
+  // Clear previous validation states
+  form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+  
+  // Validate first name
+  const firstName = document.getElementById('first_name');
+  if (!firstName.value.trim()) {
+    firstName.classList.add('is-invalid');
+    isValid = false;
+  }
+  
+  // Validate last name
+  const lastName = document.getElementById('last_name');
+  if (!lastName.value.trim()) {
+    lastName.classList.add('is-invalid');
+    isValid = false;
+  }
+  
+  // Validate email
+  const email = document.getElementById('email');
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email.value.trim() || !emailPattern.test(email.value)) {
+    email.classList.add('is-invalid');
+    isValid = false;
+  }
+  
+  // Validate phone
+  const phone = document.getElementById('phone');
+  if (!phone.value.trim() || phone.value.replace(/\D/g, '').length < 11) {
+    phone.classList.add('is-invalid');
+    isValid = false;
+  }
+  
+  // Validate address line 1
+  const address = document.getElementById('address_line_1');
+  if (!address.value.trim()) {
+    address.classList.add('is-invalid');
+    isValid = false;
+  }
+  
+  // Validate area (now required)
+  const area = document.getElementById('area');
+  if (!area.value.trim()) {
+    area.classList.add('is-invalid');
+    isValid = false;
+  }
+  
+  // Validate district
+  const state = document.getElementById('state');
+  if (!state.value) {
+    state.classList.add('is-invalid');
+    isValid = false;
+  }
+  
+  if (!isValid) {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Show alert
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+    alertDiv.innerHTML = `
+      <strong>Error!</strong> Please fill in all required fields marked with *.
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    `;
+    
+    const container = document.querySelector('.checkout-hero');
+    if (container.nextElementSibling && container.nextElementSibling.classList.contains('alert')) {
+      container.nextElementSibling.remove();
+    }
+    container.insertAdjacentElement('afterend', alertDiv);
+  }
+});
+
+// Real-time validation feedback
+const requiredFields = ['first_name', 'last_name', 'email', 'phone', 'address_line_1', 'area', 'state'];
+requiredFields.forEach(function(fieldId) {
+  const field = document.getElementById(fieldId);
+  if (field) {
+    field.addEventListener('blur', function() {
+      if (this.value.trim()) {
+        this.classList.remove('is-invalid');
+      }
+    });
+  }
+});
+</script>
 
 {% endblock %}

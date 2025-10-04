@@ -6,8 +6,9 @@
     <!-- Top section -->
     <section class="footer-top">
       <div class="row text-center text-md-start">
-        <!-- Contact us section -->
-        <aside class="col-md-4 col-12 mb-3">
+
+        <!-- Contact Us -->
+        <aside class="col-md-3 col-12 mb-3">
           <h4 class="title">Contact Us</h4>
           <ul class="list-icon">
             <li>
@@ -27,8 +28,8 @@
           </ul>
         </aside>
 
-        <!-- Information links -->
-        <aside class="col-md-4 col-12 mb-3">
+        <!-- Information -->
+        <aside class="col-md-3 col-12 mb-3">
           <h4 class="title">Information</h4>
           <ul class="list-unstyled">
             <li><a href="{% url 'about' %}">About us</a></li>
@@ -37,10 +38,10 @@
           </ul>
         </aside>
 
-        <!-- Social media + payment -->
-        <aside class="col-md-4 col-12 mb-3">
+        <!-- Follow Us -->
+        <aside class="col-md-3 col-12 mb-3">
           <h4 class="title">Follow Us</h4>
-          <p class="text-muted small mb-2">Stay connected with us on social media</p>
+          <p class="text-muted small mb-2">Stay connected with us</p>
           <div class="mb-3">
             <a href="https://facebook.com/khalab23" target="_blank" class="btn btn-icon social-btn fb-btn" title="Facebook">
               <i class="fab fa-facebook-f"></i>
@@ -55,22 +56,26 @@
               <i class="fab fa-youtube"></i>
             </a>
           </div>
+        </aside>
 
-          <!-- Payment methods -->
+        <!-- Payment Method -->
+        <aside class="col-md-3 col-12 mb-3">
           <h4 class="title">Payment Method</h4>
-          <div class="mt-2">
+          <div class="payment-logos mt-2">
             <img src="{% static 'images/misc/bkash.png' %}" alt="bKash" />
             <img src="{% static 'images/misc/nagad.jpg' %}" alt="Nagad" />
             <img src="{% static 'images/misc/rocket.png' %}" alt="Rocket" />
           </div>
         </aside>
+
       </div>
     </section>
 
     <!-- Bottom Section -->
     <section class="footer-bottom text-center">
       <p>
-        <a href="{% url 'privacy_policy' %}">Privacy Policy</a> · <a href="{% url 'terms_of_use' %}">Terms of Use</a> ·
+        <a href="{% url 'privacy_policy' %}">Privacy Policy</a> · 
+        <a href="{% url 'terms_of_use' %}">Terms of Use</a> · 
         <a href="{% url 'user_info_legal' %}">User Information Legal Enquiry Guide</a>
       </p>
       <p class="text-muted small">
@@ -91,20 +96,24 @@
 
 <!-- ========================= FOOTER STYLE ========================= -->
 <style>
-  /* Footer General */
+  /* Footer container */
   .section-footer {
     background: #111;
-    font-size: 15px; /* increased */
-    padding: 30px 0 15px;
+    padding: 20px 0 10px; /* reduced */
     color: #ddd;
+    font-size: 15px;
   }
+
+  /* Titles */
   .section-footer .title {
-    font-size: 16px; /* bigger headings */
+    font-size: 16px;
     font-weight: 700;
-    margin-bottom: 12px;
+    margin-bottom: 8px; /* tighter */
     color: #f1c40f;
     text-transform: uppercase;
   }
+
+  /* Links */
   .section-footer a {
     color: #ccc;
     font-size: 14.5px;
@@ -117,7 +126,7 @@
 
   /* Contact list */
   .list-icon li {
-    margin-bottom: 10px;
+    margin-bottom: 6px; /* tighter */
     font-size: 14.5px;
   }
   .list-icon i {
@@ -126,30 +135,18 @@
     font-size: 16px;
   }
 
-  /* Payment icons */
-  .section-footer img {
-    height: 28px; /* slightly bigger */
-    margin-right: 8px;
-    opacity: 0.9;
-    border-radius: 4px;
-    transition: transform 0.3s, opacity 0.3s;
-  }
-  .section-footer img:hover {
-    transform: scale(1.1);
-    opacity: 1;
-  }
-
   /* Social buttons */
   .social-btn {
     color: #fff;
     border: none;
-    width: 40px; height: 40px; /* bigger */
+    width: 36px;
+    height: 36px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    font-size: 18px;
-    margin-right: 6px;
+    font-size: 16px;
+    margin-right: 5px;
     transition: all 0.3s ease;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   }
@@ -162,15 +159,28 @@
     box-shadow: 0 0 10px rgba(241, 196, 15, 0.6);
   }
 
+  /* Payment logos */
+  .payment-logos img {
+    height: 25px;
+    margin-right: 6px;
+    opacity: 0.9;
+    border-radius: 4px;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .payment-logos img:hover {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+
   /* Footer bottom */
   .footer-bottom {
     font-size: 14px;
-    padding: 10px 0;
-    margin-top: 12px;
+    padding: 8px 0;
+    margin-top: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  /* WhatsApp Floating */
+  /* Floating WhatsApp */
   .whatsapp_float {
     position: fixed;
     bottom: 20px;
@@ -179,8 +189,8 @@
     color: #fff;
     border-radius: 50%;
     font-size: 24px;
-    width: 52px;
-    height: 52px;
+    width: 50px;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -190,7 +200,7 @@
   }
   .whatsapp_float:hover { background: #20b858; transform: scale(1.1); }
 
-  /* Messenger Floating */
+  /* Floating Messenger */
   .messenger_float {
     position: fixed;
     bottom: 85px;
@@ -199,8 +209,8 @@
     color: #fff;
     border-radius: 50%;
     font-size: 24px;
-    width: 52px;
-    height: 52px;
+    width: 50px;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -209,4 +219,14 @@
     transition: all 0.3s ease;
   }
   .messenger_float:hover { background: #006cd1; transform: scale(1.1); }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .footer-top .col-md-3 {
+      margin-bottom: 20px;
+    }
+    .social-btn {
+      margin-bottom: 8px;
+    }
+  }
 </style>

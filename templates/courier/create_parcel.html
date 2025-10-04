@@ -1,0 +1,114 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+{% block title %}Create REDX Parcel - Order #{{ order.order_number }}{% endblock %}
+
+{% block content %}
+<div class="content" style="padding: 20px;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h1>Create REDX Parcel</h1>
+        <p style="color: #666; margin-bottom: 20px;">Order #{{ order.order_number }}</p>
+        
+        <div style="background: #f0f9ff; border-left: 4px solid #0ea5e9; padding: 15px; margin-bottom: 20px;">
+            <strong>ℹ️ Information:</strong> Customer information has been auto-filled from the order. Please verify and adjust if needed.
+        </div>
+        
+        <form method="post" style="background: white; padding: 25px; border: 1px solid #ddd; border-radius: 8px;">
+            {% csrf_token %}
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px;">
+                        Customer Name <span style="color: red;">*</span>
+                    </label>
+                    <input type="text" name="customer_name" value="{{ customer_name }}" required
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px;">
+                        Customer Phone <span style="color: red;">*</span>
+                    </label>
+                    <input type="text" name="customer_phone" value="{{ customer_phone }}" required
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; margin-bottom: 5px;">
+                    Delivery Address <span style="color: red;">*</span>
+                </label>
+                <textarea name="customer_address" required rows="3"
+                          style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">{{ customer_address }}</textarea>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px;">
+                        Area <span style="color: red;">*</span>
+                    </label>
+                    <input type="text" name="customer_area" value="{{ customer_area }}" required
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"
+                           placeholder="e.g., Dhanmondi, Gulshan">
+                </div>
+                
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px;">
+                        District <span style="color: red;">*</span>
+                    </label>
+                    <input type="text" name="customer_district" value="{{ customer_district }}" required
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"
+                           placeholder="e.g., Dhaka">
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px;">
+                        Parcel Weight (KG) <span style="color: red;">*</span>
+                    </label>
+                    <input type="number" name="parcel_weight" value="{{ parcel_weight }}" step="0.01" required
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"
+                           placeholder="0.5">
+                </div>
+                
+                <div>
+                    <label style="display: block; font-weight: 600; margin-bottom: 5px;">
+                        Cash Collection Amount <span style="color: red;">*</span>
+                    </label>
+                    <input type="number" name="cash_collection_amount" value="{{ cash_collection_amount }}" step="0.01" required
+                           style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"
+                           placeholder="1000.00">
+                </div>
+            </div>
+            
+            <div style="background: #fffbeb; border: 1px solid #fbbf24; padding: 15px; border-radius: 4px; margin-bottom: 20px;">
+                <strong>⚠️ REDX Mode:</strong> 
+                {% if config.mode == 'sandbox' %}
+                    <span style="color: #f59e0b;">Sandbox (Testing)</span>
+                {% else %}
+                    <span style="color: #10b981;">Production (Live)</span>
+                {% endif %}
+            </div>
+            
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" 
+                        style="padding: 10px 20px; background: #0ea5e9; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
+                    Create Parcel
+                </button>
+                <a href="{% url 'admin:orders_order_change' order.id %}" 
+                   style="padding: 10px 20px; background: #6b7280; color: white; border: none; border-radius: 4px; text-decoration: none; display: inline-block;">
+                    Cancel
+                </a>
+            </div>
+        </form>
+        
+        <div style="margin-top: 20px; padding: 15px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 4px;">
+            <h3 style="margin: 0 0 10px 0; font-size: 16px;">Order Summary</h3>
+            <p style="margin: 5px 0;"><strong>Order Number:</strong> {{ order.order_number }}</p>
+            <p style="margin: 5px 0;"><strong>Order Total:</strong> Tk. {{ order.order_total }}</p>
+            <p style="margin: 5px 0;"><strong>Order Date:</strong> {{ order.created_at|date:"d M Y, h:i A" }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

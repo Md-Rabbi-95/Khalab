@@ -1,16 +1,17 @@
-from django.shortcuts import render, get_object_or_404,redirect
+# store/views.py
+
+from django.shortcuts import render, get_object_or_404, redirect
 from store.models import Product, ReviewRating, ProductGallery, Variation
 from category.models import Category
-from django.db.models import Min, Max
+from django.db.models import Min, Max, Sum
+from django.db import models
 from carts.views import _cart_id
-from django.http import HttpResponse
-from carts.models import CartItem
+from carts.models import Cart, CartItem
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Q
 from .forms import ReviewForm
 from django.contrib import messages
 from orders.models import OrderProduct
-
 
 
 def store(request, category_slug=None):
@@ -33,10 +34,18 @@ def store(request, category_slug=None):
     # === Apply Price Filter ===
     min_price = request.GET.get("min_price")
     max_price = request.GET.get("max_price")
+    price_filter_applied = False
+    
     if min_price:
         products = products.filter(price__gte=min_price)
+        price_filter_applied = True
     if max_price:
         products = products.filter(price__lte=max_price)
+        price_filter_applied = True
+    
+    # === Apply Price Ordering when price filter is used ===
+    if price_filter_applied:
+        products = products.order_by('price')
 
     # === Pagination AFTER filtering ===
     paginator = Paginator(products, 6)
@@ -49,7 +58,7 @@ def store(request, category_slug=None):
         variation_category__iexact="size", is_active=True
     ).values_list("variation_value", flat=True).distinct()
 
-    # === Dynamic Price Range (from ALL products, not filtered ones) ===
+    # === Dynamic Price Range ===
     price_range = Product.objects.aggregate(
         min_price=Min("price"),
         max_price=Max("price")
@@ -74,27 +83,41 @@ def product_detail(request, category_slug, product_slug):
         slug=product_slug
     )
 
-    in_cart = CartItem.objects.filter(
-        cart__cart_id=_cart_id(request),
-        product=single_product
-    ).exists()
+    # Get current cart quantity for this product
+    cart_quantity = 0
+    if request.user.is_authenticated:
+        cart_quantity = CartItem.objects.filter(
+            user=request.user,
+            product=single_product
+        ).aggregate(total=models.Sum('quantity'))['total'] or 0
+    else:
+        try:
+            cart = Cart.objects.get(cart_id=_cart_id(request))
+            cart_quantity = CartItem.objects.filter(
+                cart=cart,
+                product=single_product
+            ).aggregate(total=models.Sum('quantity'))['total'] or 0
+        except:
+            pass
+
+    in_cart = cart_quantity > 0
+    available_stock = max(0, single_product.stock - cart_quantity)
 
     orderproduct = False
     if request.user.is_authenticated:
         orderproduct = OrderProduct.objects.filter(
-        user=request.user,
-        product_id=single_product.id
-    ).exists()
+            user=request.user,
+            product_id=single_product.id
+        ).exists()
     
-    # Get the reviews
     reviews = ReviewRating.objects.filter(product_id=single_product.id, status=True)
-    
-    # get the product gallery
     product_gallery = ProductGallery.objects.filter(product_id=single_product.id)
     
     context = {
         'single_product': single_product,
         'in_cart': in_cart,
+        'cart_quantity': cart_quantity,
+        'available_stock': available_stock,
         'orderproduct': orderproduct,
         'reviews': reviews,
         'product_gallery': product_gallery,
@@ -105,46 +128,109 @@ def product_detail(request, category_slug, product_slug):
 def search(request):
     products = Product.objects.none()
     product_count = 0
+    search_performed = False
+    matched_category = None
 
     if 'keyword' in request.GET:
-        keyword = request.GET['keyword']
+        keyword = request.GET['keyword'].strip()
         if keyword:
-            products = Product.objects.order_by('-created_date').filter(
-                Q(description__icontains=keyword) |
-                Q(product_name__icontains=keyword)
-            )
+            search_performed = True
+            
+            # Try to find matching category first
+            try:
+                matched_category = Category.objects.filter(
+                    Q(category_name__icontains=keyword) |
+                    Q(slug__icontains=keyword)
+                ).first()
+            except:
+                pass
+            
+            # Build comprehensive product search query
+            product_query = Q(product_name__icontains=keyword) | Q(description__icontains=keyword)
+            
+            # If category matched, include all products from that category
+            if matched_category:
+                product_query |= Q(category=matched_category)
+            else:
+                # Also search by category name in products
+                product_query |= Q(category__category_name__icontains=keyword)
+            
+            # Get products matching the search criteria
+            products = Product.objects.filter(
+                product_query,
+                is_available=True
+            ).distinct().order_by('-created_date')
+            
+            # === Apply Size Filter ===
+            size_filter = request.GET.getlist("size")
+            if size_filter:
+                products = products.filter(
+                    variation__variation_category__iexact="size",
+                    variation__variation_value__in=size_filter
+                ).distinct()
+
+            # === Apply Price Filter ===
+            min_price = request.GET.get("min_price")
+            max_price = request.GET.get("max_price")
+            price_filter_applied = False
+            
+            if min_price:
+                products = products.filter(price__gte=min_price)
+                price_filter_applied = True
+            if max_price:
+                products = products.filter(price__lte=max_price)
+                price_filter_applied = True
+            
+            # Apply price ordering when price filter is used
+            if price_filter_applied:
+                products = products.order_by('price')
+            
             product_count = products.count()
 
-    # === Dynamic Sizes ===
-    sizes = Variation.objects.filter(
-        variation_category__iexact="size", is_active=True
-    ).values_list("variation_value", flat=True).distinct()
+    # === Pagination ===
+    paginator = Paginator(products, 6)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
 
-    # === Dynamic Price Range ===
-    price_range = Product.objects.aggregate(
-        min_price=Min("price"),
-        max_price=Max("price")
-    )
+    # === Dynamic Sizes from search results ===
+    if products.exists():
+        sizes = Variation.objects.filter(
+            product__in=products,
+            variation_category__iexact="size",
+            is_active=True
+        ).values_list("variation_value", flat=True).distinct()
+    else:
+        sizes = []
+
+    # === Dynamic Price Range from search results ===
+    if products.exists():
+        price_range = products.aggregate(
+            min_price=Min("price"),
+            max_price=Max("price")
+        )
+    else:
+        price_range = {'min_price': 0, 'max_price': 0}
 
     context = {
-        'products': products,
+        'products': paged_products,
         'product_count': product_count,
         'sizes': sizes,
         'price_range': price_range,
-        # keep filters consistent
         'selected_sizes': request.GET.getlist("size"),
         'selected_min': request.GET.get("min_price"),
         'selected_max': request.GET.get("max_price"),
+        'keyword': request.GET.get('keyword', ''),
+        'search_performed': search_performed,
+        'matched_category': matched_category,
     }
     return render(request, 'store/store.html', context)
-
 
 
 def submit_review(request, product_id):
     url = request.META.get('HTTP_REFERER')
     if request.method == "POST":
         try:
-            reviews = ReviewRating.objects.get(user__id=request.user.id,product__id=product_id)
+            reviews = ReviewRating.objects.get(user__id=request.user.id, product__id=product_id)
             form = ReviewForm(request.POST, instance=reviews)
             form.save()
             messages.success(request, 'Thank You! Your review has been updated.')
@@ -162,13 +248,13 @@ def submit_review(request, product_id):
                 data.save()
                 messages.success(request, 'Thank You! Your review has been submitted.')
                 return redirect(url)
- 
+
                 
 def about(request):
     context = {
         "contact_email": "rabbim913@gmail.com"  
     }
-    return render(request, "store/about.html",context)
+    return render(request, "store/about.html", context)
 
 def find_store(request):
     return render(request, "store/find_store.html")
@@ -184,7 +270,3 @@ def user_info_legal(request):
 
 def terms_of_use(request):
     return render(request, "store/terms_of_use.html")
-
-
-
-

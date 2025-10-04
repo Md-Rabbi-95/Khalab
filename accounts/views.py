@@ -1,124 +1,155 @@
-from django.shortcuts import render,redirect,get_object_or_404
+# accounts/views.py
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import RegistrationForm, UserForm, UserProfileForm
-from .models import Account,UserProfile
-from orders.models import Order
-from django.contrib import messages,auth
+from .models import Account, UserProfile
+from orders.models import Order, OrderProduct
+
+from django.contrib import messages, auth
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-import requests
-from orders.models import OrderProduct
 
-# Varification
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
-from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
+from django.urls import reverse
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
+from django.utils.html import strip_tags
+
 from carts.views import _cart_id
-from carts.models import Cart,CartItem
+from carts.models import Cart, CartItem
+
+import requests
+
+
+# ---------------------------
+# Helper: send multipart HTML email
+# ---------------------------
+def _send_templated_email(*, subject: str, html_template: str, context: dict, to_email: str) -> None:
+    """
+    Sends a multipart/alternative email (plain text + HTML).
+    Ensures clients like Gmail render the HTML version.
+    """
+    html_body = render_to_string(html_template, context)
+    text_body = strip_tags(html_body)  # simple plaintext fallback
+
+    email = EmailMultiAlternatives(
+        subject=subject,
+        body=text_body,  # text/plain
+        to=[to_email],
+    )
+    email.attach_alternative(html_body, "text/html")  # HTML part
+    email.send(fail_silently=False)
+
 
 def register(request):
     if request.method == "POST":
         form = RegistrationForm(request.POST)
         if form.is_valid():
             first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name'] 
-            phone_number = form.cleaned_data['phone_number'] 
-            email = form.cleaned_data['email'] 
+            last_name = form.cleaned_data['last_name']
+            phone_number = form.cleaned_data['phone_number']
+            email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            username=email.split("@")[0]
-            user = Account.objects.create_user(first_name=first_name,last_name=last_name,email=email,username=username,password=password)
+
+            username = email.split("@")[0]
+            user = Account.objects.create_user(
+                first_name=first_name,
+                last_name=last_name,
+                email=email,
+                username=username,
+                password=password,
+            )
             user.phone_number = phone_number
+            user.is_active = False  # keep inactive until verified
             user.save()
-            
-            # Create User Profile
-            profile = UserProfile()
-            profile.user_id = user.id
-            profile.profile_picture = 'default/default-user.png'
-            profile.save()
-            
-            
-            # user activation
-            current_site = get_current_site(request)
-            mail_subject = 'Please activate your account'
-            message = render_to_string('accounts/account_varification_email.html',{
-                'user':user,
-                'domain':current_site,
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-                'token':default_token_generator.make_token(user),
-            })
-            to_email = email
-            send_email = EmailMessage(mail_subject,message,to=[to_email])
-            send_email.send()
-            # messages.success(request,'Thank you for registering with us. We have send you a varificiation email to your email address. Please varify it.')
-            return redirect('/accounts/login/?command=verification&email='+email)
+
+            # Create default profile
+            UserProfile.objects.get_or_create(
+                user=user, defaults={"profile_picture": "default/default-user.png"}
+            )
+
+            # Build absolute activation URL
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            activation_path = reverse('activate', kwargs={'uidb64': uidb64, 'token': token})
+            activation_url = request.build_absolute_uri(activation_path)
+
+            # Send verification email (multipart)
+            _send_templated_email(
+                subject="Please Activate Your Account",
+                html_template="accounts/account_verification_email.html",
+                context={
+                    "user": user,
+                    "activation_url": activation_url,
+                    "site_name": get_current_site(request).name,
+                },
+                to_email=email,
+            )
+
+            return redirect('/accounts/login/?command=verification&email=' + email)
     else:
         form = RegistrationForm()
-    context ={
-        'form':form
-    }
-    return render(request,'accounts/register.html',context)
-    
+
+    return render(request, 'accounts/register.html', {"form": form})
+
+
 def login(request):
     if request.method == "POST":
         email = request.POST['email']
         password = request.POST['password']
-        
-        user = auth.authenticate(email=email,password=password)
+
+        user = auth.authenticate(email=email, password=password)
         if user is not None:
-            try: 
-                print('entering inside except block')
+            # Attach session cart items to user
+            try:
                 cart = Cart.objects.get(cart_id=_cart_id(request))
-                is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
-                print(is_cart_item_exists)
-                if is_cart_item_exists:
-                    cart_item = CartItem.objects.filter(cart=cart)
-                    print(cart_item)
-                    
-                    for item in cart_item:
+                if CartItem.objects.filter(cart=cart).exists():
+                    for item in CartItem.objects.filter(cart=cart):
                         item.user = user
                         item.save()
-            except:
-                print('entering inside except block')
+            except Cart.DoesNotExist:
                 pass
-            auth.login(request,user)
-            messages.success(request,'You are now logged in.')
+
+            auth.login(request, user)
+            messages.success(request, 'You are now logged in.')
+
+            # Respect ?next=
             url = request.META.get('HTTP_REFERER')
             try:
                 query = requests.utils.urlparse(url).query
-                # next=/cart/checkout'
-                params = dict(x.split('=') for x in query.split('&'))
+                params = dict(x.split('=') for x in query.split('&') if '=' in x)
                 if 'next' in params:
-                    nextPage = params['next']
-                    return redirect(nextPage)
-                
-            except:
-                return redirect('dashboard')
-        else:
-            messages.error(request,'Login failed. Please check your email and password.')
-            return redirect('login')
-    return render(request,'accounts/login.html')
+                    return redirect(params['next'])
+            except Exception:
+                pass
+            return redirect('dashboard')
+
+        messages.error(request, 'Login failed. Please check your email and password.')
+        return redirect('login')
+
+    return render(request, 'accounts/login.html')
 
 
 @login_required(login_url='login')
 def logout(request):
     auth.logout(request)
-    messages.success(request,'You have been successfully logged out.')
+    messages.success(request, 'You have been successfully logged out.')
     return redirect('login')
 
 
-def activate(request,uidb64,token):
+def activate(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = Account._default_manager.get(pk=uid)
-    except(TypeError,ValueError,OverflowError,Account.DoesNotExist):
+    except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
         user = None
-        
-    if user is not None and default_token_generator.check_token(user,token):
+
+    if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        messages.success(request,'Congratulation! Your account is activated.')
+        messages.success(request, 'Congratulations! Your account has been activated.')
         return redirect('login')
     else:
         messages.error(request, 'Activation link is invalid!')
@@ -127,88 +158,91 @@ def activate(request,uidb64,token):
 
 @login_required(login_url='login')
 def dashboard(request):
-    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
-    orders_count = orders.count()
+    orders = Order.objects.filter(user_id=request.user.id, is_ordered=True).order_by('-created_at')
     userprofile, _ = UserProfile.objects.get_or_create(user=request.user)
-    context = {
-        'orders_count' : orders_count,
+    return render(request, 'accounts/dashboard.html', {
+        'orders_count': orders.count(),
         'userprofile': userprofile,
-    }
-    return render(request, 'accounts/dashboard.html',context)
-    
+    })
+
 
 def forgotPassword(request):
-    if request.method =="POST":
-        email = request.POST['email']
-        if Account.objects.filter(email=email).exists():
-            user = Account.objects.get(email__exact=email)
-            
-            # Reset password email
-            current_site = get_current_site(request)
-            mail_subject = 'Reset Your Password'
-            message = render_to_string('accounts/reset_password_email.html',{
-                'user':user,
-                'domain':current_site,
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-                'token':default_token_generator.make_token(user),
-            })
-            to_email = email
-            send_email = EmailMessage(mail_subject,message,to=[to_email])
-            send_email.send()
-            
-            messages.success(request, 'Password reset email has been sent to your email address.')
-            return redirect('login')
-            
-        else:
-            messages.error(request,'Account does not exist!')
+    if request.method == "POST":
+        email = request.POST.get('email', '').strip()
+        try:
+            user = Account.objects.get(email__iexact=email)
+        except Account.DoesNotExist:
+            messages.error(request, 'Account does not exist!')
             return redirect('forgotPassword')
-    return render(request,'accounts/forgotPassword.html')
 
-def resetpassword_validate(request,uidb64,token):
+        # Build absolute reset URL
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+        reset_path = reverse('resetpassword_validate', kwargs={'uidb64': uidb64, 'token': token})
+        reset_url = request.build_absolute_uri(reset_path)
+
+        _send_templated_email(
+            subject="Reset Your Password",
+            html_template="accounts/reset_password_email.html",
+            context={
+                "user": user,
+                "reset_url": reset_url,
+                "site_name": get_current_site(request).name,
+            },
+            to_email=email,
+        )
+
+        messages.success(request, 'Password reset email has been sent to your email address.')
+        return redirect('login')
+
+    return render(request, 'accounts/forgotPassword.html')
+
+
+def resetpassword_validate(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = Account._default_manager.get(pk=uid)
-    except(TypeError,ValueError,OverflowError,Account.DoesNotExist):
+    except (TypeError, ValueError, OverflowError, Account.DoesNotExist):
         user = None
-    if user is not None and default_token_generator.check_token(user,token):
+
+    if user is not None and default_token_generator.check_token(user, token):
         request.session['uid'] = uid
-        messages.success(request,'Please update your password')
+        messages.success(request, 'Please update your password')
         return redirect('resetPassword')
     else:
-        messages.error(request,'The link has expired. Please request a new one.')
-        return redirect('login') 
-    
+        messages.error(request, 'The link has expired. Please request a new one.')
+        return redirect('login')
+
+
 def resetPassword(request):
     if request.method == 'POST':
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
-        
-        if password == confirm_password:
-            uid = request.session.get('uid')
-            user = Account.objects.get(pk=uid)
-            user.set_password(password)
-            user.save()
-            messages.success(request,'Your password reset successful.')
-            return redirect('login')
-        else:
-            messages.error(request,'The passwords you entered do not match')
+
+        if password != confirm_password:
+            messages.error(request, 'The passwords you entered do not match')
             return redirect('resetPassword')
-    else:    
-        return render(request, 'accounts/resetPassword.html')
-    
-   
-@login_required(login_url='login')   
+
+        uid = request.session.get('uid')
+        user = Account.objects.get(pk=uid)
+        user.set_password(password)
+        user.save()
+        messages.success(request, 'Your password has been reset successfully.')
+        return redirect('login')
+
+    return render(request, 'accounts/resetPassword.html')
+
+
+@login_required(login_url='login')
 def my_orders(request):
     orders = Order.objects.filter(user=request.user, is_ordered=True).order_by('-created_at')
-    context = {
-        'orders' : orders,
-    }
-    return render(request,'accounts/my_orders.html',context)
+    return render(request, 'accounts/my_orders.html', {'orders': orders})
 
 
 @login_required(login_url='login')
 def edit_profile(request):
     userprofile, _ = UserProfile.objects.get_or_create(user=request.user)
+
     if request.method == "POST":
         user_form = UserForm(request.POST, instance=request.user)
         profile_form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
@@ -220,12 +254,13 @@ def edit_profile(request):
     else:
         user_form = UserForm(instance=request.user)
         profile_form = UserProfileForm(instance=userprofile)
-    context = {
-        'user_form' : user_form,
-        'profile_form' : profile_form,
-        'userprofile' : userprofile,
-    }
-    return render(request, 'accounts/edit_profile.html', context)
+
+    return render(request, 'accounts/edit_profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'userprofile': userprofile,
+    })
+
 
 @login_required(login_url='login')
 def change_password(request):
@@ -233,38 +268,34 @@ def change_password(request):
         current_password = request.POST['current_password']
         new_password = request.POST['new_password']
         confirm_password = request.POST['confirm_password']
-        
+
         user = Account.objects.get(username__exact=request.user.username)
-        
-        if new_password == confirm_password:
-            success = user.check_password(current_password)
-            if success:
-                user.set_password(new_password)
-                user.save()
-                # auth.logout(request)
-                messages.success(request, 'Password updated successfully.')
-                return redirect('change_password')
-            else:
-                messages.error(request, 'Please enter valid current password.')
-                return redirect('change_password')
-        
-        else:
+
+        if new_password != confirm_password:
             messages.error(request, 'Password does not match!')
             return redirect('change_password')
-        
+
+        if not user.check_password(current_password):
+            messages.error(request, 'Please enter valid current password.')
+            return redirect('change_password')
+
+        user.set_password(new_password)
+        user.save()
+        messages.success(request, 'Password updated successfully.')
+        return redirect('change_password')
+
     return render(request, 'accounts/change_password.html')
 
 
 @login_required(login_url='login')
-def order_detail(request,order_id):
-    order_detail = OrderProduct.objects.filter(order__order_number=order_id)
+def order_detail(request, order_id):
     order = Order.objects.get(order_number=order_id)
-    subtotal = 0
-    for i in order_detail:
-        subtotal += i.product_price * i.quantity
-    context = {
+    order_detail = OrderProduct.objects.filter(order__order_number=order_id)
+    subtotal = sum(i.product_price * i.quantity for i in order_detail)
+
+    return render(request, 'accounts/order_detail.html', {
         'order_detail': order_detail,
         'order': order,
         'subtotal': subtotal,
-    }
+    })
     return render(request, 'accounts/order_detail.html',context)
