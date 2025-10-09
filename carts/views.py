@@ -334,15 +334,16 @@ def checkout(request, total=0, quantity=0, cart_items=None):
 
 # carts/views.py
 from collections import defaultdict
-
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db import models
-
+from django.conf import settings
+from django.urls import reverse
 from store.models import Product, Variation
 from .models import Cart, CartItem
+from django.contrib.auth.views import redirect_to_login
 
 
 def _cart_id(request):
@@ -582,32 +583,27 @@ def remove_cart_item(request, product_id, cart_item_id):
 
 
 def buy_now(request, product_id):
-    """Add product to cart and redirect to checkout"""
+    if not request.user.is_authenticated:
+        # Sends them to settings.LOGIN_URL and appends ?next=<current path>
+        return redirect_to_login(request.get_full_path())
+
     product = get_object_or_404(Product, id=product_id)
-    
-    if product.stock <= 0:
-        messages.error(request, f'{product.product_name} is out of stock!')
-        return redirect('store')
-    
-    # Add to cart logic (reuse existing code)
-    if request.user.is_authenticated:
-        ci, created = CartItem.objects.get_or_create(
+
+    cart_items = CartItem.objects.filter(user=request.user, product=product)
+
+    if cart_items.exists():
+        main_item = cart_items.first()
+        total_qty = sum(item.quantity for item in cart_items)
+        if main_item.quantity != total_qty:
+            main_item.quantity = total_qty
+            main_item.save(update_fields=['quantity'])
+        cart_items.exclude(pk=main_item.pk).delete()
+    else:
+        main_item = CartItem.objects.create(
             user=request.user,
             product=product,
-            defaults={'quantity': 1, 'is_active': True}
+            quantity=1,
+            is_active=True
         )
-        if not created and ci.quantity < product.stock:
-            ci.quantity += 1
-            ci.save()
-    else:
-        cart, _ = Cart.objects.get_or_create(cart_id=_cart_id(request))
-        ci, created = CartItem.objects.get_or_create(
-            cart=cart,
-            product=product,
-            defaults={'quantity': 1, 'is_active': True}
-        )
-        if not created and ci.quantity < product.stock:
-            ci.quantity += 1
-            ci.save()
-    
+
     return redirect('orders:checkout')

@@ -136,3 +136,4 @@ class REDXParcelAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         """Disable manual adding - parcels should be created through orders"""
         return False
+

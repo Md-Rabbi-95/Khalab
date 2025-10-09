@@ -197,7 +197,7 @@ def place_order(request, total=0, quantity=0):
                 'order_note': form.cleaned_data.get('order_note', ''),
             }
             request.session['checkout_data'] = checkout_data
-            return redirect('payments')
+            return redirect('orders:payments')
         else:
             # Show validation errors
             for field, errors in form.errors.items():
@@ -294,15 +294,15 @@ def payments(request):
             'Please select Online Payment and pay the delivery charge in advance '
             'or complete the full payment online.'
         )
-        return redirect('payments')
+        return redirect('orders:payments')
 
     if payment_method == 'ONLINE':
         if not online_payment_method:
             messages.error(request, 'Please select an online payment method.')
-            return redirect('payments')
+            return redirect('orders:payments')
         if not transaction_id:
             messages.error(request, 'Please enter transaction ID for online payment.')
-            return redirect('payments')
+            return redirect('orders:payments')
 
     final_payment_method = 'COD' if payment_method == 'COD' else online_payment_method
 
@@ -445,7 +445,8 @@ def payments(request):
     request.session['order_number'] = order.order_number
     request.session['payment_id'] = payment.payment_id
 
-    return redirect('order_complete')
+    return redirect('orders:order_complete')
+
 
 
 def order_complete(request):

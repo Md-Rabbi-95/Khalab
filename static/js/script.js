@@ -1,65 +1,54 @@
-// some scripts
+/* Clean jQuery helpers (no <script> wrapper) */
+(function ($) {
+  'use strict';
 
-// jquery ready start
-$(document).ready(function() {
-	// jQuery code
-
-
-    /* ///////////////////////////////////////
-
-    THESE FOLLOWING SCRIPTS ONLY FOR BASIC USAGE, 
-    For sliders, interactions and other
-
-    */ ///////////////////////////////////////
-    
-
-	//////////////////////// Prevent closing from click inside dropdown
+  // Run when DOM is ready
+  $(function () {
+    // 1) Keep dropdown open when clicking inside it
     $(document).on('click', '.dropdown-menu', function (e) {
       e.stopPropagation();
     });
 
+    // 2) Radios: only the selected .js-check in a group stays "active"
+    $(document).on('change', '.js-check :radio', function () {
+      var groupName = $(this).attr('name');
+      if (!groupName) return;
 
-    $('.js-check :radio').change(function () {
-        var check_attr_name = $(this).attr('name');
-        if ($(this).is(':checked')) {
-            $('input[name='+ check_attr_name +']').closest('.js-check').removeClass('active');
-            $(this).closest('.js-check').addClass('active');
-           // item.find('.radio').find('span').text('Add');
+      $('input[type="radio"][name="' + groupName + '"]')
+        .closest('.js-check')
+        .removeClass('active');
 
-        } else {
-            item.removeClass('active');
-            // item.find('.radio').find('span').text('Unselect');
-        }
+      if (this.checked) {
+        $(this).closest('.js-check').addClass('active');
+      }
     });
 
-
-    $('.js-check :checkbox').change(function () {
-        var check_attr_name = $(this).attr('name');
-        if ($(this).is(':checked')) {
-            $(this).closest('.js-check').addClass('active');
-           // item.find('.radio').find('span').text('Add');
-        } else {
-            $(this).closest('.js-check').removeClass('active');
-            // item.find('.radio').find('span').text('Unselect');
-        }
+    // 3) Checkboxes: toggle "active" on its .js-check container
+    $(document).on('change', '.js-check :checkbox', function () {
+      $(this).closest('.js-check').toggleClass('active', this.checked);
     });
 
+    // 4) Bootstrap tooltips (supports v4 & v5)
+    var $tooltipTargets = $('[data-toggle="tooltip"], [data-bs-toggle="tooltip"]');
+    if ($tooltipTargets.length) {
+      // Bootstrap 5
+      if (window.bootstrap && typeof window.bootstrap.Tooltip === 'function') {
+        $tooltipTargets.each(function () {
+          new window.bootstrap.Tooltip(this);
+        });
+      }
+      // Bootstrap 4 (jQuery plugin)
+      else if (typeof $tooltipTargets.tooltip === 'function') {
+        $tooltipTargets.tooltip();
+      }
+    }
 
-
-	//////////////////////// Bootstrap tooltip
-	if($('[data-toggle="tooltip"]').length>0) {  // check if element exists
-		$('[data-toggle="tooltip"]').tooltip()
-	} // end if
-
-
-
-
-    
-}); 
-// jquery end
-
-
-setTimeout(function(){
-    $('#message').fadeOut('slow')
-},4000)
-
+    // 5) Auto-fade flash message if present
+    var $msg = $('#message');
+    if ($msg.length) {
+      setTimeout(function () {
+        $msg.fadeOut('slow');
+      }, 4000);
+    }
+  });
+})(window.jQuery);

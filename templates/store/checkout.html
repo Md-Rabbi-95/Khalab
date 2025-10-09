@@ -67,7 +67,7 @@
 
     {% include "includes/alerts.html" %}
 
-    <form action="{% url 'place_order' %}" method="post" novalidate id="checkoutForm">
+    <form action="{% url 'orders:place_order' %}" method="post" novalidate id="checkoutForm">
       {% csrf_token %}
 
       <div class="row">

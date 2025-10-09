@@ -1,0 +1,581 @@
+/* ============================================
+   KHALAB ADMIN - DJANGO ADMIN OVERRIDES
+   Complete styling for all Django admin pages
+   ============================================ */
+
+/* ========== GLOBAL OVERRIDES ========== */
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    background: #f8fafc !important;
+    color: #334155 !important;
+    margin: 0;
+    padding: 0;
+}
+
+/* ========== CONTAINER ========== */
+#container {
+    background: #f8fafc !important;
+    min-width: 0 !important;
+}
+
+#content {
+    padding: 2rem !important;
+}
+
+/* ========== HEADER ========== */
+#header {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%) !important;
+    padding: 0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#branding {
+    padding: 1rem 1.5rem !important;
+}
+
+#branding h1 {
+    margin: 0 !important;
+    color: white !important;
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+}
+
+#branding h1 a:link,
+#branding h1 a:visited {
+    color: white !important;
+    text-decoration: none !important;
+}
+
+/* User Tools */
+#user-tools {
+    padding: 1rem 1.5rem !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    text-align: right !important;
+    color: white !important;
+}
+
+#user-tools a {
+    color: white !important;
+    text-decoration: none !important;
+    padding: 0.5rem 1rem !important;
+    background: rgba(255,255,255,0.15) !important;
+    border-radius: 6px !important;
+    margin-left: 0.5rem !important;
+    transition: all 0.2s !important;
+}
+
+#user-tools a:hover {
+    background: rgba(255,255,255,0.25) !important;
+}
+
+/* ========== BREADCRUMBS ========== */
+.breadcrumbs {
+    background: white !important;
+    padding: 1rem 1.5rem !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    font-size: 0.875rem !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.breadcrumbs a {
+    color: #4a90e2 !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+}
+
+.breadcrumbs a:hover {
+    color: #357abd !important;
+    text-decoration: underline !important;
+}
+
+/* ========== CONTENT AREA ========== */
+.colMS,
+.colM {
+    width: 100% !important;
+}
+
+/* ========== MODULE BOXES ========== */
+.module {
+    background: white !important;
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    margin-bottom: 1.5rem !important;
+    overflow: hidden !important;
+}
+
+.module h2,
+.module caption {
+    background: #4a90e2 !important;
+    color: white !important;
+    padding: 1rem 1.5rem !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+    border: none !important;
+}
+
+.module table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+
+.module th {
+    text-align: left !important;
+    padding: 0.875rem 1rem !important;
+    background: #f8fafc !important;
+    color: #64748b !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+}
+
+.module td {
+    padding: 0.875rem 1rem !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.module tbody tr:hover {
+    background: #f8fafc !important;
+}
+
+.module tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* ========== FORMS ========== */
+.form-row {
+    padding: 1.25rem !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    transition: background 0.2s !important;
+}
+
+.form-row:hover {
+    background: #f8fafc !important;
+}
+
+.form-row:last-child {
+    border-bottom: none !important;
+}
+
+fieldset.module {
+    padding: 0 !important;
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="number"],
+input[type="tel"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+textarea,
+select {
+    width: 100% !important;
+    max-width: 500px !important;
+    padding: 0.625rem 0.875rem !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    font-size: 0.875rem !important;
+    transition: all 0.2s !important;
+    background: #f8fafc !important;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+textarea:focus,
+select:focus {
+    outline: none !important;
+    border-color: #4a90e2 !important;
+    background: white !important;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1) !important;
+}
+
+textarea {
+    min-height: 120px !important;
+}
+
+select {
+    cursor: pointer !important;
+}
+
+/* ========== BUTTONS ========== */
+.button,
+input[type="submit"],
+input[type="button"],
+button,
+.submit-row input,
+a.button {
+    background: #4a90e2 !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.625rem 1.25rem !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+}
+
+.button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+button:hover,
+a.button:hover {
+    background: #357abd !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3) !important;
+}
+
+.button:active,
+input[type="submit"]:active,
+input[type="button"]:active,
+button:active {
+    transform: translateY(0) !important;
+}
+
+/* Delete buttons */
+.deletelink,
+.deletelink-box a {
+    background: #ef4444 !important;
+}
+
+.deletelink:hover,
+.deletelink-box a:hover {
+    background: #dc2626 !important;
+}
+
+/* Default buttons */
+.default,
+input[type="submit"].default {
+    background: #10b981 !important;
+}
+
+.default:hover,
+input[type="submit"].default:hover {
+    background: #059669 !important;
+}
+
+/* ========== OBJECT TOOLS ========== */
+.object-tools {
+    margin-bottom: 1rem !important;
+}
+
+.object-tools li {
+    display: inline-block !important;
+    margin-right: 0.5rem !important;
+}
+
+.object-tools a {
+    background: #4a90e2 !important;
+    color: white !important;
+    padding: 0.625rem 1.25rem !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    font-size: 0.875rem !important;
+    transition: all 0.2s !important;
+    display: inline-block !important;
+}
+
+.object-tools a:hover {
+    background: #357abd !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3) !important;
+}
+
+/* ========== CHANGELIST (TABLE VIEW) ========== */
+#changelist {
+    background: white !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    padding: 1.5rem !important;
+}
+
+#changelist-form {
+    padding: 0 !important;
+}
+
+#changelist .results {
+    overflow-x: auto !important;
+}
+
+#result_list {
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+
+#result_list thead th {
+    background: #f8fafc !important;
+    color: #334155 !important;
+    padding: 0.875rem 1rem !important;
+    text-align: left !important;
+    font-weight: 700 !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+}
+
+#result_list tbody td {
+    padding: 0.875rem 1rem !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    font-size: 0.875rem !important;
+}
+
+#result_list tbody tr:hover {
+    background: #f8fafc !important;
+}
+
+#result_list tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* Action checkbox column */
+#result_list tbody th {
+    padding: 0.875rem 1rem !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* ========== ACTIONS BAR ========== */
+.actions {
+    padding: 1rem !important;
+    background: #f8fafc !important;
+    border-radius: 8px !important;
+    margin-bottom: 1rem !important;
+}
+
+.actions select {
+    max-width: 300px !important;
+    margin-right: 0.5rem !important;
+}
+
+.actions button {
+    margin-right: 0.5rem !important;
+}
+
+/* ========== FILTERS (SIDEBAR) ========== */
+#changelist-filter {
+    background: white !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    padding: 1rem !important;
+}
+
+#changelist-filter h2 {
+    background: transparent !important;
+    color: #334155 !important;
+    padding: 0.5rem 0 !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+    margin-bottom: 1rem !important;
+}
+
+#changelist-filter h3 {
+    color: #64748b !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin: 1rem 0 0.5rem 0 !important;
+}
+
+#changelist-filter ul {
+    padding: 0 !important;
+    margin: 0 0 1rem 0 !important;
+}
+
+#changelist-filter li {
+    padding: 0.5rem 0 !important;
+    border-bottom: 1px solid #f8fafc !important;
+}
+
+#changelist-filter a {
+    color: #4a90e2 !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+}
+
+#changelist-filter a:hover {
+    color: #357abd !important;
+}
+
+#changelist-filter li.selected a {
+    color: #10b981 !important;
+    font-weight: 700 !important;
+}
+
+/* ========== PAGINATION ========== */
+.paginator {
+    padding: 1rem !important;
+    text-align: center !important;
+    border-top: 1px solid #e2e8f0 !important;
+    margin-top: 1rem !important;
+}
+
+.paginator a {
+    color: #4a90e2 !important;
+    text-decoration: none !important;
+    padding: 0.5rem 0.75rem !important;
+    margin: 0 0.25rem !important;
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    transition: all 0.2s !important;
+}
+
+.paginator a:hover {
+    background: #e8f4fd !important;
+}
+
+.paginator .this-page {
+    background: #4a90e2 !important;
+    color: white !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+}
+
+/* ========== MESSAGES ========== */
+.messagelist {
+    padding: 0 !important;
+    margin: 0 0 1.5rem 0 !important;
+}
+
+.messagelist li {
+    padding: 1rem 1.5rem !important;
+    margin-bottom: 0.5rem !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    list-style: none !important;
+}
+
+.messagelist .success {
+    background: #d1fae5 !important;
+    color: #10b981 !important;
+    border-left: 4px solid #10b981 !important;
+}
+
+.messagelist .warning {
+    background: #fef3c7 !important;
+    color: #f59e0b !important;
+    border-left: 4px solid #f59e0b !important;
+}
+
+.messagelist .error {
+    background: #fee2e2 !important;
+    color: #ef4444 !important;
+    border-left: 4px solid #ef4444 !important;
+}
+
+.messagelist .info {
+    background: #cffafe !important;
+    color: #06b6d4 !important;
+    border-left: 4px solid #06b6d4 !important;
+}
+
+/* ========== LINKS ========== */
+a:link,
+a:visited {
+    color: #4a90e2 !important;
+    text-decoration: none !important;
+}
+
+a:hover,
+a:focus {
+    color: #357abd !important;
+    text-decoration: underline !important;
+}
+
+/* ========== SUBMIT ROW ========== */
+.submit-row {
+    padding: 1.5rem !important;
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+    margin-top: 1.5rem !important;
+    text-align: right !important;
+}
+
+.submit-row input {
+    margin-left: 0.5rem !important;
+}
+
+/* ========== INLINE FORMS ========== */
+.inline-group {
+    background: white !important;
+    border-radius: 12px !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+    margin-bottom: 1.5rem !important;
+    overflow: hidden !important;
+}
+
+.inline-group .tabular {
+    overflow-x: auto !important;
+}
+
+.inline-group h2 {
+    background: #4a90e2 !important;
+    color: white !important;
+    padding: 1rem 1.5rem !important;
+    margin: 0 !important;
+}
+
+/* ========== DASHBOARD MODULES ========== */
+#content-main .module {
+    margin-bottom: 1.5rem !important;
+}
+
+.dashboard #content {
+    width: 100% !important;
+}
+
+/* ========== HELP TEXT ========== */
+.help,
+p.help {
+    color: #64748b !important;
+    font-size: 0.8rem !important;
+    margin-top: 0.25rem !important;
+}
+
+/* ========== ERROR LIST ========== */
+.errorlist {
+    color: #ef4444 !important;
+    background: #fee2e2 !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 6px !important;
+    margin: 0.5rem 0 !important;
+    border-left: 4px solid #ef4444 !important;
+}
+
+.errorlist li {
+    list-style: none !important;
+    font-weight: 500 !important;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+    #content {
+        padding: 1rem !important;
+    }
+    
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    textarea,
+    select {
+        max-width: 100% !important;
+    }
+}

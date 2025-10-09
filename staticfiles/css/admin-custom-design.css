@@ -1,0 +1,951 @@
+/* ============================================
+   KHALAB ADMIN - CUSTOM DESIGN SYSTEM
+   Complete Override of Django Admin
+   Professional E-commerce Interface
+   ============================================ */
+
+:root {
+    --primary: #667eea;
+    --primary-dark: #5a67d8;
+    --primary-light: #818cf8;
+    --success: #10b981;
+    --success-dark: #059669;
+    --warning: #f59e0b;
+    --warning-dark: #d97706;
+    --danger: #ef4444;
+    --danger-dark: #dc2626;
+    --info: #3b82f6;
+    --info-dark: #2563eb;
+    --dark: #1e293b;
+    --text: #334155;
+    --text-light: #64748b;
+    --border: #e2e8f0;
+    --bg: #f8fafc;
+    --white: #ffffff;
+    --shadow: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-lg: 16px;
+}
+
+/* ========== RESET DJANGO STYLES ========== */
+#container {
+    background: transparent !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+}
+
+#header {
+    display: none !important; /* Hidden - we use top-navbar */
+}
+
+.breadcrumbs {
+    background: white !important;
+    padding: 1rem 2rem !important;
+    border-radius: var(--radius) !important;
+    box-shadow: var(--shadow) !important;
+    margin-bottom: 2rem !important;
+    border: none !important;
+}
+
+.breadcrumbs a {
+    color: var(--primary) !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    transition: all 0.3s !important;
+}
+
+.breadcrumbs a:hover {
+    color: var(--primary-dark) !important;
+    text-decoration: underline !important;
+}
+
+/* ========== CONTENT AREA ========== */
+.colM, .colMS {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+#content-main {
+    background: transparent !important;
+}
+
+/* ========== MODULE BOXES (All List Views) ========== */
+.module {
+    background: white !important;
+    border: none !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-lg) !important;
+    margin-bottom: 2rem !important;
+    overflow: hidden !important;
+    transition: all 0.3s !important;
+}
+
+.module:hover {
+    box-shadow: var(--shadow-xl) !important;
+    transform: translateY(-2px) !important;
+}
+
+.module h2,
+.module caption {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+    color: white !important;
+    padding: 1.5rem 2rem !important;
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+    border: none !important;
+}
+
+.module table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+
+.module th {
+    background: var(--bg) !important;
+    color: var(--text-light) !important;
+    padding: 1rem 1.5rem !important;
+    text-align: left !important;
+    font-weight: 700 !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    border-bottom: 2px solid var(--border) !important;
+}
+
+.module td {
+    padding: 1rem 1.5rem !important;
+    border-bottom: 1px solid var(--border) !important;
+    color: var(--text) !important;
+}
+
+.module tbody tr {
+    transition: all 0.2s !important;
+}
+
+.module tbody tr:hover {
+    background: var(--bg) !important;
+    transform: scale(1.01) !important;
+}
+
+.module tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* ========== FORMS (Add/Edit Pages) ========== */
+form {
+    background: white !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-lg) !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+fieldset.module {
+    background: white !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+.form-row {
+    padding: 1.5rem 2rem !important;
+    border-bottom: 1px solid var(--border) !important;
+    transition: all 0.2s !important;
+    background: white !important;
+}
+
+.form-row:hover {
+    background: var(--bg) !important;
+}
+
+.form-row:last-child {
+    border-bottom: none !important;
+}
+
+/* Form Labels */
+.form-row label,
+.form-label,
+label {
+    display: block !important;
+    color: var(--dark) !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.5rem !important;
+    font-size: 0.875rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.025em !important;
+}
+
+/* Form Inputs */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="number"],
+input[type="tel"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="search"],
+textarea,
+select {
+    width: 100% !important;
+    max-width: 600px !important;
+    padding: 0.875rem 1rem !important;
+    border: 2px solid var(--border) !important;
+    border-radius: var(--radius-sm) !important;
+    font-size: 1rem !important;
+    font-family: inherit !important;
+    transition: all 0.3s !important;
+    background: var(--bg) !important;
+    color: var(--dark) !important;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+input[type="datetime-local"]:focus,
+input[type="search"]:focus,
+textarea:focus,
+select:focus {
+    outline: none !important;
+    border-color: var(--primary) !important;
+    background: white !important;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1) !important;
+}
+
+textarea {
+    min-height: 150px !important;
+    resize: vertical !important;
+}
+
+select {
+    cursor: pointer !important;
+    appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23334155' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    padding-right: 3rem !important;
+}
+
+/* ========== BUTTONS ========== */
+.button,
+input[type="submit"],
+input[type="button"],
+button,
+.submit-row input,
+a.button,
+.object-tools a {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.875rem 1.5rem !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 700 !important;
+    font-size: 0.9375rem !important;
+    cursor: pointer !important;
+    transition: all 0.3s !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.025em !important;
+}
+
+.button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+button:hover,
+a.button:hover,
+.object-tools a:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+}
+
+.button:active,
+input[type="submit"]:active,
+input[type="button"]:active,
+button:active {
+    transform: translateY(0) !important;
+}
+
+/* Delete Buttons */
+.deletelink,
+.deletelink-box a,
+a.deletelink {
+    background: linear-gradient(135deg, var(--danger) 0%, var(--danger-dark) 100%) !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+}
+
+.deletelink:hover,
+.deletelink-box a:hover,
+a.deletelink:hover {
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4) !important;
+}
+
+/* Save Buttons */
+.default,
+input[type="submit"].default,
+.submit-row input[name="_save"] {
+    background: linear-gradient(135deg, var(--success) 0%, var(--success-dark) 100%) !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+.default:hover,
+input[type="submit"].default:hover {
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
+}
+
+/* ========== CHANGELIST (Table View) ========== */
+#changelist {
+    background: white !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-lg) !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+#changelist-form {
+    padding: 0 !important;
+}
+
+#changelist .results {
+    overflow-x: auto !important;
+}
+
+/* Changelist Header */
+#changelist .module h2 {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+    color: white !important;
+    padding: 1.5rem 2rem !important;
+    margin: 0 !important;
+}
+
+/* Results Table */
+#result_list {
+    width: 100% !important;
+    border-collapse: collapse !important;
+}
+
+#result_list thead th {
+    background: linear-gradient(135deg, var(--dark) 0%, #0f172a 100%) !important;
+    color: white !important;
+    padding: 1rem 1.5rem !important;
+    text-align: left !important;
+    font-weight: 700 !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    border: none !important;
+}
+
+#result_list thead th a {
+    color: white !important;
+    text-decoration: none !important;
+}
+
+#result_list tbody td,
+#result_list tbody th {
+    padding: 1rem 1.5rem !important;
+    border-bottom: 1px solid var(--border) !important;
+    color: var(--text) !important;
+    font-size: 0.9375rem !important;
+}
+
+#result_list tbody tr {
+    transition: all 0.2s !important;
+    position: relative !important;
+}
+
+#result_list tbody tr::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background: var(--primary);
+    transition: width 0.3s;
+}
+
+#result_list tbody tr:hover {
+    background: var(--bg) !important;
+}
+
+#result_list tbody tr:hover::before {
+    width: 4px;
+}
+
+#result_list tbody tr:last-child td,
+#result_list tbody tr:last-child th {
+    border-bottom: none !important;
+}
+
+/* Action Checkbox */
+#result_list tbody th.action-checkbox {
+    padding: 1rem !important;
+}
+
+input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    cursor: pointer !important;
+    accent-color: var(--primary) !important;
+}
+
+/* ========== FILTERS (Sidebar) ========== */
+#changelist-filter {
+    background: white !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-lg) !important;
+    padding: 1.5rem !important;
+    border: none !important;
+}
+
+#changelist-filter h2 {
+    background: transparent !important;
+    color: var(--dark) !important;
+    padding: 0 0 1rem 0 !important;
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    border-bottom: 2px solid var(--primary) !important;
+    margin-bottom: 1.5rem !important;
+}
+
+#changelist-filter h3 {
+    color: var(--text-light) !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin: 1.5rem 0 0.75rem 0 !important;
+}
+
+#changelist-filter ul {
+    padding: 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+}
+
+#changelist-filter li {
+    padding: 0.625rem 0 !important;
+    border-bottom: 1px solid var(--border) !important;
+}
+
+#changelist-filter li:last-child {
+    border-bottom: none !important;
+}
+
+#changelist-filter a {
+    color: var(--text) !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    font-size: 0.9375rem !important;
+    transition: all 0.2s !important;
+    display: block !important;
+}
+
+#changelist-filter a:hover {
+    color: var(--primary) !important;
+    padding-left: 0.5rem !important;
+}
+
+#changelist-filter li.selected a {
+    color: var(--primary) !important;
+    font-weight: 700 !important;
+    background: rgba(102, 126, 234, 0.1) !important;
+    padding: 0.25rem 0.75rem !important;
+    border-radius: var(--radius-sm) !important;
+}
+
+/* ========== ACTIONS BAR ========== */
+.actions {
+    padding: 1.5rem 2rem !important;
+    background: var(--bg) !important;
+    border-radius: var(--radius) !important;
+    margin: 1.5rem 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    flex-wrap: wrap !important;
+}
+
+.actions select {
+    max-width: 300px !important;
+    flex: 1 !important;
+}
+
+.actions button,
+.actions input[type="submit"] {
+    margin: 0 !important;
+}
+
+.action-counter {
+    color: var(--text-light) !important;
+    font-weight: 600 !important;
+}
+
+/* ========== PAGINATION ========== */
+.paginator {
+    padding: 1.5rem 2rem !important;
+    text-align: center !important;
+    background: white !important;
+    border-top: 1px solid var(--border) !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 1rem !important;
+}
+
+.paginator a,
+.paginator span {
+    color: var(--primary) !important;
+    text-decoration: none !important;
+    padding: 0.5rem 0.875rem !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 600 !important;
+    transition: all 0.2s !important;
+    display: inline-block !important;
+}
+
+.paginator a:hover {
+    background: var(--primary) !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+}
+
+.paginator .this-page {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+    color: white !important;
+}
+
+.paginator .end {
+    color: var(--text-light) !important;
+}
+
+/* ========== MESSAGES ========== */
+.messagelist {
+    padding: 0 !important;
+    margin: 0 0 2rem 0 !important;
+    list-style: none !important;
+}
+
+.messagelist li {
+    padding: 1rem 1.5rem !important;
+    margin-bottom: 1rem !important;
+    border-radius: var(--radius) !important;
+    font-weight: 600 !important;
+    font-size: 0.9375rem !important;
+    box-shadow: var(--shadow) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    animation: slideIn 0.3s ease-out !important;
+}
+
+.messagelist li::before {
+    font-size: 1.5rem !important;
+}
+
+.messagelist .success {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%) !important;
+    color: var(--success-dark) !important;
+    border-left: 4px solid var(--success) !important;
+}
+
+.messagelist .success::before {
+    content: '✓' !important;
+}
+
+.messagelist .warning {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+    color: var(--warning-dark) !important;
+    border-left: 4px solid var(--warning) !important;
+}
+
+.messagelist .warning::before {
+    content: '⚠' !important;
+}
+
+.messagelist .error {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+    color: var(--danger-dark) !important;
+    border-left: 4px solid var(--danger) !important;
+}
+
+.messagelist .error::before {
+    content: '✕' !important;
+}
+
+.messagelist .info {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+    color: var(--info-dark) !important;
+    border-left: 4px solid var(--info) !important;
+}
+
+.messagelist .info::before {
+    content: 'ℹ' !important;
+}
+
+/* ========== OBJECT TOOLS ========== */
+.object-tools {
+    margin: 0 0 2rem 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    display: flex !important;
+    gap: 1rem !important;
+    flex-wrap: wrap !important;
+}
+
+.object-tools li {
+    display: inline-block !important;
+}
+
+/* ========== SUBMIT ROW ========== */
+.submit-row {
+    padding: 2rem !important;
+    background: var(--bg) !important;
+    border-top: 2px solid var(--border) !important;
+    text-align: right !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 1rem !important;
+    flex-wrap: wrap !important;
+}
+
+.submit-row input,
+.submit-row button {
+    margin: 0 !important;
+}
+
+/* ========== INLINE FORMS ========== */
+.inline-group {
+    background: white !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-lg) !important;
+    margin-bottom: 2rem !important;
+    overflow: hidden !important;
+}
+
+.inline-group h2 {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%) !important;
+    color: white !important;
+    padding: 1.5rem 2rem !important;
+    margin: 0 !important;
+}
+
+.inline-group .tabular {
+    overflow-x: auto !important;
+}
+
+.inline-related {
+    background: white !important;
+    border: none !important;
+    margin: 0 !important;
+}
+
+.inline-related h3 {
+    background: var(--bg) !important;
+    padding: 1rem 2rem !important;
+    margin: 0 !important;
+    font-weight: 600 !important;
+}
+
+/* ========== HELP TEXT ========== */
+.help,
+p.help,
+.helptext {
+    color: var(--text-light) !important;
+    font-size: 0.875rem !important;
+    margin-top: 0.5rem !important;
+    font-style: italic !important;
+}
+
+/* ========== ERROR LIST ========== */
+.errorlist {
+    color: var(--danger) !important;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%) !important;
+    padding: 1rem 1.5rem !important;
+    border-radius: var(--radius) !important;
+    margin: 1rem 0 !important;
+    border-left: 4px solid var(--danger) !important;
+    list-style: none !important;
+    font-weight: 600 !important;
+    box-shadow: var(--shadow) !important;
+}
+
+.errorlist li {
+    padding: 0.25rem 0 !important;
+}
+
+.errorlist li::before {
+    content: '✕ ' !important;
+    margin-right: 0.5rem !important;
+}
+
+/* ========== DASHBOARD SPECIFIC ========== */
+.dashboard #content {
+    width: 100% !important;
+}
+
+.dashboard .module table th,
+.dashboard .module table td {
+    padding: 0.875rem 1rem !important;
+}
+
+/* ========== LINKS ========== */
+a:link,
+a:visited {
+    color: var(--primary) !important;
+    transition: all 0.2s !important;
+}
+
+a:hover,
+a:focus {
+    color: var(--primary-dark) !important;
+}
+
+/* ========== SEARCH BAR ========== */
+#toolbar {
+    padding: 1.5rem 2rem !important;
+    background: white !important;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important;
+    box-shadow: var(--shadow) !important;
+}
+
+#searchbar {
+    padding: 0.875rem 1rem !important;
+    border: 2px solid var(--border) !important;
+    border-radius: var(--radius-sm) !important;
+    font-size: 1rem !important;
+    max-width: 400px !important;
+}
+
+#searchbar:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1) !important;
+}
+
+/* ========== DATE HIERARCHY ========== */
+.xfull {
+    background: white !important;
+    padding: 1rem 2rem !important;
+    border-radius: var(--radius) !important;
+    margin-bottom: 1.5rem !important;
+    box-shadow: var(--shadow) !important;
+}
+
+.xfull a {
+    color: var(--primary) !important;
+    text-decoration: none !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: var(--radius-sm) !important;
+    display: inline-block !important;
+    font-weight: 600 !important;
+}
+
+.xfull a:hover {
+    background: var(--primary) !important;
+    color: white !important;
+}
+
+/* ========== CALENDAR WIDGET ========== */
+.calendarbox,
+.clockbox {
+    background: white !important;
+    border: 2px solid var(--border) !important;
+    border-radius: var(--radius) !important;
+    box-shadow: var(--shadow-lg) !important;
+    padding: 1rem !important;
+}
+
+.calendar caption {
+    background: var(--primary) !important;
+    color: white !important;
+    padding: 0.75rem !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 700 !important;
+}
+
+.calendar td,
+.calendar th {
+    padding: 0.5rem !important;
+    text-align: center !important;
+}
+
+.calendar td a {
+    display: block !important;
+    padding: 0.5rem !important;
+    border-radius: var(--radius-sm) !important;
+    text-decoration: none !important;
+}
+
+.calendar td a:hover {
+    background: var(--primary) !important;
+    color: white !important;
+}
+
+/* ========== FILE UPLOAD ========== */
+.file-upload {
+    position: relative !important;
+}
+
+input[type="file"] {
+    padding: 0.875rem !important;
+    border: 2px dashed var(--border) !important;
+    border-radius: var(--radius) !important;
+    background: var(--bg) !important;
+    cursor: pointer !important;
+    transition: all 0.3s !important;
+}
+
+input[type="file"]:hover {
+    border-color: var(--primary) !important;
+    background: rgba(102, 126, 234, 0.05) !important;
+}
+
+.vFileUploadField {
+    display: block !important;
+    width: 100% !important;
+}
+
+/* ========== RELATED WIDGET WRAPPER ========== */
+.related-widget-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+.related-widget-wrapper-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 36px !important;
+    height: 36px !important;
+    background: var(--primary) !important;
+    color: white !important;
+    border-radius: var(--radius-sm) !important;
+    text-decoration: none !important;
+    transition: all 0.3s !important;
+}
+
+.related-widget-wrapper-link:hover {
+    background: var(--primary-dark) !important;
+    transform: scale(1.1) !important;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+    .module th,
+    .module td {
+        padding: 0.875rem 1rem !important;
+    }
+    
+    .form-row {
+        padding: 1.25rem 1.5rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    input[type="text"],
+    input[type="password"],
+    input[type="email"],
+    textarea,
+    select {
+        max-width: 100% !important;
+    }
+    
+    .actions {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .actions select {
+        max-width: 100% !important;
+    }
+    
+    .submit-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .submit-row input,
+    .submit-row button {
+        width: 100% !important;
+    }
+    
+    .paginator {
+        flex-direction: column !important;
+        text-align: center !important;
+    }
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.module,
+.messagelist li,
+form {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* ========== ACCESSIBILITY ========== */
+*:focus-visible {
+    outline: 3px solid var(--primary) !important;
+    outline-offset: 2px !important;
+}
+
+/* ========== PRINT STYLES ========== */
+@media print {
+    .admin-sidebar,
+    .top-navbar,
+    .sidebar-overlay,
+    .object-tools,
+    .submit-row,
+    .actions {
+        display: none !important;
+    }
+    
+    #content {
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+    }
+    
+    .module,
+    form {
+        box-shadow: none !important;
+        page-break-inside: avoid !important;
+    }
+}
+
+/* ========== END OF FILE ========== */

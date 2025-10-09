@@ -269,7 +269,7 @@ button,
 [type=button],
 [type=reset],
 [type=submit] {
-  -webkit-appearance: button;
+  appearance: none;
 }
 
 button:not(:disabled),
@@ -297,7 +297,7 @@ input[type=date],
 input[type=time],
 input[type=datetime-local],
 input[type=month] {
-  -webkit-appearance: listbox;
+  appearance: listbox;
 }
 
 textarea {
@@ -335,7 +335,7 @@ progress {
 
 [type=search] {
   outline-offset: -2px;
-  -webkit-appearance: none;
+  appearance: none;
 }
 
 [type=search]::-webkit-search-decoration {

@@ -1,3 +1,4 @@
+#carts/admin.py
 from django.contrib import admin
 from .models import Cart, CartItem
 
@@ -10,3 +11,4 @@ class CartItemAdmin(admin.ModelAdmin):
 
 admin.site.register(Cart,CartAdmin)
 admin.site.register(CartItem,CartItemAdmin)
+

@@ -9,43 +9,54 @@
   direction: rtl;             /* lets ~ select “previous” stars visually */
   user-select: none;
 }
+
 .rate input {
   position: absolute;
   left: -9999px;              /* fully hide radios */
 }
+
 .rate label {
-  float: right;
+  float: right;               /* float handles layout, inline-block not needed */
   cursor: pointer;
   position: relative;
   width: 1.1rem;              /* star box */
   height: 1.1rem;
   margin: 0 2px;
   line-height: 1.1rem;
-  display: inline-block;
   transition: transform .08s ease-in-out;
 }
+
 /* empty star */
 .rate label::before {
   content: "★";
   font-size: 1rem;            /* star size (compact) */
   color: #c5c8ce;             /* light grey outline look */
 }
+
 /* hover + checked fill */
 .rate input:checked ~ label::before,
 .rate label:hover ~ label::before,
 .rate label:hover::before {
   color: #222;
 }
+
 /* subtle hover feel */
-.rate label:hover { transform: scale(1.04); }
+.rate label:hover { 
+  transform: scale(1.04); 
+}
+
 /* tighter vertical rhythm when used inline */
-.rate-5 { margin-top: 2px; }
+.rate-5 { 
+  margin-top: 2px; 
+}
 
 
 /* =========================================================
    Product Detail (gallery + thumbs, Amazon-like)
    ========================================================= */
-.prod-figure { border-radius: 10px; }
+.prod-figure { 
+  border-radius: 10px; 
+}
 
 .prod-main {
   background: #fff;
@@ -56,6 +67,7 @@
   justify-content: center;
   min-height: 420px;          /* desktop height */
 }
+
 .prod-main img {
   width: 100%;
   max-height: 520px;
@@ -64,7 +76,13 @@
 }
 
 /* Thumbnails strip */
-.prod-thumbs { margin: .5rem 0 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.prod-thumbs { 
+  margin: .5rem 0 0; 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 10px; 
+}
+
 .prod-thumbs .thumb,
 .thumb-img {                     /* .thumb-img kept for older markup */
   width: 78px;
@@ -75,12 +93,14 @@
   cursor: pointer;
   transition: transform .1s ease, border-color .15s ease, box-shadow .15s ease;
 }
+
 .prod-thumbs .thumb:hover,
 .thumb-img:hover {
   transform: translateY(-1px);
   border-color: #0d6efd;
   box-shadow: 0 0 0 3px rgba(13,110,253,.15);
 }
+
 .prod-thumbs .thumb.active,
 .thumb-img.active {
   border-color: #0d6efd;
@@ -89,12 +109,19 @@
 
 /* Star colors for read-only displays */
 .rating-star .fas.fa-star,
-.rating-star .fas.fa-star-half-alt { color: #da9a05; }
-.rating-star .far.fa-star { color: #c5c8ce; }
+.rating-star .fas.fa-star-half-alt { 
+  color: #da9a05; 
+}
+
+.rating-star .far.fa-star { 
+  color: #c5c8ce; 
+}
 
 /* Mobile tweaks */
 @media (max-width: 767.98px) {
-  .prod-main { min-height: 300px; }
+  .prod-main { 
+    min-height: 300px; 
+  }
 }
 
 
@@ -119,10 +146,9 @@
   -webkit-appearance: none;
   -moz-appearance: none;
 }
+
 .plain-select-sm:focus {
   border-color: #0d6efd;
   outline: 0;
   box-shadow: 0 0 0 2px rgba(13,110,253,.15);
 }
-
-
